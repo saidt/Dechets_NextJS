@@ -110,7 +110,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string; childId: string }> }
 ) {
   if (! await checkRole(PARAMETRE_LIGNE_TABLE_NAME+'.DELETE')) {
     const err = new Error(`Forbidden: ${PARAMETRE_LIGNE_TABLE_NAME}.DELETE`);
@@ -122,7 +122,7 @@ export async function DELETE(
   }
   try {
     const prms = await params;
-    const id = prms.id;
+    const id = prms.childId;
     //consoleInfo('Parametre_Ligne DELETE id: ', id);
 
     if (!id) {
