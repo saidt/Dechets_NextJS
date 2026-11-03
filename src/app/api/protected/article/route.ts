@@ -11,7 +11,7 @@ import { checkRole } from "@/lib/auth-lib";
 
 export async function GET(request: NextRequest) {
   try {
-    if (!checkRole(ARTICLE_TABLE_NAME+'.LIST')) {
+    if (! await checkRole(ARTICLE_TABLE_NAME+'.LIST')) {
       const err = new Error(`Forbidden: ${ARTICLE_TABLE_NAME}.LIST`);
       logError('article GET route', err);
       return NextResponse.json(
