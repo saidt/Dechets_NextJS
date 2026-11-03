@@ -111,7 +111,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string; childId: string }> }
 ) {
   if (! await checkRole(REGLEMENT_DECHET_LIGNE_TABLE_NAME+'.DELETE')) {
     const err = new Error(`Forbidden: ${REGLEMENT_DECHET_LIGNE_TABLE_NAME}.DELETE`);
@@ -123,7 +123,7 @@ export async function DELETE(
   }
   try {
     const prms = await params;
-    const id = prms.id;
+    const id = prms.childId;
     //consoleInfo('Reglement_Dechet_Ligne DELETE id: ', id);
 
     if (!id) {
