@@ -6,10 +6,19 @@ import { httpList, httpListParams, HttpStatus } from "@/types/http";
 import { logError } from "@/lib/serverLog";
 import { NextRequest, NextResponse } from "next/server";
 import { article_Count, article_List } from "@/app/db-data/article";
-import { Empty_Article, ARTICLE_DEFAULT_SORT, Article_Type } from "@/types/article";
+import { Empty_Article, ARTICLE_DEFAULT_SORT, Article_Type, ARTICLE_TABLE_NAME } from "@/types/article";
+import { checkRole } from "@/lib/auth-lib";
 
 export async function GET(request: NextRequest) {
   try {
+    if (!checkRole(ARTICLE_TABLE_NAME+'.LIST')) {
+      const err = new Error(`Forbidden: ${ARTICLE_TABLE_NAME}.LIST`);
+      logError('article GET route', err);
+      return NextResponse.json(
+        { error: `article route GET ${err.message}` },
+        { status: HttpStatus.UNAUTHORIZED }
+      );  
+    }
     const searchParams = request.nextUrl.searchParams
     //consoleInfo("Item GET searchParams....................:", searchParams);
     const params : TableState<Article_Type> = httpListParams<Article_Type>(searchParams, ARTICLE_DEFAULT_SORT)
