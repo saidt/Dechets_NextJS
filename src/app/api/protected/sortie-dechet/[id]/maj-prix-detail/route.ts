@@ -9,11 +9,12 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const pathname = '/sortie-dechet/[id]/maj-prix-detail';
   if (! await checkRole(SORTIE_DECHET_TABLE_NAME+'.UPDATE')) {
     const err = new Error(`Forbidden: ${SORTIE_DECHET_TABLE_NAME}.UPDATE`);
-    logError('sortie-dechet/[id]/maj-prix-detail GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `sortie-dechet/[id]/maj-prix-detail route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -28,9 +29,9 @@ export async function GET(
     });
   } 
   catch (err: any) {
-    logError('sortie-dechet maj-prix-detail GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `sortie-dechet maj-prix-detail route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

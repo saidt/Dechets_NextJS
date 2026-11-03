@@ -14,11 +14,12 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const pathname = '/client-dechet/[id]';
   if (! await checkRole(CLIENT_DECHET_TABLE_NAME+'.SHOW')) {
     const err = new Error(`Forbidden: ${CLIENT_DECHET_TABLE_NAME}.SHOW`);
-    logError('client-dechet/[id] GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `client-dechet/[id] route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -29,7 +30,7 @@ export async function GET(
 
     if (!id) {
       return NextResponse.json(
-        { error: "client_Dechet/[id] GET id not found" },
+        { error: `${pathname} GET route id not found` },
         { status: HttpStatus.BAD_REQUEST }
       );
     }
@@ -39,9 +40,9 @@ export async function GET(
     return NextResponse.json(data);
   }
   catch (err: any) {
-    logError('client_Dechet/[id] GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `client_Dechet/[id] route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
@@ -50,11 +51,12 @@ export async function GET(
 export async function POST(
   request: NextRequest,
 ) {
+  const pathname = '/client-dechet/[id]';
   if (! await checkRole(CLIENT_DECHET_TABLE_NAME+'.ADD')) {
     const err = new Error(`Forbidden: ${CLIENT_DECHET_TABLE_NAME}.ADD`);
-    logError('client-dechet/[id] POST route', err);
+    logError(`${pathname} POST route`, err);
     return NextResponse.json(
-      { error: `client-dechet/[id] route POST ${err.message}` },
+      { error: `${pathname} POST route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -69,9 +71,9 @@ export async function POST(
     return response;
   }
   catch (err: any) {
-    logError('client_Dechet/[id] POST route', err);
+    logError(`${pathname} POST route`, err);
     return NextResponse.json(
-      { error: `client_Dechet/[id] route POST: ${String(err)}` },
+      { error: `${pathname} POST route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
@@ -80,11 +82,12 @@ export async function POST(
 export async function PUT(
   request: NextRequest,
 ) {
+  const pathname = '/client-dechet/[id]';
   if (! await checkRole(CLIENT_DECHET_TABLE_NAME+'.UPDATE')) {
     const err = new Error(`Forbidden: ${CLIENT_DECHET_TABLE_NAME}.UPDATE`);
-    logError('client-dechet/[id] PUT route', err);
+    logError(`${pathname} PUT route`, err);
     return NextResponse.json(
-      { error: `client-dechet/[id] route PUT ${err.message}` },
+      { error: `${pathname} PUT route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -100,9 +103,9 @@ export async function PUT(
     return response;
   }
   catch (err: any) {
-    logError('client_Dechet/[id] PUT route', err);
+    logError(`${pathname} PUT route`, err);
     return NextResponse.json(
-      { error: `client_Dechet/[id] route PUT: ${String(err)}` },
+      { error: `${pathname} PUT route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
@@ -112,11 +115,12 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const pathname = '/client-dechet/[id]';
   if (! await checkRole(CLIENT_DECHET_TABLE_NAME+'.DELETE')) {
     const err = new Error(`Forbidden: ${CLIENT_DECHET_TABLE_NAME}.DELETE`);
-    logError('client-dechet/[id] DELETE route', err);
+    logError(`${pathname} DELETE route`, err);
     return NextResponse.json(
-      { error: `client-dechet/[id] route DELETE ${err.message}` },
+      { error: `${pathname} DELETE route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -127,7 +131,7 @@ export async function DELETE(
 
     if (!id) {
       return NextResponse.json(
-        { error: "client_Dechet/[id] DELETE id not found" },
+        { error: `${pathname} DELETE route id not found` },
         { status: HttpStatus.BAD_REQUEST }
       );
     }
@@ -141,9 +145,9 @@ export async function DELETE(
     return response;
   }
   catch (err: any) {
-    logError('client_Dechet/[id] DELETE route', err);
+    logError(`${pathname} DELETE route`, err);
     return NextResponse.json(
-      { error: `client_Dechet/[id] route DELETE: ${String(err)}` },
+      { error: `${pathname} DELETE route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

@@ -11,11 +11,12 @@ import { checkRole } from "@/lib/auth-lib";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(request: NextRequest) {
+  const pathname = '/retour-dechet';
   if (! await checkRole(RETOUR_DECHET_TABLE_NAME+'.LIST')) {
     const err = new Error(`Forbidden: ${RETOUR_DECHET_TABLE_NAME}.LIST`);
-    logError('retour-dechet GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `retour-dechet route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -30,9 +31,9 @@ export async function GET(request: NextRequest) {
     return httpList<any>(() => retour_Dechet_List(prismaParams), () => retour_Dechet_Count(prismaParams.where) )
   }
   catch (err: any) {
-    logError('retour-dechet GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `retour-dechet route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

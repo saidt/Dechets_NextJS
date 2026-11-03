@@ -11,6 +11,7 @@ export async function  GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const pathname = '/user/[id]/table-filter';
   const prms = await params;
   const id = prms.id;
   try {
@@ -26,9 +27,9 @@ export async function  GET(
     return httpList<any>(() => user_Table_Filter_List(prismaParams), () => user_Table_Filter_Count(prismaParams.where) )
   }
   catch (err: any) {
-    logError('user/${id}/table-filter GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `user/${id}/table-filter route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

@@ -10,22 +10,23 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
+  const pathname = '/sp/param';
   try {
     const session = await getServerSession(authOptions);
     if (! session) {
       const err = new Error('Session not found  !')
-      logError('sp param GET route', err);
+      logError(`${pathname} GET route`, err);
       return NextResponse.json(
-        { error: `sp param route GET: ${String(err)}` },
+        { error: `${pathname} GET route ${String(err)}` },
         { status: HttpStatus.UNAUTHORIZED }
       );  
     }
 
     if (! session.user || ! session.user.id) {
       const err = new Error('User not found  !')
-      logError('sp param GET route', err);
+      logError(`${pathname} GET route`, err);
       return NextResponse.json(
-        { error: `sp param route GET: ${String(err)}` },
+        { error: `${pathname} GET route ${String(err)}` },
         { status: HttpStatus.UNAUTHORIZED }
       );  
     }
@@ -37,9 +38,9 @@ export async function GET(request: NextRequest) {
 
     if (! spName) {
       const err = new Error('spName not found !')
-      logError('sp param GET route', err);
+      logError(`${pathname} GET route`, err);
       return NextResponse.json(
-        { error: `sp param route GET: ${String(err)}` },
+        { error: `${pathname} GET route ${String(err)}` },
         { status: HttpStatus.BAD_REQUEST }
       );  
     }
@@ -49,9 +50,9 @@ export async function GET(request: NextRequest) {
 
     if (! await exists_User_Role(userId, roleId)) {
       const err = new Error(`User ${userId} does not have ${roleId} role  !`)
-      logError('sp param GET route', err);
+      logError(`${pathname} GET route`, err);
       return NextResponse.json(
-        { error: `sp param route GET: ${String(err)}` },
+        { error: `${pathname} GET route ${String(err)}` },
         { status: HttpStatus.UNAUTHORIZED }
       );
     }
@@ -64,9 +65,9 @@ export async function GET(request: NextRequest) {
     );
   }
   catch (err: any) {
-    logError('sp param GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `sp param route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

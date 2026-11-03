@@ -9,11 +9,12 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const pathname = '/client-dechet/[id]/reste-a-payer';
   if (! await checkRole(CLIENT_DECHET_TABLE_NAME+'.SHOW')) {
     const err = new Error(`Forbidden: ${CLIENT_DECHET_TABLE_NAME}.SHOW`);
-    logError('client-dechet/[id]/reste-a-payer GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `client-dechet/[id]/reste-a-payer route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -28,9 +29,9 @@ export async function GET(
     });
   } 
   catch (err: any) {
-    logError('client-dechet/[id]/reste-a-payer GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `client-dechet/[id]/reste-a-payer GET route: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

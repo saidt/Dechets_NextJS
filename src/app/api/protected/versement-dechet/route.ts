@@ -11,11 +11,12 @@ import { checkRole } from "@/lib/auth-lib";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(request: NextRequest) {
+  const pathname = '/versement-dechet';
   if (! await checkRole(VERSEMENT_DECHET_TABLE_NAME+'.LIST')) {
     const err = new Error(`Forbidden: ${VERSEMENT_DECHET_TABLE_NAME}.LIST`);
-    logError('versement-dechet GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `versement-dechet route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -30,9 +31,9 @@ export async function GET(request: NextRequest) {
     return httpList<any>(() => versement_Dechet_List(prismaParams), () => versement_Dechet_Count(prismaParams.where) )
   }
   catch (err: any) {
-    logError('versement-dechet GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `versement-dechet route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

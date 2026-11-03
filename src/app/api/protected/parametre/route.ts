@@ -10,11 +10,12 @@ import { Empty_Parametre, PARAMETRE_DEFAULT_SORT, Parametre_Type, PARAMETRE_TABL
 import { checkRole } from "@/lib/auth-lib";
 
 export async function GET(request: NextRequest) {
+  const pathname = '/parametre';
   if (! await checkRole(PARAMETRE_TABLE_NAME+'.LIST')) {
     const err = new Error(`Forbidden: ${PARAMETRE_TABLE_NAME}.LIST`);
-    logError('parametre GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `parametre route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -29,9 +30,9 @@ export async function GET(request: NextRequest) {
     return httpList<any>(() => parametre_List(prismaParams), () => parametre_Count(prismaParams.where) )
   }
   catch (err: any) {
-    logError('parametre GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `parametre route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

@@ -11,11 +11,12 @@ import { checkRole } from "@/lib/auth-lib";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(request: NextRequest) {
+  const pathname = '/unite-conversion';
   if (! await checkRole(UNITE_CONVERSION_TABLE_NAME+'.LIST')) {
     const err = new Error(`Forbidden: ${UNITE_CONVERSION_TABLE_NAME}.LIST`);
-    logError('unite-conversion GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `unite-conversion route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -30,9 +31,9 @@ export async function GET(request: NextRequest) {
     return httpList<any>(() => unite_Conversion_List(prismaParams), () => unite_Conversion_Count(prismaParams.where) )
   }
   catch (err: any) {
-    logError('unite-conversion GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `unite-conversion route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

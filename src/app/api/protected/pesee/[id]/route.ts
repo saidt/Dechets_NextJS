@@ -13,11 +13,12 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const pathname = '/pesee/[id]';
   if (! await checkRole(PESEE_TABLE_NAME+'.SHOW')) {
     const err = new Error(`Forbidden: ${PESEE_TABLE_NAME}.SHOW`);
-    logError('pesee/[id] GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `pesee/[id] route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -30,7 +31,7 @@ export async function GET(
 
     if (!id) {
       return NextResponse.json(
-        { error: "pesee/[id] GET id not found" },
+        { error: `${pathname} GET route id not found` },
         { status: HttpStatus.BAD_REQUEST }
       );
     }
@@ -40,9 +41,9 @@ export async function GET(
     return NextResponse.json(data);
   }
   catch (err: any) {
-    logError('pesee/[id] GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `pesee/[id] route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

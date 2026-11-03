@@ -4,6 +4,7 @@ import { delete_User_Table_Filter, update_User_Table_Filter } from "@/app/db-dat
 import { logError } from "@/lib/serverLog";
 
 export async function PUT(request: Request) {
+  const pathname = '/user/[id]/table-filter/[childId]';
   try {
     const req = await request.json();
     //consoleInfo('user-table-filter PUT req: ', req);
@@ -19,22 +20,23 @@ export async function PUT(request: Request) {
     const result = await update_User_Table_Filter(userId, tableName, filterName, filter);
     
     if (! result.success) {
-      logError('user-table-filter PUT route', result.error);
+      logError(`${pathname} PUT route`, result.error);
       return NextResponse.json({ error: result.error }, { status: 400 })
     }
     
     return NextResponse.json(result.data, { status: HttpStatus.OK })
   } 
   catch (err: any) {
-    logError('user-table-filter PUT route', err);
+    logError(`${pathname} PUT route`, err);
     return NextResponse.json(
-      { error: `user-table-filter route PUT: ${String(err)}` },
+      { error: `${pathname} PUT route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }
 
 export async function DELETE(request: Request) {
+  const pathname = '/user/[id]/table-filter/[childId]';
   try {
     const data = await request.json();
     const id=data.id
@@ -42,9 +44,9 @@ export async function DELETE(request: Request) {
     return NextResponse.json(item);
   } 
   catch (err: any) {
-    logError('user-table-filter DELETE route', err);
+    logError(`${pathname} DELETE route`, err);
     return NextResponse.json(
-      { error: `user-table-filter route DELETE: ${String(err)}` },
+      { error: `${pathname} DELETE route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

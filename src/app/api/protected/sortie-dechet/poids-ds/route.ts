@@ -6,11 +6,12 @@ import { SORTIE_DECHET_TABLE_NAME } from "@/types/sortie-dechet";
 import { checkRole } from "@/lib/auth-lib";
 
 export async function GET() {
+  const pathname = '/sortie-dechet/poids-ds';
   if (! await checkRole(SORTIE_DECHET_TABLE_NAME+'.LIST')) {
     const err = new Error(`Forbidden: ${SORTIE_DECHET_TABLE_NAME}.LIST`);
-    logError('sortie-dechet/poids-ds GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `sortie-dechet/poids-ds route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -23,9 +24,9 @@ export async function GET() {
     });
   }
   catch (err: any) {
-    logError('sortie-dechet/poids-ds GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `sortie-dechet/poids-ds route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }  

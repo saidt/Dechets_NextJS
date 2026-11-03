@@ -14,11 +14,12 @@ export async function  GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const pathname = '/parametre/[id]/ligne';
   if (! await checkRole(PARAMETRE_LIGNE_TABLE_NAME+'.LIST')) {
     const err = new Error(`Forbidden: ${PARAMETRE_LIGNE_TABLE_NAME}.LIST`);
-    logError('parametre/[id]/ligne GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `parametre/[id]/ligne route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -37,9 +38,9 @@ export async function  GET(
     return httpList<any>(() => parametre_Ligne_List(prismaParams), () => parametre_Ligne_Count(prismaParams.where) )
   }
   catch (err: any) {
-    logError('parametre-ligne GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `parametre-ligne route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

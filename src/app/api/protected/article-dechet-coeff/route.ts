@@ -10,11 +10,12 @@ import { Empty_Article_Dechet_Coeff, ARTICLE_DECHET_COEFF_DEFAULT_SORT, Article_
 import { checkRole } from "@/lib/auth-lib";
 
 export async function GET(request: NextRequest) {
+  const pathname = '/article-dechet-coeff';
   if (! await checkRole(ARTICLE_DECHET_COEFF_TABLE_NAME+'.LIST')) {
     const err = new Error(`Forbidden: ${ARTICLE_DECHET_COEFF_TABLE_NAME}.LIST`);
-    logError('article-dechet-coeff GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `article-dechet-coeff route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -29,9 +30,9 @@ export async function GET(request: NextRequest) {
     return httpList<any>(() => article_Dechet_Coeff_List(prismaParams), () => article_Dechet_Coeff_Count(prismaParams.where) )
   }
   catch (err: any) {
-    logError('article-dechet-coeff GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `article-dechet-coeff route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

@@ -8,6 +8,7 @@ import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
+  const pathname = '/remote-log';
   try {
     const body = await req.json();
 
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
 
     if (!message) {
       return new Response(
-        JSON.stringify({ error: "api remote log message is required" }),
+        JSON.stringify({ error: `${pathname} POST route message is required` }),
         { status: HttpStatus.BAD_REQUEST }
       );
     }
@@ -45,9 +46,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
   catch (err) {
-    logError('remote-log route POST', err);
+    logError(`${pathname} POST route`, err);
     return NextResponse.json(
-      { error: `remote-log route POST: ${String(err)}` },
+      { error: `${pathname} POST route ${String(err)}` },
       { status: HttpStatus.BAD_REQUEST }
     );
   }

@@ -11,23 +11,24 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
+  const pathname = '/sf/exec';
   try {
     const session = await getServerSession(authOptions);
 
     if (! session) {
       const err = new Error('Session not found  !')
-      logError('sf exec GET route', err);
+      logError(`${pathname} GET route`, err);
       return NextResponse.json(
-        { error: `sf exec route GET: ${String(err)}` },
+        { error: `${pathname} GET route ${String(err)}` },
         { status: HttpStatus.UNAUTHORIZED }
       );  
     }
 
     if (! session.user || ! session.user.id) {
       const err = new Error('User not found  !')
-      logError('sf exec GET route', err);
+      logError(`${pathname} GET route`, err);
       return NextResponse.json(
-        { error: `sf exec route GET: ${String(err)}` },
+        { error: `${pathname} GET route ${String(err)}` },
         { status: HttpStatus.UNAUTHORIZED }
       );  
     }
@@ -39,9 +40,9 @@ export async function GET(request: NextRequest) {
 
     if (! sfName) {
       const err = new Error('sfName not found !')
-      logError('sf exec GET route', err);
+      logError(`${pathname} GET route`, err);
       return NextResponse.json(
-        { error: `sf exec route GET: ${String(err)}` },
+        { error: `${pathname} GET route ${String(err)}` },
         { status: HttpStatus.BAD_REQUEST }
       );
     }
@@ -51,9 +52,9 @@ export async function GET(request: NextRequest) {
 
     if (! await exists_User_Role(userId, roleId)) {
       const err = new Error(`User ${userId} does not have ${roleId} role  !`)
-      logError('sf exec GET route', err);
+      logError(`${pathname} GET route`, err);
       return NextResponse.json(
-        { error: `sf exec route GET: ${String(err)}` },
+        { error: `${pathname} GET route ${String(err)}` },
         { status: HttpStatus.UNAUTHORIZED }
       );
     }*/
@@ -70,9 +71,9 @@ export async function GET(request: NextRequest) {
     );
   }
   catch (err: any) {
-    logError('sf exec GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `sf exec GET route: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

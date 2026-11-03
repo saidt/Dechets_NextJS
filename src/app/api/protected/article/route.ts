@@ -10,12 +10,13 @@ import { Empty_Article, ARTICLE_DEFAULT_SORT, Article_Type, ARTICLE_TABLE_NAME }
 import { checkRole } from "@/lib/auth-lib";
 
 export async function GET(request: NextRequest) {
+  const pathname = '/article';
   try {
     if (! await checkRole(ARTICLE_TABLE_NAME+'.LIST')) {
       const err = new Error(`Forbidden: ${ARTICLE_TABLE_NAME}.LIST`);
-      logError('article GET route', err);
+      logError(`${pathname} GET route`, err);
       return NextResponse.json(
-        { error: `article route GET ${err.message}` },
+        { error: `${pathname} GET route ${err.message}` },
         { status: HttpStatus.UNAUTHORIZED }
       );  
     }
@@ -29,9 +30,9 @@ export async function GET(request: NextRequest) {
     return httpList<any>(() => article_List(prismaParams), () => article_Count(prismaParams.where) )
   }
   catch (err: any) {
-    logError('article GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `article route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

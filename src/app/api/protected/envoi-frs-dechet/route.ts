@@ -11,11 +11,12 @@ import { checkRole } from "@/lib/auth-lib";
 //import { isDevMode } from "@/lib/lib";
 
 export async function GET(request: NextRequest) {
+  const pathname = '/envoi-frs-dechet';
   if (! await checkRole(ENVOI_FRS_DECHET_TABLE_NAME+'.LIST')) {
     const err = new Error(`Forbidden: ${ENVOI_FRS_DECHET_TABLE_NAME}.LIST`);
-    logError('envoi-frs-dechet GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `envoi-frs-dechet route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -30,9 +31,9 @@ export async function GET(request: NextRequest) {
     return httpList<any>(() => envoi_Frs_Dechet_List(prismaParams), () => envoi_Frs_Dechet_Count(prismaParams.where) )
   }
   catch (err: any) {
-    logError('envoi-frs-dechet GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `envoi-frs-dechet route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

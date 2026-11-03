@@ -9,6 +9,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const pathname = '/user/[id]';
   try {
     const prms = await params;
     const id = prms.id;
@@ -16,7 +17,7 @@ export async function GET(
 
     if (!id) {
       return NextResponse.json(
-        { error: "user/[id] GET id not found" },
+        { error: `${pathname} GET route id not found` },
         { status: HttpStatus.BAD_REQUEST }
       );
     }
@@ -26,9 +27,9 @@ export async function GET(
     return NextResponse.json(data);
   }
   catch (err: any) {
-    logError('user/[id] GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `user/[id] route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

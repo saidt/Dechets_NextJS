@@ -8,11 +8,12 @@ import { checkRole } from "@/lib/auth-lib";
 export async function GET(
   request: NextRequest
 ) {
+  const pathname = '/envoi-frs-dechet/reste';
   if (! await checkRole(ENVOI_FRS_DECHET_TABLE_NAME+'.LIST')) {
     const err = new Error(`Forbidden: ${ENVOI_FRS_DECHET_TABLE_NAME}.LIST`);
-    logError('envoi-frs-dechet/reste GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `envoi-frs-dechet/reste route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -25,9 +26,9 @@ export async function GET(
     });
   } 
   catch (err: any) {
-    logError('envoi-frs-dechet/reste GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `envoi-frs-dechet/reste GET route: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

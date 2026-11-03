@@ -6,11 +6,12 @@ import { RETOUR_DECHET_TABLE_NAME } from "@/types/retour-dechet";
 import { checkRole } from "@/lib/auth-lib";
 
 export async function GET() {
+  const pathname = '/retour-dechet/count';
   if (! await checkRole(RETOUR_DECHET_TABLE_NAME+'.LIST')) {
     const err = new Error(`Forbidden: ${RETOUR_DECHET_TABLE_NAME}.LIST`);
-    logError('retour-dechet/count GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `retour-dechet/count route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -22,9 +23,9 @@ export async function GET() {
     });
   }
   catch (err: any) {
-    logError('retour-dechet/count GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `retour-dechet/count route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR },
     );
   }

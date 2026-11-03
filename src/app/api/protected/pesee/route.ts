@@ -11,11 +11,12 @@ import { checkRole } from "@/lib/auth-lib";
 //import { isDevMode } from "@/lib/lib";
 
 export async function GET(request: NextRequest) {
+  const pathname = '/pesee';
   if (! await checkRole(PESEE_TABLE_NAME+'.LIST')) {
     const err = new Error(`Forbidden: ${PESEE_TABLE_NAME}.LIST`);
-    logError('pesee GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `pesee route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -30,9 +31,9 @@ export async function GET(request: NextRequest) {
     return httpList<any>(() => pesee_List(prismaParams), () => pesee_Count(prismaParams.where) )
   }
   catch (err: any) {
-    logError('pesee GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `pesee route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

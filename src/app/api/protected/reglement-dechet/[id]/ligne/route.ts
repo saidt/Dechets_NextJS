@@ -15,11 +15,12 @@ export async function  GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const pathname = '/reglement-dechet/[id]/ligne';
   if (! await checkRole(REGLEMENT_DECHET_LIGNE_TABLE_NAME+'.LIST')) {
     const err = new Error(`Forbidden: ${REGLEMENT_DECHET_LIGNE_TABLE_NAME}.LIST`);
-    logError('reglement-dechet/[id]/ligne GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `reglement-dechet/[id]/ligne route GET ${err.message}` },
+      { error: `${pathname} GET route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -38,9 +39,9 @@ export async function  GET(
     return httpList<any>(() => reglement_Dechet_Ligne_List(prismaParams), () => reglement_Dechet_Ligne_Count(prismaParams.where) )
   }
   catch (err: any) {
-    logError('reglement-dechet/${id}/ligne GET route', err);
+    logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `reglement-dechet/${id}/ligne route GET: ${String(err)}` },
+      { error: `${pathname} GET route ${String(err)}` },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
