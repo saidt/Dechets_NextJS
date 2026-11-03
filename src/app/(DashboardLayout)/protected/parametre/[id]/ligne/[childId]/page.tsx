@@ -1,5 +1,3 @@
-'use server'
-
 import Breadcrumb from '@/app/(DashboardLayout)/shared/breadcrumb/Breadcrumb';
 import { Home_Breadcrumb, Parametre_Ligne_Breadcrumb } from '@/lib/breadcrumb-items';
 import { PARAMETRE_URL } from '@/types/parametre';

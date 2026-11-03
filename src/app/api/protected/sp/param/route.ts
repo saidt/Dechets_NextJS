@@ -1,5 +1,3 @@
-'use server';
-
 import { exists_User_Role } from "@/app/db-data/user-role";
 import { authOptions } from "@/lib/auth";
 import { storedProcParams } from "@/lib/db";

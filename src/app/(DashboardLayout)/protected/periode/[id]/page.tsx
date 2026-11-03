@@ -1,5 +1,3 @@
-'use server'
-
 import Breadcrumb from '@/app/(DashboardLayout)/shared/breadcrumb/Breadcrumb';
 import { Home_Breadcrumb, Periode_Breadcrumb } from '@/lib/breadcrumb-items';
 import Periode_Show from '@/ui/periode/Periode_Show';

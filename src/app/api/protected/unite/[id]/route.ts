@@ -1,5 +1,3 @@
-'use server';
-
 import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Unite, delete_Unite, read_Unite, update_Unite } from "@/app/db-data/unite";

@@ -1,5 +1,3 @@
-'use server';
-
 import { unite_Count, unite_List } from "@/app/db-data/unite";
 import { logError } from "@/lib/serverLog";
 import { tableStateToPrismaQuery } from "@/lib/prismaUtils";

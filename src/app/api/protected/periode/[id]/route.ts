@@ -1,5 +1,3 @@
-'use server';
-
 import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Periode, delete_Periode, read_Periode, update_Periode } from "@/app/db-data/periode";

@@ -1,5 +1,3 @@
-'use server';
-
 import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Versement_Dechet_Ligne, delete_Versement_Dechet_Ligne, read_Versement_Dechet_Ligne, update_Versement_Dechet_Ligne } from "@/app/db-data/versement-dechet-ligne";

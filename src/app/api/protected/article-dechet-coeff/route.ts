@@ -1,5 +1,3 @@
-'use server';
-
 import { tableStateToPrismaQuery } from "@/lib/prismaUtils";
 import { PrismaQuery, TableState } from "@/lib/types";
 import { httpList, httpListParams, HttpStatus } from "@/types/http";

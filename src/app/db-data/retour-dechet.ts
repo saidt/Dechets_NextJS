@@ -1,5 +1,3 @@
-'use server'
-
 import { DEFAULT_PAGE_SIZE } from "@/lib/consts";
 import { consoleInfo } from "@/lib/clientLog";
 import { prisma } from "@/lib/prisma";

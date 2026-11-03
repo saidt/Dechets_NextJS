@@ -1,5 +1,3 @@
-'use server';
-
 import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Article, delete_Article, read_Article, update_Article } from "@/app/db-data/article";

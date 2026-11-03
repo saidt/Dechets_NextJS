@@ -1,5 +1,3 @@
-'use server';
-
 import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Article_Dechet_Coeff, delete_Article_Dechet_Coeff, read_Article_Dechet_Coeff, update_Article_Dechet_Coeff } from "@/app/db-data/article-dechet-coeff";

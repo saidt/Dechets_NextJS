@@ -1,5 +1,3 @@
-'use server';
-
 import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Client_Dechet_Sld_Ini, delete_Client_Dechet_Sld_Ini, read_Client_Dechet_Sld_Ini, update_Client_Dechet_Sld_Ini } from "@/app/db-data/client-dechet-sld-ini";

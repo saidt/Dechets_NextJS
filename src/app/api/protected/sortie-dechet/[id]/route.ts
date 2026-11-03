@@ -1,5 +1,3 @@
-'use server';
-
 import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Sortie_Dechet, delete_Sortie_Dechet, read_Sortie_Dechet, update_Sortie_Dechet } from "@/app/db-data/sortie-dechet";

@@ -1,5 +1,3 @@
-'use server'
-
 import Breadcrumb from '@/app/(DashboardLayout)/shared/breadcrumb/Breadcrumb';
 import { Home_Breadcrumb, Article_Dechet_Breadcrumb } from '@/lib/breadcrumb-items';
 import Article_Show from '@/ui/article/Article_Show';

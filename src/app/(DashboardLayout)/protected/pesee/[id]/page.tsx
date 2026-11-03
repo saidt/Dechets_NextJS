@@ -1,5 +1,3 @@
-'use server'
-
 import Breadcrumb from '@/app/(DashboardLayout)/shared/breadcrumb/Breadcrumb';
 import { Home_Breadcrumb, Pesee_Breadcrumb } from '@/lib/breadcrumb-items';
 import { PESEE_SHOW_TITLE } from '@/types/pesee';

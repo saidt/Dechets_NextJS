@@ -1,5 +1,3 @@
-'use server';
-
 import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Reglement_Dechet, delete_Reglement_Dechet, read_Reglement_Dechet, update_Reglement_Dechet } from "@/app/db-data/reglement-dechet";

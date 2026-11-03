@@ -1,5 +1,3 @@
-'use server';
-
 import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus } from "@/types/http";
 import { read_User } from "@/app/db-data/user";

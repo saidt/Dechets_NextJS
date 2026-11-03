@@ -1,5 +1,3 @@
-'use server'
-
 import Breadcrumb from '@/app/(DashboardLayout)/shared/breadcrumb/Breadcrumb';
 import { Home_Breadcrumb, Sortie_Dechet_Breadcrumb } from '@/lib/breadcrumb-items';
 import Sortie_Dechet_Show from '@/ui/sortie-dechet/Sortie_Dechet_Show';

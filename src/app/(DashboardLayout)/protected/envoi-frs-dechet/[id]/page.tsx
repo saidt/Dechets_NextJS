@@ -1,5 +1,3 @@
-'use server'
-
 import Breadcrumb from '@/app/(DashboardLayout)/shared/breadcrumb/Breadcrumb';
 import { Home_Breadcrumb, Envoi_Frs_Dechet_Breadcrumb } from '@/lib/breadcrumb-items';
 import { ENVOI_FRS_DECHET_SHOW_TITLE } from '@/types/envoi-frs-dechet';

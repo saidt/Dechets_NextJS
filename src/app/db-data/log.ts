@@ -1,5 +1,3 @@
-'use server'
-
 import { consoleInfo } from "@/lib/clientLog";
 import { prisma } from "@/lib/prisma";
 import { LogType } from "@/types/log";
