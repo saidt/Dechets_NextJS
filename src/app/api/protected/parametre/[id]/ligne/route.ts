@@ -6,13 +6,22 @@ import { httpList, httpListParams, HttpStatus } from "@/types/http";
 import { logError } from "@/lib/serverLog";
 import { NextRequest, NextResponse } from "next/server";
 import { parametre_Ligne_Count, parametre_Ligne_List } from "@/app/db-data/parametre-ligne";
-import { Empty_Parametre_Ligne, PARAMETRE_LIGNE_DEFAULT_SORT, Parametre_Ligne_Type } from "@/types/parametre-ligne";
+import { Empty_Parametre_Ligne, PARAMETRE_LIGNE_DEFAULT_SORT, Parametre_Ligne_Type, PARAMETRE_LIGNE_TABLE_NAME } from "@/types/parametre-ligne";
 import { addTableStateFilter } from "@/lib/lib";
+import { checkRole } from "@/lib/auth-lib";
 
 export async function  GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(PARAMETRE_LIGNE_TABLE_NAME+'.LIST')) {
+    const err = new Error(`Forbidden: ${PARAMETRE_LIGNE_TABLE_NAME}.LIST`);
+    logError('parametre/[id]/ligne GET route', err);
+    return NextResponse.json(
+      { error: `parametre/[id]/ligne route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   const prms = await params;
   const id = prms.id;
   try {

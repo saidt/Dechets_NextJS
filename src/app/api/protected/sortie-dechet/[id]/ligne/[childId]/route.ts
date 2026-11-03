@@ -4,16 +4,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Sortie_Dechet_Ligne, delete_Sortie_Dechet_Ligne, read_Sortie_Dechet_Ligne, update_Sortie_Dechet_Ligne } from "@/app/db-data/sortie-dechet-ligne";
 import { localLog } from "@/components/logger/localLog";
-import { Sortie_Dechet_Ligne_Type } from "@/types/sortie-dechet-ligne";
+import { Sortie_Dechet_Ligne_Type, SORTIE_DECHET_LIGNE_TABLE_NAME } from "@/types/sortie-dechet-ligne";
 import { cookies } from "next/headers";
 import { remoteLog } from "@/components/logger/remoteLog";
 import { logError } from "@/lib/serverLog";
+import { checkRole } from "@/lib/auth-lib";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ childId: string }> }
 ) {
+  if (! await checkRole(SORTIE_DECHET_LIGNE_TABLE_NAME+'.SHOW')) {
+    const err = new Error(`Forbidden: ${SORTIE_DECHET_LIGNE_TABLE_NAME}.SHOW`);
+    logError('sortie-dechet/[id]/ligne/[childId] GET route', err);
+    return NextResponse.json(
+      { error: `sortie-dechet/[id]/ligne/[childId] route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   const prms = await params;
   const id = prms.childId;
   //consoleInfo('Sortie_Dechet_Ligne GET id: ', id);
@@ -42,6 +51,14 @@ export async function GET(
 export async function POST(
   request: NextRequest,
 ) {
+  if (! await checkRole(SORTIE_DECHET_LIGNE_TABLE_NAME+'.ADD')) {
+    const err = new Error(`Forbidden: ${SORTIE_DECHET_LIGNE_TABLE_NAME}.ADD`);
+    logError('sortie-dechet/[id]/ligne/[childId] POST route', err);
+    return NextResponse.json(
+      { error: `sortie-dechet/[id]/ligne/[childId] route POST ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Sortie_Dechet_Ligne_Type>(() => create_Sortie_Dechet_Ligne(data.data))
@@ -64,6 +81,14 @@ export async function POST(
 export async function PUT(
   request: NextRequest,
 ) {
+  if (! await checkRole(SORTIE_DECHET_LIGNE_TABLE_NAME+'.UPDATE')) {
+    const err = new Error(`Forbidden: ${SORTIE_DECHET_LIGNE_TABLE_NAME}.UPDATE`);
+    logError('sortie-dechet/[id]/ligne/[childId] PUT route', err);
+    return NextResponse.json(
+      { error: `sortie-dechet/[id]/ligne/[childId] route PUT ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Sortie_Dechet_Ligne_Type>(() => update_Sortie_Dechet_Ligne(data.data))
@@ -88,6 +113,14 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(SORTIE_DECHET_LIGNE_TABLE_NAME+'.DELETE')) {
+    const err = new Error(`Forbidden: ${SORTIE_DECHET_LIGNE_TABLE_NAME}.DELETE`);
+    logError('sortie-dechet/[id]/ligne/[childId] DELETE route', err);
+    return NextResponse.json(
+      { error: `sortie-dechet/[id]/ligne/[childId] route DELETE ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;

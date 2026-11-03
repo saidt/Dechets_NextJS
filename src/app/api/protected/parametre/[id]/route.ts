@@ -4,15 +4,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Parametre, delete_Parametre, read_Parametre, update_Parametre } from "@/app/db-data/parametre";
 import { localLog } from "@/components/logger/localLog";
-import { Parametre_Type } from "@/types/parametre";
+import { Parametre_Type, PARAMETRE_TABLE_NAME } from "@/types/parametre";
 import { cookies } from "next/headers";
 import { remoteLog } from "@/components/logger/remoteLog";
 import { logError } from "@/lib/serverLog";
+import { checkRole } from "@/lib/auth-lib";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(PARAMETRE_TABLE_NAME+'.SHOW')) {
+    const err = new Error(`Forbidden: ${PARAMETRE_TABLE_NAME}.SHOW`);
+    logError('parametre/[id] GET route', err);
+    return NextResponse.json(
+      { error: `parametre/[id] route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;
@@ -41,6 +50,14 @@ export async function GET(
 export async function POST(
   request: NextRequest,
 ) {
+  if (! await checkRole(PARAMETRE_TABLE_NAME+'.ADD')) {
+    const err = new Error(`Forbidden: ${PARAMETRE_TABLE_NAME}.ADD`);
+    logError('parametre/[id] POST route', err);
+    return NextResponse.json(
+      { error: `parametre/[id] route POST ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Parametre_Type>(() => create_Parametre(data.data))
@@ -63,6 +80,14 @@ export async function POST(
 export async function PUT(
   request: NextRequest,
 ) {
+  if (! await checkRole(PARAMETRE_TABLE_NAME+'.UPDATE')) {
+    const err = new Error(`Forbidden: ${PARAMETRE_TABLE_NAME}.UPDATE`);
+    logError('parametre/[id] PUT route', err);
+    return NextResponse.json(
+      { error: `parametre/[id] route PUT ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Parametre_Type>(() => update_Parametre(data.data))
@@ -87,6 +112,14 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(PARAMETRE_TABLE_NAME+'.DELETE')) {
+    const err = new Error(`Forbidden: ${PARAMETRE_TABLE_NAME}.DELETE`);
+    logError('parametre/[id] DELETE route', err);
+    return NextResponse.json(
+      { error: `parametre/[id] route DELETE ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;

@@ -6,10 +6,19 @@ import { httpList, httpListParams, HttpStatus } from "@/types/http";
 import { logError } from "@/lib/serverLog";
 import { NextRequest, NextResponse } from "next/server";
 import { periode_Count, periode_List } from "@/app/db-data/periode";
-import { Empty_Periode, PERIODE_DEFAULT_SORT, Periode_Type } from "@/types/periode";
+import { Empty_Periode, PERIODE_DEFAULT_SORT, Periode_Type, PERIODE_TABLE_NAME } from "@/types/periode";
+import { checkRole } from "@/lib/auth-lib";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(request: NextRequest) {
+  if (! await checkRole(PERIODE_TABLE_NAME+'.LIST')) {
+    const err = new Error(`Forbidden: ${PERIODE_TABLE_NAME}.LIST`);
+    logError('periode GET route', err);
+    return NextResponse.json(
+      { error: `periode route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const searchParams = request.nextUrl.searchParams
     //consoleInfo("Item GET searchParams....................:", searchParams);

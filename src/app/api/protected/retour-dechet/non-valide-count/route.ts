@@ -2,8 +2,18 @@ import { retour_Dechet_Non_Valide_Count } from "@/app/db-data/retour-dechet";
 import { logError } from "@/lib/serverLog";
 import { HttpStatus } from "@/types/http";
 import { NextResponse } from "next/server";
+import { RETOUR_DECHET_TABLE_NAME } from "@/types/retour-dechet";
+import { checkRole } from "@/lib/auth-lib";
 
 export async function GET() {
+  if (! await checkRole(RETOUR_DECHET_TABLE_NAME+'.LIST')) {
+    const err = new Error(`Forbidden: ${RETOUR_DECHET_TABLE_NAME}.LIST`);
+    logError('retour-dechet/non-valide-count GET route', err);
+    return NextResponse.json(
+      { error: `retour-dechet/non-valide-count route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const result = await retour_Dechet_Non_Valide_Count();
 

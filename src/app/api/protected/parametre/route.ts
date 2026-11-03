@@ -6,9 +6,18 @@ import { httpList, httpListParams, HttpStatus } from "@/types/http";
 import { logError } from "@/lib/serverLog";
 import { NextRequest, NextResponse } from "next/server";
 import { parametre_Count, parametre_List } from "@/app/db-data/parametre";
-import { Empty_Parametre, PARAMETRE_DEFAULT_SORT, Parametre_Type } from "@/types/parametre";
+import { Empty_Parametre, PARAMETRE_DEFAULT_SORT, Parametre_Type, PARAMETRE_TABLE_NAME } from "@/types/parametre";
+import { checkRole } from "@/lib/auth-lib";
 
 export async function GET(request: NextRequest) {
+  if (! await checkRole(PARAMETRE_TABLE_NAME+'.LIST')) {
+    const err = new Error(`Forbidden: ${PARAMETRE_TABLE_NAME}.LIST`);
+    logError('parametre GET route', err);
+    return NextResponse.json(
+      { error: `parametre route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const searchParams = request.nextUrl.searchParams
     //consoleInfo("Item GET searchParams....................:", searchParams);

@@ -4,10 +4,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Envoi_Frs_Dechet, delete_Envoi_Frs_Dechet, read_Envoi_Frs_Dechet, update_Envoi_Frs_Dechet } from "@/app/db-data/envoi-frs-dechet";
 import { localLog } from "@/components/logger/localLog";
-import { Envoi_Frs_Dechet_Type } from "@/types/envoi-frs-dechet";
+import { Envoi_Frs_Dechet_Type, ENVOI_FRS_DECHET_TABLE_NAME } from "@/types/envoi-frs-dechet";
 import { cookies } from "next/headers";
 import { remoteLog } from "@/components/logger/remoteLog";
 import { logError } from "@/lib/serverLog";
+import { checkRole } from "@/lib/auth-lib";
 
 //import { isDevMode } from "@/lib/lib";
 
@@ -15,6 +16,14 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(ENVOI_FRS_DECHET_TABLE_NAME+'.SHOW')) {
+    const err = new Error(`Forbidden: ${ENVOI_FRS_DECHET_TABLE_NAME}.SHOW`);
+    logError('envoi-frs-dechet/[id] GET route', err);
+    return NextResponse.json(
+      { error: `envoi-frs-dechet/[id] route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;
@@ -45,6 +54,14 @@ export async function GET(
 export async function POST(
   request: NextRequest,
 ) {
+  if (! await checkRole(ENVOI_FRS_DECHET_TABLE_NAME+'.ADD')) {
+    const err = new Error(`Forbidden: ${ENVOI_FRS_DECHET_TABLE_NAME}.ADD`);
+    logError('envoi-frs-dechet/[id] POST route', err);
+    return NextResponse.json(
+      { error: `envoi-frs-dechet/[id] route POST ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Envoi_Frs_Dechet_Type>(() => create_Envoi_Frs_Dechet(data.data))
@@ -67,6 +84,14 @@ export async function POST(
 export async function PUT(
   request: NextRequest,
 ) {
+  if (! await checkRole(ENVOI_FRS_DECHET_TABLE_NAME+'.UPDATE')) {
+    const err = new Error(`Forbidden: ${ENVOI_FRS_DECHET_TABLE_NAME}.UPDATE`);
+    logError('envoi-frs-dechet/[id] PUT route', err);
+    return NextResponse.json(
+      { error: `envoi-frs-dechet/[id] route PUT ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Envoi_Frs_Dechet_Type>(() => update_Envoi_Frs_Dechet(data.data))
@@ -91,6 +116,14 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(ENVOI_FRS_DECHET_TABLE_NAME+'.DELETE')) {
+    const err = new Error(`Forbidden: ${ENVOI_FRS_DECHET_TABLE_NAME}.DELETE`);
+    logError('envoi-frs-dechet/[id] DELETE route', err);
+    return NextResponse.json(
+      { error: `envoi-frs-dechet/[id] route DELETE ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;

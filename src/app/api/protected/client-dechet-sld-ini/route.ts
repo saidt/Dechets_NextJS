@@ -6,10 +6,19 @@ import { httpList, httpListParams, HttpStatus } from "@/types/http";
 import { logError } from "@/lib/serverLog";
 import { NextRequest, NextResponse } from "next/server";
 import { client_Dechet_Sld_Ini_Count, client_Dechet_Sld_Ini_List } from "@/app/db-data/client-dechet-sld-ini";
-import { Empty_Client_Dechet_Sld_Ini, CLIENT_DECHET_SLD_INI_DEFAULT_SORT, Client_Dechet_Sld_Ini_Type } from "@/types/client-dechet-sld-ini";
+import { Empty_Client_Dechet_Sld_Ini, CLIENT_DECHET_SLD_INI_DEFAULT_SORT, Client_Dechet_Sld_Ini_Type, CLIENT_DECHET_SLD_INI_TABLE_NAME } from "@/types/client-dechet-sld-ini";
+import { checkRole } from "@/lib/auth-lib";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(request: NextRequest) {
+  if (! await checkRole(CLIENT_DECHET_SLD_INI_TABLE_NAME+'.LIST')) {
+    const err = new Error(`Forbidden: ${CLIENT_DECHET_SLD_INI_TABLE_NAME}.LIST`);
+    logError('client-dechet-sld-ini GET route', err);
+    return NextResponse.json(
+      { error: `client-dechet-sld-ini route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const searchParams = request.nextUrl.searchParams
     //consoleInfo("Item GET searchParams....................:", searchParams);

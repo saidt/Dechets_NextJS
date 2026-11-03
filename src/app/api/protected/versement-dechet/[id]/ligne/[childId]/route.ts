@@ -4,16 +4,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Versement_Dechet_Ligne, delete_Versement_Dechet_Ligne, read_Versement_Dechet_Ligne, update_Versement_Dechet_Ligne } from "@/app/db-data/versement-dechet-ligne";
 import { localLog } from "@/components/logger/localLog";
-import { Versement_Dechet_Ligne_Type } from "@/types/versement-dechet-ligne";
+import { Versement_Dechet_Ligne_Type, VERSEMENT_DECHET_LIGNE_TABLE_NAME } from "@/types/versement-dechet-ligne";
 import { cookies } from "next/headers";
 import { remoteLog } from "@/components/logger/remoteLog";
 import { logError } from "@/lib/serverLog";
+import { checkRole } from "@/lib/auth-lib";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ childId: string }> }
 ) {
+  if (! await checkRole(VERSEMENT_DECHET_LIGNE_TABLE_NAME+'.SHOW')) {
+    const err = new Error(`Forbidden: ${VERSEMENT_DECHET_LIGNE_TABLE_NAME}.SHOW`);
+    logError('versement-dechet/[id]/ligne/[childId] GET route', err);
+    return NextResponse.json(
+      { error: `versement-dechet/[id]/ligne/[childId] route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   const prms = await params;
   const id = prms.childId;
   //consoleInfo('Versement_Dechet_Ligne GET id: ', id);
@@ -42,6 +51,14 @@ export async function GET(
 export async function POST(
   request: NextRequest,
 ) {
+  if (! await checkRole(VERSEMENT_DECHET_LIGNE_TABLE_NAME+'.ADD')) {
+    const err = new Error(`Forbidden: ${VERSEMENT_DECHET_LIGNE_TABLE_NAME}.ADD`);
+    logError('versement-dechet/[id]/ligne/[childId] POST route', err);
+    return NextResponse.json(
+      { error: `versement-dechet/[id]/ligne/[childId] route POST ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Versement_Dechet_Ligne_Type>(() => create_Versement_Dechet_Ligne(data.data))
@@ -64,6 +81,14 @@ export async function POST(
 export async function PUT(
   request: NextRequest,
 ) {
+  if (! await checkRole(VERSEMENT_DECHET_LIGNE_TABLE_NAME+'.UPDATE')) {
+    const err = new Error(`Forbidden: ${VERSEMENT_DECHET_LIGNE_TABLE_NAME}.UPDATE`);
+    logError('versement-dechet/[id]/ligne/[childId] PUT route', err);
+    return NextResponse.json(
+      { error: `versement-dechet/[id]/ligne/[childId] route PUT ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Versement_Dechet_Ligne_Type>(() => update_Versement_Dechet_Ligne(data.data))
@@ -88,6 +113,14 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(VERSEMENT_DECHET_LIGNE_TABLE_NAME+'.DELETE')) {
+    const err = new Error(`Forbidden: ${VERSEMENT_DECHET_LIGNE_TABLE_NAME}.DELETE`);
+    logError('versement-dechet/[id]/ligne/[childId] DELETE route', err);
+    return NextResponse.json(
+      { error: `versement-dechet/[id]/ligne/[childId] route DELETE ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;

@@ -6,10 +6,19 @@ import { httpList, httpListParams, HttpStatus } from "@/types/http";
 import { logError } from "@/lib/serverLog";
 import { NextRequest, NextResponse } from "next/server";
 import { unite_Conversion_Count, unite_Conversion_List } from "@/app/db-data/unite-conversion";
-import { Empty_Unite_Conversion, UNITE_CONVERSION_DEFAULT_SORT, Unite_Conversion_Type } from "@/types/unite-conversion";
+import { Empty_Unite_Conversion, UNITE_CONVERSION_DEFAULT_SORT, Unite_Conversion_Type, UNITE_CONVERSION_TABLE_NAME } from "@/types/unite-conversion";
+import { checkRole } from "@/lib/auth-lib";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(request: NextRequest) {
+  if (! await checkRole(UNITE_CONVERSION_TABLE_NAME+'.LIST')) {
+    const err = new Error(`Forbidden: ${UNITE_CONVERSION_TABLE_NAME}.LIST`);
+    logError('unite-conversion GET route', err);
+    return NextResponse.json(
+      { error: `unite-conversion route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const searchParams = request.nextUrl.searchParams
     //consoleInfo("Item GET searchParams....................:", searchParams);

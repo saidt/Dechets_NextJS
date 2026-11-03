@@ -2,11 +2,21 @@ import { client_Dechet_Reste_A_Payer } from "@/app/db-data/client-dechet";
 import { logError } from "@/lib/serverLog";
 import { HttpStatus } from "@/types/http";
 import { NextRequest, NextResponse } from "next/server";
+import { CLIENT_DECHET_TABLE_NAME } from "@/types/client-dechet";
+import { checkRole } from "@/lib/auth-lib";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(CLIENT_DECHET_TABLE_NAME+'.SHOW')) {
+    const err = new Error(`Forbidden: ${CLIENT_DECHET_TABLE_NAME}.SHOW`);
+    logError('client-dechet/[id]/reste-a-payer GET route', err);
+    return NextResponse.json(
+      { error: `client-dechet/[id]/reste-a-payer route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;
