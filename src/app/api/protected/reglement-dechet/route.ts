@@ -6,10 +6,19 @@ import { httpList, httpListParams, HttpStatus } from "@/types/http";
 import { logError } from "@/lib/serverLog";
 import { NextRequest, NextResponse } from "next/server";
 import { reglement_Dechet_Count, reglement_Dechet_List } from "@/app/db-data/reglement-dechet";
-import { Empty_Reglement_Dechet, REGLEMENT_DECHET_DEFAULT_SORT, Reglement_Dechet_Type } from "@/types/reglement-dechet";
+import { Empty_Reglement_Dechet, REGLEMENT_DECHET_DEFAULT_SORT, Reglement_Dechet_Type, REGLEMENT_DECHET_TABLE_NAME } from "@/types/reglement-dechet";
+import { checkRole } from "@/lib/auth-lib";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(request: NextRequest) {
+  if (! await checkRole(REGLEMENT_DECHET_TABLE_NAME+'.LIST')) {
+    const err = new Error(`Forbidden: ${REGLEMENT_DECHET_TABLE_NAME}.LIST`);
+    logError('reglement-dechet GET route', err);
+    return NextResponse.json(
+      { error: `reglement-dechet route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const searchParams = request.nextUrl.searchParams
     //consoleInfo("Item GET searchParams....................:", searchParams);

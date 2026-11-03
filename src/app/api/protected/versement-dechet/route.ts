@@ -6,10 +6,19 @@ import { httpList, httpListParams, HttpStatus } from "@/types/http";
 import { logError } from "@/lib/serverLog";
 import { NextRequest, NextResponse } from "next/server";
 import { versement_Dechet_Count, versement_Dechet_List } from "@/app/db-data/versement-dechet";
-import { Empty_Versement_Dechet, VERSEMENT_DECHET_DEFAULT_SORT, Versement_Dechet_Type } from "@/types/versement-dechet";
+import { Empty_Versement_Dechet, VERSEMENT_DECHET_DEFAULT_SORT, Versement_Dechet_Type, VERSEMENT_DECHET_TABLE_NAME } from "@/types/versement-dechet";
+import { checkRole } from "@/lib/auth-lib";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(request: NextRequest) {
+  if (! await checkRole(VERSEMENT_DECHET_TABLE_NAME+'.LIST')) {
+    const err = new Error(`Forbidden: ${VERSEMENT_DECHET_TABLE_NAME}.LIST`);
+    logError('versement-dechet GET route', err);
+    return NextResponse.json(
+      { error: `versement-dechet route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const searchParams = request.nextUrl.searchParams
     //consoleInfo("Item GET searchParams....................:", searchParams);

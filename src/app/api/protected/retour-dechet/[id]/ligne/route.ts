@@ -6,14 +6,23 @@ import { httpList, httpListParams, HttpStatus } from "@/types/http";
 import { logError } from "@/lib/serverLog";
 import { NextRequest, NextResponse } from "next/server";
 import { retour_Dechet_Ligne_Count, retour_Dechet_Ligne_List } from "@/app/db-data/retour-dechet-ligne";
-import { Empty_Retour_Dechet_Ligne, RETOUR_DECHET_LIGNE_DEFAULT_SORT, Retour_Dechet_Ligne_Type } from "@/types/retour-dechet-ligne";
+import { Empty_Retour_Dechet_Ligne, RETOUR_DECHET_LIGNE_DEFAULT_SORT, Retour_Dechet_Ligne_Type, RETOUR_DECHET_LIGNE_TABLE_NAME } from "@/types/retour-dechet-ligne";
 import { addTableStateFilter } from "@/lib/lib";
+import { checkRole } from "@/lib/auth-lib";
 //import { consoleInfo } from "@/lib/log";
 
 export async function  GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(RETOUR_DECHET_LIGNE_TABLE_NAME+'.LIST')) {
+    const err = new Error(`Forbidden: ${RETOUR_DECHET_LIGNE_TABLE_NAME}.LIST`);
+    logError('retour-dechet/[id]/ligne GET route', err);
+    return NextResponse.json(
+      { error: `retour-dechet/[id]/ligne route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   const prms = await params;
   const id = prms.id;
   try {

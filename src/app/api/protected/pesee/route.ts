@@ -6,10 +6,19 @@ import { httpList, httpListParams, HttpStatus } from "@/types/http";
 import { logError } from "@/lib/serverLog";
 import { NextRequest, NextResponse } from "next/server";
 import { pesee_Count, pesee_List } from "@/app/db-data/pesee";
-import { Empty_Pesee, PESEE_DEFAULT_SORT, Pesee_Type } from "@/types/pesee";
+import { Empty_Pesee, PESEE_DEFAULT_SORT, Pesee_Type, PESEE_TABLE_NAME } from "@/types/pesee";
+import { checkRole } from "@/lib/auth-lib";
 //import { isDevMode } from "@/lib/lib";
 
 export async function GET(request: NextRequest) {
+  if (! await checkRole(PESEE_TABLE_NAME+'.LIST')) {
+    const err = new Error(`Forbidden: ${PESEE_TABLE_NAME}.LIST`);
+    logError('pesee GET route', err);
+    return NextResponse.json(
+      { error: `pesee route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const searchParams = request.nextUrl.searchParams
     //isDevMode() && console.log("Item GET searchParams....................:", searchParams);

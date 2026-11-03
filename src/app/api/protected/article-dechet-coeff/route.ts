@@ -6,9 +6,18 @@ import { httpList, httpListParams, HttpStatus } from "@/types/http";
 import { logError } from "@/lib/serverLog";
 import { NextRequest, NextResponse } from "next/server";
 import { article_Dechet_Coeff_Count, article_Dechet_Coeff_List } from "@/app/db-data/article-dechet-coeff";
-import { Empty_Article_Dechet_Coeff, ARTICLE_DECHET_COEFF_DEFAULT_SORT, Article_Dechet_Coeff_Type } from "@/types/article-dechet-coeff";
+import { Empty_Article_Dechet_Coeff, ARTICLE_DECHET_COEFF_DEFAULT_SORT, Article_Dechet_Coeff_Type, ARTICLE_DECHET_COEFF_TABLE_NAME } from "@/types/article-dechet-coeff";
+import { checkRole } from "@/lib/auth-lib";
 
 export async function GET(request: NextRequest) {
+  if (! await checkRole(ARTICLE_DECHET_COEFF_TABLE_NAME+'.LIST')) {
+    const err = new Error(`Forbidden: ${ARTICLE_DECHET_COEFF_TABLE_NAME}.LIST`);
+    logError('article-dechet-coeff GET route', err);
+    return NextResponse.json(
+      { error: `article-dechet-coeff route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const searchParams = request.nextUrl.searchParams
     //consoleInfo("Item GET searchParams....................:", searchParams);

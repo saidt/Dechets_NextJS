@@ -6,10 +6,19 @@ import { httpList, httpListParams, HttpStatus } from "@/types/http";
 import { logError } from "@/lib/serverLog";
 import { NextRequest, NextResponse } from "next/server";
 import { envoi_Frs_Dechet_Count, envoi_Frs_Dechet_List } from "@/app/db-data/envoi-frs-dechet";
-import { Empty_Envoi_Frs_Dechet, ENVOI_FRS_DECHET_DEFAULT_SORT, Envoi_Frs_Dechet_Type } from "@/types/envoi-frs-dechet";
+import { Empty_Envoi_Frs_Dechet, ENVOI_FRS_DECHET_DEFAULT_SORT, Envoi_Frs_Dechet_Type, ENVOI_FRS_DECHET_TABLE_NAME } from "@/types/envoi-frs-dechet";
+import { checkRole } from "@/lib/auth-lib";
 //import { isDevMode } from "@/lib/lib";
 
 export async function GET(request: NextRequest) {
+  if (! await checkRole(ENVOI_FRS_DECHET_TABLE_NAME+'.LIST')) {
+    const err = new Error(`Forbidden: ${ENVOI_FRS_DECHET_TABLE_NAME}.LIST`);
+    logError('envoi-frs-dechet GET route', err);
+    return NextResponse.json(
+      { error: `envoi-frs-dechet route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const searchParams = request.nextUrl.searchParams
     //isDevMode() && console.log("Item GET searchParams....................:", searchParams);

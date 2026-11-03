@@ -4,16 +4,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Periode, delete_Periode, read_Periode, update_Periode } from "@/app/db-data/periode";
 import { localLog } from "@/components/logger/localLog";
-import { Periode_Type } from "@/types/periode";
+import { Periode_Type, PERIODE_TABLE_NAME } from "@/types/periode";
 import { cookies } from "next/headers";
 import { remoteLog } from "@/components/logger/remoteLog";
 import { logError } from "@/lib/serverLog";
+import { checkRole } from "@/lib/auth-lib";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(PERIODE_TABLE_NAME+'.SHOW')) {
+    const err = new Error(`Forbidden: ${PERIODE_TABLE_NAME}.SHOW`);
+    logError('periode/[id] GET route', err);
+    return NextResponse.json(
+      { error: `periode/[id] route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;
@@ -42,6 +51,14 @@ export async function GET(
 export async function POST(
   request: NextRequest,
 ) {
+  if (! await checkRole(PERIODE_TABLE_NAME+'.ADD')) {
+    const err = new Error(`Forbidden: ${PERIODE_TABLE_NAME}.ADD`);
+    logError('periode/[id] POST route', err);
+    return NextResponse.json(
+      { error: `periode/[id] route POST ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Periode_Type>(() => create_Periode(data.data))
@@ -64,6 +81,14 @@ export async function POST(
 export async function PUT(
   request: NextRequest,
 ) {
+  if (! await checkRole(PERIODE_TABLE_NAME+'.UPDATE')) {
+    const err = new Error(`Forbidden: ${PERIODE_TABLE_NAME}.UPDATE`);
+    logError('periode/[id] PUT route', err);
+    return NextResponse.json(
+      { error: `periode/[id] route PUT ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Periode_Type>(() => update_Periode(data.data))
@@ -88,6 +113,14 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(PERIODE_TABLE_NAME+'.DELETE')) {
+    const err = new Error(`Forbidden: ${PERIODE_TABLE_NAME}.DELETE`);
+    logError('periode/[id] DELETE route', err);
+    return NextResponse.json(
+      { error: `periode/[id] route DELETE ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;

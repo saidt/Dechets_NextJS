@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus } from "@/types/http";
 import { read_Pesee } from "@/app/db-data/pesee";
 import { logError } from "@/lib/serverLog";
+import { PESEE_TABLE_NAME } from "@/types/pesee";
+import { checkRole } from "@/lib/auth-lib";
 
 //import { isDevMode } from "@/lib/lib";
 
@@ -11,6 +13,14 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(PESEE_TABLE_NAME+'.SHOW')) {
+    const err = new Error(`Forbidden: ${PESEE_TABLE_NAME}.SHOW`);
+    logError('pesee/[id] GET route', err);
+    return NextResponse.json(
+      { error: `pesee/[id] route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;

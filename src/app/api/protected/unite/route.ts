@@ -5,10 +5,19 @@ import { logError } from "@/lib/serverLog";
 import { tableStateToPrismaQuery } from "@/lib/prismaUtils";
 import { PrismaQuery, TableState } from "@/lib/types";
 import { httpList, httpListParams, HttpStatus } from "@/types/http";
-import { Empty_Unite, UNITE_DEFAULT_SORT, Unite_Type } from "@/types/unite";
+import { Empty_Unite, UNITE_DEFAULT_SORT, Unite_Type, UNITE_TABLE_NAME } from "@/types/unite";
 import { NextRequest, NextResponse } from "next/server";
+import { checkRole } from "@/lib/auth-lib";
 
 export async function GET(request: NextRequest) {
+  if (! await checkRole(UNITE_TABLE_NAME+'.LIST')) {
+    const err = new Error(`Forbidden: ${UNITE_TABLE_NAME}.LIST`);
+    logError('unite GET route', err);
+    return NextResponse.json(
+      { error: `unite route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     //throw new Error('unite_Count volontary error !')
     const searchParams = request.nextUrl.searchParams

@@ -4,15 +4,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Unite, delete_Unite, read_Unite, update_Unite } from "@/app/db-data/unite";
 import { localLog } from "@/components/logger/localLog";
-import { Unite_Type } from "@/types/unite";
+import { Unite_Type, UNITE_TABLE_NAME } from "@/types/unite";
 import { cookies } from "next/headers";
 import { remoteLog } from "@/components/logger/remoteLog";
 import { logError } from "@/lib/serverLog";
+import { checkRole } from "@/lib/auth-lib";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(UNITE_TABLE_NAME+'.SHOW')) {
+    const err = new Error(`Forbidden: ${UNITE_TABLE_NAME}.SHOW`);
+    logError('unite/[id] GET route', err);
+    return NextResponse.json(
+      { error: `unite/[id] route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;
@@ -41,6 +50,14 @@ export async function GET(
 export async function POST(
   request: NextRequest,
 ) {
+  if (! await checkRole(UNITE_TABLE_NAME+'.ADD')) {
+    const err = new Error(`Forbidden: ${UNITE_TABLE_NAME}.ADD`);
+    logError('unite/[id] POST route', err);
+    return NextResponse.json(
+      { error: `unite/[id] route POST ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Unite_Type>(() => create_Unite(data.data))
@@ -63,6 +80,14 @@ export async function POST(
 export async function PUT(
   request: NextRequest,
 ) {
+  if (! await checkRole(UNITE_TABLE_NAME+'.UPDATE')) {
+    const err = new Error(`Forbidden: ${UNITE_TABLE_NAME}.UPDATE`);
+    logError('unite/[id] PUT route', err);
+    return NextResponse.json(
+      { error: `unite/[id] route PUT ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Unite_Type>(() => update_Unite(data.data))
@@ -87,6 +112,14 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(UNITE_TABLE_NAME+'.DELETE')) {
+    const err = new Error(`Forbidden: ${UNITE_TABLE_NAME}.DELETE`);
+    logError('unite/[id] DELETE route', err);
+    return NextResponse.json(
+      { error: `unite/[id] route DELETE ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;

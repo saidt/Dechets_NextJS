@@ -4,15 +4,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus, httpAction } from "@/types/http";
 import { create_Article, delete_Article, read_Article, update_Article } from "@/app/db-data/article";
 import { localLog } from "@/components/logger/localLog";
-import { Article_Type } from "@/types/article";
+import { Article_Type, ARTICLE_TABLE_NAME } from "@/types/article";
 import { cookies } from "next/headers";
 import { remoteLog } from "@/components/logger/remoteLog";
 import { logError } from "@/lib/serverLog";
+import { checkRole } from "@/lib/auth-lib";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(ARTICLE_TABLE_NAME+'.SHOW')) {
+    const err = new Error(`Forbidden: ${ARTICLE_TABLE_NAME}.SHOW`);
+    logError('article/[id] GET route', err);
+    return NextResponse.json(
+      { error: `article/[id] route GET ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;
@@ -41,6 +50,14 @@ export async function GET(
 export async function POST(
   request: NextRequest,
 ) {
+  if (! await checkRole(ARTICLE_TABLE_NAME+'.ADD')) {
+    const err = new Error(`Forbidden: ${ARTICLE_TABLE_NAME}.ADD`);
+    logError('article/[id] POST route', err);
+    return NextResponse.json(
+      { error: `article/[id] route POST ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Article_Type>(() => create_Article(data.data))
@@ -63,6 +80,14 @@ export async function POST(
 export async function PUT(
   request: NextRequest,
 ) {
+  if (! await checkRole(ARTICLE_TABLE_NAME+'.UPDATE')) {
+    const err = new Error(`Forbidden: ${ARTICLE_TABLE_NAME}.UPDATE`);
+    logError('article/[id] PUT route', err);
+    return NextResponse.json(
+      { error: `article/[id] route PUT ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const response = await httpAction<Article_Type>(() => update_Article(data.data))
@@ -87,6 +112,14 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (! await checkRole(ARTICLE_TABLE_NAME+'.DELETE')) {
+    const err = new Error(`Forbidden: ${ARTICLE_TABLE_NAME}.DELETE`);
+    logError('article/[id] DELETE route', err);
+    return NextResponse.json(
+      { error: `article/[id] route DELETE ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const prms = await params;
     const id = prms.id;
