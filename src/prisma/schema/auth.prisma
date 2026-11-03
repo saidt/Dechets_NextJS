@@ -1,0 +1,23 @@
+model User {
+  id           String    @id
+  name         String?
+  email        String?   @unique
+  psw_hash     String?
+  last_connect DateTime? @db.DateTime
+
+  sessions           Session[]
+  user_roles         User_Role[]
+  user_table_params  User_Table_Param[]
+  user_table_filters User_Table_Filter[]
+
+  @@map("USER_")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime @db.DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

@@ -1,0 +1,46 @@
+Libraries:
+  React framework
+  TypeScript
+  Material UI (MUI)
+  MUI DataGrid
+  MUI Charts
+  MUI DateTime picker
+  NextAuth with authentication and database session management
+  React hook form
+  tanstack React Table
+  Prisma
+  MS SQL Prisma adapter
+  Zod validation
+  Tailwindcss
+  React-pdf/render
+  Winston logger
+
+Features:
+  Authentication with database session management
+  Authentication with SHA256 hash stored password
+  Url protect via Proxy (ex middleware)
+  /protected/* and /api/protected/* only allowed for authenticated users
+  All actions via api routes
+  Dashboard with indicators, statistics, graphs, weather...
+  List with server pagination, quick searching, sorting per column and filtering per column
+  Memory list with pagination, quick searching, sorting per column and filtering per column
+  CRUD operations
+  Breadcrumbs
+  Closables alerts
+  Reusable components...
+  Navigator save and restore last user sort, filter and accessed item per table
+  Load global filters per table
+  Save and load user filters per table
+  Access privileges (List, Show, Add, Update, Delete, Print, Export...)
+  Multiple prisma config files
+  Track sql changes (Scalar Functions, Schemas, Stored Procs, Table Functions, Tables, Triggers, Types)
+  About page
+  Not found page
+  Custom page error
+  User profile page (info, roles)
+  Simple server pages
+  Navigation history (to handle go back)
+  Generic list print
+  Generic show print
+  Loading effects
+  Setup for multi-langages (i18n)

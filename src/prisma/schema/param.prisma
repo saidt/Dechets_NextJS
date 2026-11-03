@@ -1,0 +1,51 @@
+model User_Table_Param {
+  id          Int     @id @default(autoincrement())
+  user_id     String
+  table_name  String
+  table_id    String?
+  sort        String?
+  filter      String?
+  page_size   Int?
+  page_number Int?
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, table_name])
+}
+
+model User_Table_Filter {
+  id          Int    @id @default(autoincrement())
+  user_id     String
+  table_name  String
+  filter_name String
+  type        String
+  filter      String
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, table_name, filter_name])
+}
+
+model Parametre {
+  rubrique String  @id
+  designation String?
+  	
+  parametre_lignes Parametre_Ligne[]
+}
+
+model Parametre_Ligne {
+  id Int @id @default(autoincrement())
+  parametre_rubrique String
+  code String
+  designation String?
+
+  @@unique([parametre_rubrique, code])
+  
+  parametre Parametre @relation(fields: [parametre_rubrique], references: [rubrique], onUpdate: NoAction, onDelete: NoAction)	
+}
+
+model Periode {
+  code String  @id
+  date_deb DateTime @db.DateTime
+  date_fin DateTime @db.DateTime
+}

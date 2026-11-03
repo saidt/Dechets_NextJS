@@ -1,0 +1,30 @@
+'use server';
+
+import { tableStateToPrismaQuery } from "@/lib/prismaUtils";
+import { PrismaQuery, TableState } from "@/lib/types";
+import { httpList, httpListParams, HttpStatus } from "@/types/http";
+import { logError } from "@/lib/serverLog";
+import { NextRequest, NextResponse } from "next/server";
+import { client_Dechet_Sld_Ini_Count, client_Dechet_Sld_Ini_List } from "@/app/db-data/client-dechet-sld-ini";
+import { Empty_Client_Dechet_Sld_Ini, CLIENT_DECHET_SLD_INI_DEFAULT_SORT, Client_Dechet_Sld_Ini_Type } from "@/types/client-dechet-sld-ini";
+//import { consoleInfo } from "@/lib/log";
+
+export async function GET(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams
+    //consoleInfo("Item GET searchParams....................:", searchParams);
+    const params : TableState<Client_Dechet_Sld_Ini_Type> = httpListParams<Client_Dechet_Sld_Ini_Type>(searchParams, CLIENT_DECHET_SLD_INI_DEFAULT_SORT)
+    const quickSearchColumns :  (keyof Client_Dechet_Sld_Ini_Type)[] =  ['id', 'article_code','client_code', 'date_debut','quantite',] 
+    const prismaParams : PrismaQuery = tableStateToPrismaQuery<Client_Dechet_Sld_Ini_Type>(params, Empty_Client_Dechet_Sld_Ini, quickSearchColumns);
+    //consoleInfo("Client_Dechet_Sld_Ini GET prismaParams================:", JSON.stringify(prismaParams));
+
+    return httpList<any>(() => client_Dechet_Sld_Ini_List(prismaParams), () => client_Dechet_Sld_Ini_Count(prismaParams.where) )
+  }
+  catch (err: any) {
+    logError('client-dechet-sld-ini GET route', err);
+    return NextResponse.json(
+      { error: `client-dechet-sld-ini route GET: ${String(err)}` },
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
+    );
+  }
+}

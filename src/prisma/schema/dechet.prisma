@@ -1,0 +1,166 @@
+model Pesee {
+  numero_1 String @id
+  date_1 DateTime @db.DateTime
+  heure_1 String
+  numero_2 String
+  date_2 DateTime @db.DateTime
+  heure_2 String
+  client_raison_sociale String?
+  frs_raison_sociale String?
+  article_designation String
+  immatriculation String
+  poids_brut Decimal @db.Decimal(10, 0)
+  tare Decimal @db.Decimal(10, 0)
+  poids_net Decimal? @db.Decimal(10, 0)
+  sens String
+  
+  sortie_dechet_lignes Sortie_Dechet_Ligne[]
+  
+  @@map("PESEE")
+}
+model Sortie_Dechet {
+  numero Int @id @default(autoincrement())
+  client_code String
+  client_raison_sociale String
+  date_piece DateTime @db.DateTime
+  montant Decimal @db.Decimal(12, 2)
+  montant_regle Decimal @db.Decimal(12, 2)
+  valide String
+  controle String
+  
+  client_dechet Client_Dechet @relation(fields: [client_code], references: [code], onUpdate: NoAction, onDelete: NoAction) 	
+  sortie_dechet_lignes Sortie_Dechet_Ligne[]
+  sortie_dechet_details Sortie_Dechet_Detail[]
+  reglement_dechet_lignes Reglement_Dechet_Ligne[]
+}
+
+model Sortie_Dechet_Ligne {
+  id Int @id @default(autoincrement())
+  sortie_dechet_numero Int
+  unite String
+  ligne_numero Decimal @db.Decimal(10, 0)
+  article_code String
+  article_designation String
+  quantite Decimal @db.Decimal(10, 0)
+  prix_vente Decimal @db.Decimal(12, 2)
+  montant Decimal @db.Decimal(12, 2)
+  pesee_numero String?
+
+  @@unique([sortie_dechet_numero, ligne_numero])
+  
+  sortie_dechet Sortie_Dechet @relation(fields: [sortie_dechet_numero], references: [numero], onUpdate: NoAction, onDelete: NoAction)
+  article Article @relation(fields: [article_code], references: [code], onUpdate: NoAction, onDelete: NoAction)
+  unite_fk Unite @relation(fields: [unite], references: [code], onUpdate: NoAction, onDelete: NoAction)
+  pesee_fk Pesee? @relation(fields: [pesee_numero], references: [numero_1])
+}
+
+model Sortie_Dechet_Detail {
+  id Int @id @default(autoincrement())
+  article_code String
+  sortie_dechet_numero Int
+  ligne_numero Decimal @db.Decimal(10, 0)
+  article_designation String
+  poids Decimal @db.Decimal(10, 0)
+  ml Decimal @db.Decimal(10, 0)
+  prix_vente Decimal @db.Decimal(12, 2)
+  montant Decimal @db.Decimal(12, 2)
+
+  @@unique([sortie_dechet_numero, ligne_numero])
+  
+  article Article @relation(fields: [article_code], references: [code], onUpdate: NoAction, onDelete: NoAction)
+  sortie_dechet Sortie_Dechet @relation(fields: [sortie_dechet_numero], references: [numero], onUpdate: NoAction, onDelete: NoAction)
+}
+
+model Retour_Dechet {
+  numero Int @id @default(autoincrement())
+  client_code String
+  client_raison_sociale String
+  date_piece DateTime @db.DateTime
+  montant Decimal @db.Decimal(12, 2)
+  montant_regle Decimal @db.Decimal(12, 2)
+  date_sortie DateTime @db.DateTime
+  valide String
+  controle String
+
+  client_dechet Client_Dechet @relation(fields: [client_code], references: [code], onUpdate: NoAction, onDelete: NoAction) 	
+  retour_dechet_lignes Retour_Dechet_Ligne[]
+}
+
+model Retour_Dechet_Ligne {
+  id Int @id @default(autoincrement())
+  retour_dechet_numero Int
+  unite String
+  ligne_numero Decimal @db.Decimal(10, 0)
+  article_code String
+  article_designation String
+  quantite Decimal @db.Decimal(10, 0)
+  prix_vente Decimal @db.Decimal(12, 2)
+  montant Decimal @db.Decimal(12, 2)
+
+  @@unique([retour_dechet_numero, ligne_numero])
+  
+  retour_dechet Retour_Dechet @relation(fields: [retour_dechet_numero], references: [numero], onUpdate: NoAction, onDelete: NoAction)
+  article Article @relation(fields: [article_code], references: [code], onUpdate: NoAction, onDelete: NoAction)
+  unite_fk Unite @relation(fields: [unite], references: [code], onUpdate: NoAction, onDelete: NoAction)
+}
+
+model Reglement_Dechet {
+  numero Int @id @default(autoincrement())
+  client_code String
+  date_piece DateTime @db.DateTime
+  client_raison_sociale String
+  montant Decimal @db.Decimal(12, 2)
+  montant_regle Decimal @db.Decimal(12, 2)
+  montant_verse Decimal @db.Decimal(12, 2)
+  valide String
+  
+  client_dechet Client_Dechet @relation(fields: [client_code], references: [code], onUpdate: NoAction, onDelete: NoAction)
+ 	
+  reglement_dechet_lignes Reglement_Dechet_Ligne[]
+  versement_dechet_lignes Versement_Dechet_Ligne[]
+}
+
+model Reglement_Dechet_Ligne {
+  id Int @id @default(autoincrement())
+  reglement_dechet_numero Int
+  sortie_dechet_numero Int
+  montant Decimal @db.Decimal(12, 2)
+
+  @@unique([reglement_dechet_numero, sortie_dechet_numero])
+  
+  reglement_dechet Reglement_Dechet @relation(fields: [reglement_dechet_numero], references: [numero], onUpdate: NoAction, onDelete: NoAction)
+  sortie_dechet Sortie_Dechet @relation(fields: [sortie_dechet_numero], references: [numero], onUpdate: NoAction, onDelete: NoAction)
+}
+
+model Versement_Dechet {
+  numero Int @id @default(autoincrement())
+  date_piece DateTime @db.DateTime
+  valide String
+  	
+  versement_dechet_lignes Versement_Dechet_Ligne[]
+}
+
+model Versement_Dechet_Ligne {
+  id Int @id @default(autoincrement())
+  versement_dechet_numero Int
+  reglement_dechet_numero Int
+  montant Decimal @db.Decimal(12, 2)
+
+  @@unique([versement_dechet_numero, reglement_dechet_numero])
+  
+  reglement_dechet Reglement_Dechet @relation(fields: [reglement_dechet_numero], references: [numero], onUpdate: NoAction, onDelete: NoAction)
+  versement_dechet Versement_Dechet @relation(fields: [versement_dechet_numero], references: [numero], onUpdate: NoAction, onDelete: NoAction) 	
+}
+
+model Envoi_Frs_Dechet {
+  id Int @id @default(autoincrement())
+  article_code String
+  annee Decimal @db.Decimal(4, 0)
+  no_dos_exp Decimal @db.Decimal(10, 0)
+  no_cmd_exp Decimal @db.Decimal(10, 0)
+  date_cmd DateTime @db.DateTime
+  quantite Decimal @db.Decimal(10, 0)
+  valide String
+  
+  article Article @relation(fields: [article_code], references: [code], onUpdate: NoAction, onDelete: NoAction)
+}

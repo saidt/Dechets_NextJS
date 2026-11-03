@@ -1,0 +1,9 @@
+- Internationalization
+- Ajouter REGLEMENT_DECHET_RETOUR_DECHET
+- Ajouter check roles dans toutes les protected api
+- Use all hooks before any return (## Error Message:  Rendered more hooks than during the previous render)
+*- Corriger décalage heure DateTimePicker 1 heure
+- Afficher le menu seulement si session active
+- Afficher seulement les menus auxquels l'utilisateur a droit
+*- Filtre on dates bug (sorties déchets par ex)
+- Ajouter un état de pointage des sorties déchets pour KarimJ

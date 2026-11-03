@@ -1,0 +1,42 @@
+model Client_Dechet {
+  code String  @id
+  raison_sociale String  
+	
+  client_dechet_sld_inis Client_Dechet_Sld_Ini[]
+  reglement_dechets Reglement_Dechet[]
+  retour_dechets Retour_Dechet[]
+  sortie_dechets Sortie_Dechet[]
+}
+
+model Client_Dechet_Sld_Ini {
+  id Int @id @default(autoincrement())
+  article_code String
+  client_code String
+  date_debut DateTime @db.DateTime
+  quantite Decimal @db.Decimal(15, 3)
+  valide String
+  
+  article Article @relation(fields: [article_code], references: [code], onUpdate: NoAction, onDelete: NoAction)
+  client_dechet Client_Dechet @relation(fields: [client_code], references: [code], onUpdate: NoAction, onDelete: NoAction)
+}
+
+model Article {
+  code String  @id
+  designation String
+  unite_stk String
+  nature String
+
+  article_dechet_coeffs Article_Dechet_Coeff[]
+  client_dechet_sld_inis Client_Dechet_Sld_Ini[]
+  sortie_dechet_lignes Sortie_Dechet_Ligne[]
+  sortie_dechet_details Sortie_Dechet_Detail[]
+  retour_dechet_lignes Retour_Dechet_Ligne[]
+  envoi_frs_dechets Envoi_Frs_Dechet[]
+}
+
+model Article_Dechet_Coeff {
+  article_code String  @id
+  coeff Decimal @db.Decimal(6, 2)
+  
+  article Article @relation(fields: [article_code], references: [code], onUpdate: NoAction, onDelete: NoAction) 	
+}

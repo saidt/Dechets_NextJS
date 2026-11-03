@@ -1,0 +1,38 @@
+'use server';
+
+import { tableStateToPrismaQuery } from "@/lib/prismaUtils";
+import { Filter, PrismaQuery, TableState } from "@/lib/types";
+import { httpList, httpListParams, HttpStatus } from "@/types/http";
+import { logError } from "@/lib/serverLog";
+import { NextRequest, NextResponse } from "next/server";
+import { versement_Dechet_Ligne_Count, versement_Dechet_Ligne_List } from "@/app/db-data/versement-dechet-ligne";
+import { Empty_Versement_Dechet_Ligne, VERSEMENT_DECHET_LIGNE_DEFAULT_SORT, Versement_Dechet_Ligne_Type } from "@/types/versement-dechet-ligne";
+import { addTableStateFilter } from "@/lib/lib";
+//import { consoleInfo } from "@/lib/log";
+
+export async function  GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const prms = await params;
+  const id = prms.id;
+  try {
+    const searchParams = request.nextUrl.searchParams
+    //consoleInfo("Item GET searchParams....................:", searchParams);
+    const params : TableState<Versement_Dechet_Ligne_Type> = httpListParams<Versement_Dechet_Ligne_Type>(searchParams, VERSEMENT_DECHET_LIGNE_DEFAULT_SORT)
+	  const masterFilter : Filter<Versement_Dechet_Ligne_Type> = {'versement_dechet_numero': id } // adjust to master column name !
+    const mergedParams = addTableStateFilter(params, masterFilter)
+    const quickSearchColumns :  (keyof Versement_Dechet_Ligne_Type)[] =  ['id', 'reglement_dechet_numero','versement_dechet_numero', 'montant',] 
+    const prismaParams : PrismaQuery = tableStateToPrismaQuery<Versement_Dechet_Ligne_Type>(mergedParams, Empty_Versement_Dechet_Ligne, quickSearchColumns);
+    //consoleInfo("Versement_Dechet_Ligne GET prismaParams================:", JSON.stringify(prismaParams));
+
+    return httpList<any>(() => versement_Dechet_Ligne_List(prismaParams), () => versement_Dechet_Ligne_Count(prismaParams.where) )
+  }
+  catch (err: any) {
+    logError('versement-dechet-ligne/${id}/child_url GET route', err); // adjust to child url !
+    return NextResponse.json(
+      { error: `versement-dechet-ligne/${id}/child_url route GET: ${String(err)}` }, // adjust to child url !
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
+    );
+  }
+}

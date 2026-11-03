@@ -1,0 +1,21 @@
+model Unite {
+  code        String @id
+  designation String
+
+  unite_sources       Unite_Conversion[] @relation("UniteSource")
+  unite_destinations Unite_Conversion[] @relation("UniteDestination")
+  sortie_dechet_lignes Sortie_Dechet_Ligne[]
+  retour_dechet_lignes Retour_Dechet_Ligne[]
+}
+
+model Unite_Conversion {
+  id                Int     @id @default(autoincrement())
+  unite_source      String
+  unite_destination String
+  coeff             Decimal @db.Decimal(10, 6)
+
+  @@unique([unite_source, unite_destination])
+
+  unite_source_fk      Unite @relation("UniteSource", fields: [unite_source], references: [code], onUpdate: NoAction, onDelete: NoAction)
+  unite_destination_fk Unite @relation("UniteDestination", fields: [unite_destination], references: [code], onUpdate: NoAction, onDelete: NoAction)
+}

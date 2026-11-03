@@ -1,0 +1,17 @@
+model Role {
+  id  String  @id
+  description String? @db.Text
+
+  user_roles User_Role[]
+}
+
+model User_Role {
+  id      Int    @id @default(autoincrement())
+  user_id String
+  role_id String
+
+  user User @relation(fields: [user_id], references: [id])
+  role Role @relation(fields: [role_id], references: [id])
+
+  @@unique([user_id, role_id])
+}
