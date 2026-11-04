@@ -8,7 +8,7 @@ import MuiDialog from "@/components/ui/dialog/MuiDialog";
 import { DialogProps } from "@mui/material";
 import { fetch_Sortie_Dechet_Maj_Prix_Detail } from "@/fetch/sortie-dechet";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { clientError } from "@/lib/error";
 import { useAppContext } from "@/app/context/AppContext";
 
@@ -40,17 +40,13 @@ const Sortie_Dechet_Maj_Prix_Detail = ({numero, ...restProps}: CmsDialogProps) =
     MONTANT: Number;
   };
 
-  async function fetchAllData() {
-    //consoleInfo('Sortie_Dechet_Maj_Prix_Detail fetchAllData: user.id', user.id)
-    try {
-      const response = await fetch_Sortie_Dechet_Maj_Prix_Detail(numero)
-      const data : Maj_Prix_Detail_Type[] = await getResponseData(response, 'Sortie_Dechet_Maj_Prix_Detail api error')
-      return data;
-    }
-    catch (err) {
-      throw err;
-    }
-  }
+  // Stable identity: the GET runs the price update stored proc, so it must only
+  // run when the list is mounted, not on every re-render.
+  const fetchAllData = useCallback(async () => {
+    const response = await fetch_Sortie_Dechet_Maj_Prix_Detail(numero)
+    const data : Maj_Prix_Detail_Type[] = await getResponseData(response, 'Sortie_Dechet_Maj_Prix_Detail api error')
+    return data;
+  }, [numero]);
 
   const columns: Column<Maj_Prix_Detail_Type>[] = [
     { 
@@ -104,21 +100,22 @@ const Sortie_Dechet_Maj_Prix_Detail = ({numero, ...restProps}: CmsDialogProps) =
     },
   ];
 
-  const Maj_Prix_Detail_List = () => {
-    return (
-      <GenericMemListPage<Maj_Prix_Detail_Type>
-        title={`Màj prix détail sortie déchets ${numero}`}
-        columns={columns}
-        isModalList={false}
-        fetchAllData={fetchAllData}
-      />
-    )
-  }
 
   return (
     <MuiDialog {...restProps}
       title="Màj des prix du détail"
-      children={ <Maj_Prix_Detail_List />}
+      children={
+        // Rendered as an element, not as a component declared inside this one:
+        // a component declared here gets a new identity on every re-render
+        // (e.g. after a notification), which remounted the list, re-ran the
+        // stored proc and, on error, notified again in an endless loop.
+        <GenericMemListPage<Maj_Prix_Detail_Type>
+          title={`Màj prix détail sortie déchets ${numero}`}
+          columns={columns}
+          isModalList={false}
+          fetchAllData={fetchAllData}
+        />
+      }
     />
   );
 };
