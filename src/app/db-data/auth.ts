@@ -29,11 +29,3 @@ export async function dbLogin(credentials: Credentials) {
     throw new Error("Invalid credentials !");
   }
 }
-
-export async function session(sessionToken: string) {
-  const data = await prisma.session.findUnique({
-    where: { sessionToken }
-  })
-
-  return data;
-}

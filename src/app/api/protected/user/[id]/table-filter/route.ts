@@ -7,12 +7,21 @@ import { user_Table_Filter_Count, user_Table_Filter_List } from "@/app/db-data/u
 import { logError } from "@/lib/serverLog";
 import { addTableStateFilter } from "@/lib/lib";
 import { getErrorMessage } from "@/lib/errorMessage";
+import { checkLoggedIn } from "@/lib/auth-lib";
 
 export async function  GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const pathname = '/user/[id]/table-filter';
+  if (! await checkLoggedIn()) {
+    const err = new Error('Session not found or expired !');
+    logError(`${pathname} GET route`, err);
+    return NextResponse.json(
+      { error: `${pathname} GET route ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   const prms = await params;
   const id = prms.id;
   try {

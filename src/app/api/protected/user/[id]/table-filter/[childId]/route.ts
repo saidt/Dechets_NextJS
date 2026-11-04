@@ -3,9 +3,18 @@ import { HttpStatus } from "@/types/http";
 import { delete_User_Table_Filter, update_User_Table_Filter } from "@/app/db-data/user-table-filter";
 import { logError } from "@/lib/serverLog";
 import { getErrorMessage } from "@/lib/errorMessage";
+import { checkLoggedIn } from "@/lib/auth-lib";
 
 export async function PUT(request: Request) {
   const pathname = '/user/[id]/table-filter/[childId]';
+  if (! await checkLoggedIn()) {
+    const err = new Error('Session not found or expired !');
+    logError(`${pathname} PUT route`, err);
+    return NextResponse.json(
+      { error: `${pathname} PUT route ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const req = await request.json();
     //consoleInfo('user-table-filter PUT req: ', req);
@@ -38,6 +47,14 @@ export async function PUT(request: Request) {
 
 export async function DELETE(request: Request) {
   const pathname = '/user/[id]/table-filter/[childId]';
+  if (! await checkLoggedIn()) {
+    const err = new Error('Session not found or expired !');
+    logError(`${pathname} DELETE route`, err);
+    return NextResponse.json(
+      { error: `${pathname} DELETE route ${err.message}` },
+      { status: HttpStatus.UNAUTHORIZED }
+    );
+  }
   try {
     const data = await request.json();
     const id=data.id

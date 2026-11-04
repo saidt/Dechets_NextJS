@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from 'next-auth';
-import { authOptions } from "./lib/auth";
+import { checkSession } from "./lib/auth-lib";
 import { consoleInfo } from "@/lib/clientLog";
 
 export async function proxy(req: NextRequest) {
@@ -16,50 +15,9 @@ export async function proxy(req: NextRequest) {
   }
 
   if (pathname.startsWith("/protected") || pathname.startsWith("/api/protected")) {
-    const session = await getServerSession(authOptions);
-
-    var message = '';
-    if (! session) {
-      message='SessionNotFound'
-    }
-    else {
-      const sessionUuid = session.sessionUuid
-      //consoleInfo('proxy sessionUuid : ', sessionUuid);
-      if (!sessionUuid) {
-        message='SessionUiidNotFound'
-      }
-      else {
-        const response  = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/session`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            uuid: sessionUuid
-          }),
-        });
-
-        if (!response.ok) {
-          message='WrongResponse'
-        }
-        else {
-          const data = await response.json();
-          //consoleInfo('proxy data : ', JSON.stringify(data));
-
-          const dbSession = data.data
-          //consoleInfo('proxy dbSession : ', JSON.stringify(dbSession));
-          if (!dbSession) {
-            message='DbSessionNotFound'
-          }
-          else {
-            const expires = new Date(dbSession.expires)
-            //consoleInfo('proxy dbSession.expires : ', expires);
-            const now = new Date()
-            if (expires < now) {
-              message='SessionExpired'
-            }
-          }
-        }
-      }
-    }
+    // Same check as the API routes: JWT session + its row in the Session table
+    const { error } = await checkSession();
+    const message = error ?? '';
 
     if ( message != '') {
       consoleInfo('proxy message : ', message)

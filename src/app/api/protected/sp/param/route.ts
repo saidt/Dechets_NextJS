@@ -1,17 +1,16 @@
 import { exists_User_Role } from "@/app/db-data/user-role";
-import { authOptions } from "@/lib/auth";
 import { storedProcParams } from "@/lib/db";
 import { consoleInfo } from "@/lib/clientLog";
 import { logError } from "@/lib/serverLog";
 import { HttpStatus } from "@/types/http";
-import { getServerSession } from "next-auth";
+import { getValidSession } from "@/lib/auth-lib";
 import { NextRequest, NextResponse } from "next/server";
 import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function GET(request: NextRequest) {
   const pathname = '/sp/param';
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getValidSession();
     if (! session) {
       const err = new Error('Session not found  !')
       logError(`${pathname} GET route`, err);
