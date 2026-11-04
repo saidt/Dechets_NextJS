@@ -1,6 +1,7 @@
 import { uniqueId } from "@/lib/lib";
 import { NavItem_Type } from "./NavGroup";
 import { USER_PROFILE_URL } from "@/types/user-profile";
+import { PASSWORD_HASH_URL } from "@/types/user";
 import { UNITE_URL } from "@/types/unite";
 import { CLIENT_DECHET_URL } from "@/types/client-dechet";
 import { ARTICLE_URL } from "@/types/article";
@@ -140,6 +141,12 @@ const Menuitems: NavItem_Type[] = [
     title: "Profile",
     icon: "solar:user-circle-linear",
     href: USER_PROFILE_URL,
+  },
+  {
+    id: uniqueId(),
+    title: "Hash mot de passe",
+    icon: "solar:key-linear",
+    href: PASSWORD_HASH_URL,
   },
   {
     navlabel: true,
