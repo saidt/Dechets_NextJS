@@ -2,13 +2,9 @@ import { createSHA256Hash } from "@/lib/crypt";
 import { Credentials, credentials_Schema } from "@/types/credentials";
 import { prisma } from "@/lib/prisma";
 import { trimStrings } from "@/lib/lib";
-import { consoleInfo } from "@/lib/clientLog";
 
 export async function dbLogin(credentials: Credentials) {
-  consoleInfo('action login credentials :', JSON.stringify(credentials));
   const validateCredentials : Credentials = credentials_Schema.parse(credentials);
-  consoleInfo('action login validateCredentials :', JSON.stringify(validateCredentials));
-
   const hashPswd = createSHA256Hash(credentials.password);
 
   const data = await prisma.user.findUnique({
@@ -19,8 +15,6 @@ export async function dbLogin(credentials: Credentials) {
   });
 
   const user=trimStrings(data)
-
-  consoleInfo('action login user : ', JSON.stringify(user));
 
   if (user) {
     return {
@@ -40,6 +34,5 @@ export async function session(sessionToken: string) {
     where: { sessionToken }
   })
 
-  //consoleInfo('action session data :', data)
   return data;
 }
