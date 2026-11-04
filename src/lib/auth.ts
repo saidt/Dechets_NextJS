@@ -5,12 +5,11 @@ import CredentialsProvider  from 'next-auth/providers/credentials';
 import { getResponseData } from './html';
 import { credentials_Schema } from '@/types/credentials';
 import { prisma } from './prisma';
-import { isDevMode } from './lib';
 import { updateUserLastConnected } from '@/app/db-data/user';
 import { LogType } from '@/types/log';
 import { createLog } from '@/app/db-data/log';
 import { SESSION_MAX_AGE } from './consts';
-import { consoleError } from './clientLog';
+import { consoleDebug, consoleError, consoleWarn } from './clientLog';
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -171,10 +170,10 @@ export const authOptions: AuthOptions = {
       consoleError(code, metadata)
     },
     warn(code) {
-      isDevMode() && console.warn(code)
+      consoleWarn(code)
     },
     debug(code, metadata) {
-      isDevMode() && console.debug(code, metadata)
+      consoleDebug(code, metadata)
     }
   },
   secret: process.env.NEXTAUTH_SECRET,
