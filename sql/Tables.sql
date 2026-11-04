@@ -5,7 +5,7 @@ create table USER_ (
    ID                   T_CODE20             not null,
    NAME                 T_DESIGNATION        not null,
    EMAIL                T_DESIGNATION        not null,
-   PSW_HASH             nvarchar(64)         null,
+   PSW_HASH             nvarchar(255)        null,
    LAST_CONNECT         T_DATE_TIME          null,
    constraint PK_UER_ primary key nonclustered (ID)
 )
