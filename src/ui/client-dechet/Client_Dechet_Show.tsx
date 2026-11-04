@@ -19,6 +19,41 @@ import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
 import { fetchPeriode, PeriodeResultType } from "@/lib/periode";
 
+// Module level: declared inside the page component it was a new component type
+// on every re-render, so React remounted it each time.
+const BouclageMenu = (props : MenuItemProps) => {
+  return (
+    <MenuItem {...props}>
+      <ListItemIcon>
+        <LockResetIcon color="secondary"/>
+      </ListItemIcon>
+      Bouclage des déchets
+    </MenuItem>    
+  );
+};
+
+const SoldeResumeMenu = (props : MenuItemProps) => {
+  return (
+    <MenuItem {...props}>
+      <ListItemIcon>
+        <BalanceIcon color="secondary"/>
+      </ListItemIcon>
+      Solde résumé
+    </MenuItem>    
+  );
+};
+
+const SoldeDetailMenu = (props : MenuItemProps) => {
+  return (
+    <MenuItem {...props}>
+      <ListItemIcon>
+        <BalanceIcon color="secondary"/>
+      </ListItemIcon>
+      Solde détail
+    </MenuItem>    
+  );
+};
+
 const Client_Dechet_Show = () => {
 
   const [client_Dechet, setClient_Dechet] = useState<Client_Dechet_Type>(Empty_Client_Dechet);
@@ -93,38 +128,8 @@ const Client_Dechet_Show = () => {
     setClient_DechetValue(name, value);
   };
 
-  const BouclageMenu = (props : MenuItemProps) => {
-    return (
-      <MenuItem {...props}>
-        <ListItemIcon>
-          <LockResetIcon color="secondary"/>
-        </ListItemIcon>
-        Bouclage des déchets
-      </MenuItem>    
-    );
-  };
 
-  const SoldeResumeMenu = (props : MenuItemProps) => {
-    return (
-      <MenuItem {...props}>
-        <ListItemIcon>
-          <BalanceIcon color="secondary"/>
-        </ListItemIcon>
-        Solde résumé
-      </MenuItem>    
-    );
-  };
 
-  const SoldeDetailMenu = (props : MenuItemProps) => {
-    return (
-      <MenuItem {...props}>
-        <ListItemIcon>
-          <BalanceIcon color="secondary"/>
-        </ListItemIcon>
-        Solde détail
-      </MenuItem>    
-    );
-  };
 
   const handle_Stat_Un_Detail = () => {
     setSpName("dbo.STAT_SORTIE_DECHET_CLIENT_UN_DETAIL")

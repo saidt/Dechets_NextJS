@@ -16,6 +16,19 @@ import Unite_Conversion_Dialog from "./Unite_Conversion_Dialog";
 import { useState } from "react";
 import { fetch_All_Unite_Conversion_List, fetch_Unite_Conversion_List } from "@/fetch/unite-conversion";
 
+// Module level: declared inside the page component it was a new component type
+// on every re-render, so React remounted it each time.
+const ConvertMenu = (props : MenuItemProps) => {
+  return (
+    <MenuItem {...props}>
+      <ListItemIcon>
+        <MultipleStopIcon color="secondary"/>
+      </ListItemIcon>
+      Conversion d'unités
+    </MenuItem>    
+  );
+};
+
 const Unite_Conversion_List = (props: CmListProps<Unite_Conversion_Type>) => {
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -32,16 +45,6 @@ const Unite_Conversion_List = (props: CmListProps<Unite_Conversion_Type>) => {
     return await fetch_All_Unite_Conversion_List(tableState);
   }
   
-  const ConvertMenu = (props : MenuItemProps) => {
-    return (
-      <MenuItem {...props}>
-        <ListItemIcon>
-          <MultipleStopIcon color="secondary"/>
-        </ListItemIcon>
-        Conversion d'unités
-      </MenuItem>    
-    );
-  };
 
   const optionsMenu : React.ReactNode[] = [
     <ConvertMenu onClick={() => setDialogOpen(true)} />
