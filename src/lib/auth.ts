@@ -89,8 +89,11 @@ export const authOptions: AuthOptions = {
         if (token.sub) {
           session.user.id = token.sub;
           session.sessionUuid = token.sessionUuid as string;
-          //consoleInfo('callbacks session expiresAt=======: ', token.expiresAt)
-          session.expiresAt = token.expiresAt
+          // Show the real (sliding) expiry from the Session row; fall back to the login-time value
+          const dbSession = token.sessionUuid
+            ? await prisma.session.findUnique({ where: { sessionToken: token.sessionUuid as string } })
+            : null;
+          session.expiresAt = dbSession?.expires ?? token.expiresAt
           session.user.lastConnect = token.lastConnect
         }
         return session;
@@ -104,6 +107,11 @@ export const authOptions: AuthOptions = {
       if (user) {
         token.sub = user.id;
         token.credentials = true
+
+        // Housekeeping: drop expired sessions (logins are rare, so this is cheap)
+        await prisma.session.deleteMany({
+          where: { expires: { lt: new Date() } },
+        });
 
         const sessionUuid = uuid()
         const expiresAt = new Date(Date.now() + 1 * SESSION_MAX_AGE * 1000) // 1 day in milliseconds
