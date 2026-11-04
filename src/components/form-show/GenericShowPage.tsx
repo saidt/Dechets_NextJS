@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { apiFetch } from "@/lib/apiFetch";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppContext } from "@/app/context/AppContext";
 import { saveLastViewedId } from "@/services/userSettingsService";
@@ -137,7 +138,7 @@ export function GenericShowPage<T extends Record<string, any>>({
 
   const internalFetchData = async(id: string | number) : Promise<T> => {
     //consoleInfo('GenericShowPage internalFetchData `${apiUrl}/${id}` : ', `${apiUrl}/${id}`);
-    const response  = await fetch(`${apiUrl}/${id}`)
+    const response  = await apiFetch(`${apiUrl}/${id}`)
     /*, {
       method: "GET",
       headers: {'Content-Type': 'application/json' },
@@ -154,7 +155,7 @@ export function GenericShowPage<T extends Record<string, any>>({
   const internalCreateData = async(entity: T) : Promise<T> => {
     const id = getId(entity)
     //consoleInfo('GenericShowPage internalCreateData entity : ', entity);
-    const response  = await fetch(`${apiUrl}/${id}`, {
+    const response  = await apiFetch(`${apiUrl}/${id}`, {
       method: "POST",
       //headers: {'Content-Type': 'application/json' },
       //credentials: 'include',
@@ -177,7 +178,7 @@ export function GenericShowPage<T extends Record<string, any>>({
 
     const id = getId(originalEntity)
 
-    const response  = await fetch(`${apiUrl}/${id}`, {
+    const response  = await apiFetch(`${apiUrl}/${id}`, {
       method: "PUT",
       //headers: {'Content-Type': 'application/json' },
       //credentials: 'include',
@@ -192,7 +193,7 @@ export function GenericShowPage<T extends Record<string, any>>({
   }
 
   const internalDeleteData = async(id: string | number) : Promise<T> => {
-    const response  = await fetch(`${apiUrl}/${id}`, {
+    const response  = await apiFetch(`${apiUrl}/${id}`, {
       method: "DELETE",
       //headers: {'Content-Type': 'application/json' },
       //credentials: 'include',

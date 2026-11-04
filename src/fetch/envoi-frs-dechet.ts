@@ -1,4 +1,5 @@
 import { ENVOI_FRS_DECHET_FETCH_URL, Envoi_Frs_Dechet_Type } from "@/types/envoi-frs-dechet";
+import { apiFetch } from "@/lib/apiFetch";
 import { TableState } from "@/lib/types";
 import { fetchAllData, fetchData } from "@/lib/fetchData";
 import { NextResponse } from "next/server";
@@ -16,15 +17,15 @@ export async function fetch_All_Envoi_Frs_Dechet_List(
 }
 
 export async function fetch_Envoi_Frs_Dechet(id: number, ): Promise<Response> {
-  return await fetch(`${ ENVOI_FRS_DECHET_FETCH_URL }/${ id }`);
+  return await apiFetch(`${ ENVOI_FRS_DECHET_FETCH_URL }/${ id }`);
 }
 
 export async function fetch_Envoi_Frs_Dechet_Reste(): Promise<Response> {
-  return await fetch(`${ENVOI_FRS_DECHET_FETCH_URL}/reste`)
+  return await apiFetch(`${ENVOI_FRS_DECHET_FETCH_URL}/reste`)
 }
 
 export async function put_Envoi_Frs_Dechet(id: number, data: Partial<Envoi_Frs_Dechet_Type> ): Promise<Response> {
-  return await fetch(`${ENVOI_FRS_DECHET_FETCH_URL}/${id}`, {
+  return await apiFetch(`${ENVOI_FRS_DECHET_FETCH_URL}/${id}`, {
     method: "PUT",
     //headers: {'Content-Type': 'application/json' },
     //credentials: 'include',

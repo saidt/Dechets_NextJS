@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { apiFetch } from "@/lib/apiFetch";
 import { Box, IconButton } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 import { Column, Filter, TableState } from "@/lib/types";
@@ -178,7 +179,7 @@ export function GenericListPage<T extends Record<string, any>>({
   const handleSaveFilter = async(filterName: string) => {
     if (user) {
       try {
-        const response = await fetch(
+        const response = await apiFetch(
           `${USER_FETCH_URL}/${user.id}/${USER_TABLE_FILTER_CHILD_URL}/null`,
           {
             method: "PUT",

@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/lib/apiFetch";
 
 import {
   Empty_Envoi_Frs_Dechet,
@@ -192,7 +193,7 @@ const Envoi_Frs_Dechet_Show = () => {
 
     setLoading(true);
     try {
-      const response  = await fetch(`${ENVOI_FRS_DECHET_FETCH_URL}/null`, {
+      const response  = await apiFetch(`${ENVOI_FRS_DECHET_FETCH_URL}/null`, {
         method: "POST",
         //headers: {'Content-Type': 'application/json' },
         //credentials: 'include',

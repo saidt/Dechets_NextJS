@@ -1,4 +1,5 @@
 import { VERSEMENT_DECHET_FETCH_URL, Versement_Dechet_Type } from "@/types/versement-dechet";
+import { apiFetch } from "@/lib/apiFetch";
 import { TableState } from "@/lib/types";
 import { fetchAllData, fetchData } from "@/lib/fetchData";
 import { NextResponse } from "next/server";
@@ -16,11 +17,11 @@ export async function fetch_All_Versement_Dechet_List(
 }
 
 export async function fetch_Versement_Dechet(numero: number, ): Promise<Response> {
-  return await fetch(`${ VERSEMENT_DECHET_FETCH_URL }/${ numero }`);
+  return await apiFetch(`${ VERSEMENT_DECHET_FETCH_URL }/${ numero }`);
 }
 
 export async function put_Versement_Dechet(numero: number, data: Partial<Versement_Dechet_Type>): Promise<Response> {
-  return await fetch(`${VERSEMENT_DECHET_FETCH_URL}/${numero}`, {
+  return await apiFetch(`${VERSEMENT_DECHET_FETCH_URL}/${numero}`, {
     method: "PUT",
     //headers: {'Content-Type': 'application/json' },
     //credentials: 'include',

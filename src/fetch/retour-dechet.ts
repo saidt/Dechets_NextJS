@@ -1,4 +1,5 @@
 import { RETOUR_DECHET_FETCH_URL, Retour_Dechet_Type } from "@/types/retour-dechet";
+import { apiFetch } from "@/lib/apiFetch";
 import { TableState } from "@/lib/types";
 import { fetchAllData, fetchData } from "@/lib/fetchData";
 import { NextResponse } from "next/server";
@@ -16,19 +17,19 @@ export async function fetch_All_Retour_Dechet_List(
 }
 
 export async function fetch_Retour_Dechet(numero: number, ): Promise<Response> {
-  return await fetch(`${ RETOUR_DECHET_FETCH_URL }/${ numero }`);
+  return await apiFetch(`${ RETOUR_DECHET_FETCH_URL }/${ numero }`);
 }
 
 export async function fetch_Retour_Dechet_Count(): Promise<Response> {
-  return await fetch(`${RETOUR_DECHET_FETCH_URL}/count`);
+  return await apiFetch(`${RETOUR_DECHET_FETCH_URL}/count`);
 }
 
 export async function fetch_Retour_Dechet_Non_Valide_Count(): Promise<Response> {
-  return await fetch(`${RETOUR_DECHET_FETCH_URL}/non-valide-count`);
+  return await apiFetch(`${RETOUR_DECHET_FETCH_URL}/non-valide-count`);
 }
 
 export async function put_Retour_Dechet(numero: number, data: Partial<Retour_Dechet_Type> ): Promise<Response> {
-  return await fetch(`${RETOUR_DECHET_FETCH_URL}/${numero}`, {
+  return await apiFetch(`${RETOUR_DECHET_FETCH_URL}/${numero}`, {
     method: "PUT",
     //headers: {'Content-Type': 'application/json' },
     //credentials: 'include',

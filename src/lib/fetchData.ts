@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { apiFetch } from "@/lib/apiFetch";
 import { removeEmptyValues } from "./lib";
 import { PaginatedResponse, TableState } from "./types";
 import { Scalar_Function_Param_Type, Stored_Proc_Param_Type } from "@/types/sp";
@@ -21,7 +22,7 @@ export async function fetchData<T extends Record<string, any>>(url: string, tabl
 
   consoleInfo('fetchData fetchData urlParams: ', urlParams)
 
-  const response = await fetch(`${url}?${urlParams.toString()}`);
+  const response = await apiFetch(`${url}?${urlParams.toString()}`);
   const data = await response.json();
   return NextResponse.json<PaginatedResponse<T>>(data);
 };
@@ -39,20 +40,20 @@ export async function fetchAllData<T extends Record<string, any>>(url: string, t
 
 export async function fetchStoredProc(spName: string, params: Stored_Proc_Param_Type[]): Promise<NextResponse> {
   const jsonParams = JSON.stringify(params)
-  const response  = await fetch(`/api/protected/sp/exec?spName=${spName}&params=${jsonParams}`, {});
+  const response  = await apiFetch(`/api/protected/sp/exec?spName=${spName}&params=${jsonParams}`, {});
   const data = await response.json();
   return NextResponse.json(data);
 }
 
 export async function storedProcParams(spName: string): Promise<NextResponse> {
-  const response  = await fetch(`/api/protected/sp/param?spName=${spName}`, {});
+  const response  = await apiFetch(`/api/protected/sp/param?spName=${spName}`, {});
   const data = await response.json();
   return NextResponse.json(data);
 }
 
 export async function fetchScalarFunction(sfName: string, params: Scalar_Function_Param_Type[]): Promise<NextResponse> {
   const jsonParams = JSON.stringify(params)
-  const response  = await fetch(`/api/protected/sf/exec?sfName=${sfName}&params=${jsonParams}`, {});
+  const response  = await apiFetch(`/api/protected/sf/exec?sfName=${sfName}&params=${jsonParams}`, {});
   const data = await response.json();
   return NextResponse.json(data);
 }

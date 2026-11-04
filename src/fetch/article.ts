@@ -1,4 +1,5 @@
 import { ARTICLE_FETCH_URL, Article_Type } from "@/types/article";
+import { apiFetch } from "@/lib/apiFetch";
 import { TableState } from "@/lib/types";
 import { fetchAllData, fetchData } from "@/lib/fetchData";
 import { NextResponse } from "next/server";
@@ -16,5 +17,5 @@ export async function fetch_All_Article_List(
 }
 
 export async function fetch_Article(id: string): Promise<Response> {
-  return await fetch(`${ARTICLE_FETCH_URL}/${id}`);
+  return await apiFetch(`${ARTICLE_FETCH_URL}/${id}`);
 }
