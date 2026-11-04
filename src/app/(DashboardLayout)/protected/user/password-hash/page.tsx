@@ -14,7 +14,7 @@ const BCrumb = [
 
 const Password_Hash_Page = () => {
   return (
-    <PageContainer title="Hash mot de passe">
+    <PageContainer title="Hash de mot de passe">
       <Breadcrumb items={BCrumb} />
       <Password_Hash />
     </PageContainer>

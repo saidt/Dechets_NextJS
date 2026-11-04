@@ -16,6 +16,7 @@ import { apiFetch } from "@/lib/apiFetch";
 import { getResponseData } from "@/lib/html";
 import { clientError, handleError } from "@/lib/error";
 import { PASSWORD_HASH_FETCH_URL, USER_UPDATE_PSWD_ROLE } from "@/types/user";
+import { BasicTextField, MuiTextField } from "@/components/form-show/Inputs";
 
 // Generates a USER_.PSW_HASH value for a user id + password (display only).
 // The hash is computed by the API route: NEXTAUTH_SECRET never reaches the browser.
@@ -78,18 +79,15 @@ const Password_Hash = () => {
   return (
     <TitleCard title="Hash mot de passe">
       <LoadingBar loading={loading} />
-      <Stack spacing={2} sx={{ maxWidth: 700 }}>
-        <Typography variant="body2" color="text.secondary">
-          Génère la valeur à copier dans USER_.PSW_HASH. Rien n'est enregistré en base.
-        </Typography>
-        <TextField
-          label="Utilisateur (USER_.ID)"
+      <Stack spacing={2} sx={{ maxWidth: 700, pt: 2}}>
+        <BasicTextField
+          label="Utilisateur"
           value={userId}
           onChange={(e) => { setUserId(e.target.value); setHash(""); }}
           autoComplete="off"
           fullWidth
         />
-        <TextField
+        <BasicTextField
           label="Mot de passe"
           type={showPassword ? "text" : "password"}
           value={password}
@@ -113,13 +111,13 @@ const Password_Hash = () => {
             },
           }}
         />
-        <Box>
+        <Box sx={{ pl: 2 }}>
           <ExecuteButton onClick={handleGenerate} disabled={loading}>
             Générer
           </ExecuteButton>
         </Box>
-        <TextField
-          label="Hash (USER_.PSW_HASH)"
+        <BasicTextField
+          label="Hash"
           value={hash}
           fullWidth
           slotProps={{

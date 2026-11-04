@@ -1,13 +1,13 @@
-import { consoleInfo } from "@/lib/clientLog";
 import { trimStrings } from "@/lib/lib";
 import { prisma } from "@/lib/prisma";
+//import { consoleInfo } from "@/lib/clientLog";
 
 export async function read_User(id: string): Promise<any> {
   const user = await prisma.user.findUnique({
     where: { id }
   })
 
-  consoleInfo("fetch_User user: ", user)
+  //consoleInfo("fetch_User user: ", user)
 
   return trimStrings(user);
 }
