@@ -38,8 +38,8 @@ const Sortie_Dechet_Detail_Show = () => {
   //consoleInfo('Sortie_Dechet_Detail_Show id Param: ', id)
   //consoleInfo('Sortie_Dechet_Detail_Show childId Param: ', childId)
 
-  const empty_Sortie_Dechet_Detail = Empty_Sortie_Dechet_Detail;
-  empty_Sortie_Dechet_Detail.sortie_dechet_numero = Number(id)
+  // Copy: modifying Empty_Sortie_Dechet_Detail itself would change the shared object used everywhere
+  const empty_Sortie_Dechet_Detail : Sortie_Dechet_Detail_Type = { ...Empty_Sortie_Dechet_Detail, sortie_dechet_numero: Number(id) };
 	
 
   const searchParams = useSearchParams();
@@ -69,7 +69,7 @@ const Sortie_Dechet_Detail_Show = () => {
   }
 
   const get_New_Sortie_Dechet_Detail = () => {
-    const newEntity : Sortie_Dechet_Detail_Type = Empty_Sortie_Dechet_Detail
+    const newEntity : Sortie_Dechet_Detail_Type = { ...empty_Sortie_Dechet_Detail }
     return newEntity
   }
 

@@ -40,8 +40,8 @@ const Reglement_Dechet_Ligne_Show = () => {
   //consoleInfo('Reglement_Dechet_Ligne_Show id Param: ', id)
   //consoleInfo('Reglement_Dechet_Ligne_Show childId Param: ', childId)
 
-  const empty_Reglement_Dechet_Ligne = Empty_Reglement_Dechet_Ligne;
-  empty_Reglement_Dechet_Ligne.reglement_dechet_numero = Number(id)
+  // Copy: modifying Empty_Reglement_Dechet_Ligne itself would change the shared object used everywhere
+  const empty_Reglement_Dechet_Ligne : Reglement_Dechet_Ligne_Type = { ...Empty_Reglement_Dechet_Ligne, reglement_dechet_numero: Number(id) };
 
   const searchParams = useSearchParams();
   const edit = Boolean(searchParams.get('edit'));
@@ -73,7 +73,7 @@ const Reglement_Dechet_Ligne_Show = () => {
   }
 
   const get_New_Reglement_Dechet_Ligne = () => {
-    const newEntity : Reglement_Dechet_Ligne_Type = Empty_Reglement_Dechet_Ligne
+    const newEntity : Reglement_Dechet_Ligne_Type = { ...empty_Reglement_Dechet_Ligne }
     return newEntity
   }
 

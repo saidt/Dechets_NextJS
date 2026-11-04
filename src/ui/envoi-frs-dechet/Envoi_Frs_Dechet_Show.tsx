@@ -29,7 +29,7 @@ import { put_Envoi_Frs_Dechet } from "@/fetch/envoi-frs-dechet";
 //import { consoleDebug, consoleInfo } from "@/lib/clientLog";
 
 const Envoi_Frs_Dechet_Show = () => {
-  //const { addNotification } = useAppContext();
+  const { addNotification } = useAppContext();
 
   const { id } = useParams<{ id: string }>();
   //consoleDebug('Envoi_Frs_Dechet_Show idParam: ', id)
@@ -171,7 +171,6 @@ const Envoi_Frs_Dechet_Show = () => {
     (hasRole('dbo.ENVOI_FRS_DECHET.DEVALIDER') && <DevaliderMenu onClick={handle_Non_Valide} />),
   ]
 
-  const { addNotification } = useAppContext();
   const router =  useRouter()
 
   const handleRowClick = async(row: Envoi_Frs_Dechet_Reste_Type) => {

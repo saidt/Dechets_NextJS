@@ -16,8 +16,8 @@ const Parametre_Ligne_Show = () => {
   //consoleInfo('Parametre_Ligne_Show masterId Param: ', masterId)
   //consoleInfo('Parametre_Ligne_Show childId Param: ', childId)
 
-  const empty_Parametre_Ligne = Empty_Parametre_Ligne;
-  empty_Parametre_Ligne.parametre_rubrique = id
+  // Copy: modifying Empty_Parametre_Ligne itself would change the shared object used everywhere
+  const empty_Parametre_Ligne : Parametre_Ligne_Type = { ...Empty_Parametre_Ligne, parametre_rubrique: id };
 
   const searchParams = useSearchParams();
   const edit = Boolean(searchParams.get('edit'));
@@ -45,7 +45,7 @@ const Parametre_Ligne_Show = () => {
   }
 
   const getNewParametre_Ligne = () => {
-    const newEntity : Parametre_Ligne_Type = Empty_Parametre_Ligne
+    const newEntity : Parametre_Ligne_Type = { ...empty_Parametre_Ligne }
     return newEntity
   }
 

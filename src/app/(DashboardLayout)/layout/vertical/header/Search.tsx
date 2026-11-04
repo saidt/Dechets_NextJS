@@ -29,12 +29,9 @@ interface menuType {
 const Search = () => {
 
   const { data: session} = useSession()
-  
-    if (!session) {
-      return <></>
-    }
-    
+
   // drawer top
+  // Hooks must run on every render, before any early return
   const [showDrawer2, setShowDrawer2] = useState(false);
   const [search, setSerach] = useState('');
 
@@ -51,6 +48,11 @@ const Search = () => {
     return rotr;
   };
   const searchData = filterRoutes(Menuitems as menuType[], search);
+
+
+  if (!session) {
+    return <></>
+  }
 
   return (<>
     <IconButton

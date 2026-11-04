@@ -54,8 +54,8 @@ const Sortie_Dechet_Ligne_Show = () => {
   //consoleInfo('Sortie_Dechet_Ligne_Show id Param: ', id)
   //consoleInfo('Sortie_Dechet_Ligne_Show childId Param: ', childId)
 
-  const empty_Sortie_Dechet_Ligne = Empty_Sortie_Dechet_Ligne;
-  empty_Sortie_Dechet_Ligne.sortie_dechet_numero = Number(id)
+  // Copy: modifying Empty_Sortie_Dechet_Ligne itself would change the shared object used everywhere
+  const empty_Sortie_Dechet_Ligne : Sortie_Dechet_Ligne_Type = { ...Empty_Sortie_Dechet_Ligne, sortie_dechet_numero: Number(id) };
 	
   const searchParams = useSearchParams();
   const edit = Boolean(searchParams.get('edit'));
@@ -86,7 +86,7 @@ const Sortie_Dechet_Ligne_Show = () => {
   }
 
   const get_New_Sortie_Dechet_Ligne = () => {
-    const newEntity : Sortie_Dechet_Ligne_Type = Empty_Sortie_Dechet_Ligne
+    const newEntity : Sortie_Dechet_Ligne_Type = { ...empty_Sortie_Dechet_Ligne }
     return newEntity
   }
 
