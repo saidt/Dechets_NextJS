@@ -208,6 +208,10 @@ export function GenericListPage<T extends Record<string, any>>({
       const mergedTableState = addTableStateFilter(tableState, permanentFilter)
       const response = await fetchAllData(mergedTableState);
       const json = await response.json();
+      if (json.error) {
+        addNotification(json.error, "error");
+        return;
+      }
       const allData = json.data;
       if (allData.length === 0) {
         addNotification("Aucune donnée à exporter", "warning");
@@ -226,6 +230,10 @@ export function GenericListPage<T extends Record<string, any>>({
       const mergedTableState = addTableStateFilter(tableState, permanentFilter)
       const response = await fetchAllData(mergedTableState);
       const json = await response.json();
+      if (json.error) {
+        addNotification(json.error, "error");
+        return;
+      }
       const allData = json.data;
 
       //consoleInfo("GenericListPage handleDefaultPrint allData : ", allData);

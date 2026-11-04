@@ -37,7 +37,7 @@ import { put_Reglement_Dechet } from "@/fetch/reglement-dechet";
 const TAB_STORAGE_KEY = "REGLEMENT_DECHET_TAB";
 
 const Reglement_Dechet_Show = () => {
-  //const { addNotification } = useAppContext();
+  const { addNotification } = useAppContext();
 
   const { id } = useParams<{ id: string }>();
   //consoleInfo('Sortie_Dechet_Show idParam: ', id)
@@ -118,7 +118,8 @@ const Reglement_Dechet_Show = () => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_client_code api error', err, addNotification)
+      return false
     }
   };
 	
@@ -166,7 +167,6 @@ const Reglement_Dechet_Show = () => {
     <Reglement_Dechet_Ligne_List isModalList={false} />
   )
 
-  const { addNotification } = useAppContext();
 
   const handle_Valide = async() => {
     if (reglement_Dechet.valide === 'O') {

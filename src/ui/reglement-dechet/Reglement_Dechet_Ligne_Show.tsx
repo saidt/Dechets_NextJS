@@ -21,9 +21,11 @@ import Client_Dechet_Reste_A_Payer, { CdrapMemListPageProps } from "../client-de
 import { consoleInfo } from "@/lib/clientLog";
 import { fetch_Sortie_Dechet } from "@/fetch/sortie-dechet";
 import { fetch_Reglement_Dechet } from "@/fetch/reglement-dechet";
+import { useAppContext } from "@/app/context/AppContext";
+import { handleError } from "@/lib/error";
 
 const Reglement_Dechet_Ligne_Show = () => {
-  //const { addNotification } = useAppContext();
+  const { addNotification } = useAppContext();
   const { id, childId } = useParams<{ id: string; childId: string }>();
 
   //consoleInfo('Reglement_Dechet_Ligne_Show id Param: ', id)
@@ -109,7 +111,8 @@ const Reglement_Dechet_Ligne_Show = () => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_sortie_dechet_numero api error', err, addNotification)
+      return false
     }
   };
 	
@@ -151,7 +154,7 @@ const Reglement_Dechet_Ligne_Show = () => {
         set_Reglement_Dechet(data);
       }
       catch (err) {
-        throw err;
+        handleError('load_Reglement_Dechet api error', err, addNotification)
       }
       finally {
         setLoading(false)
@@ -176,7 +179,7 @@ const Reglement_Dechet_Ligne_Show = () => {
         }
       }
       catch (err) {
-        throw err;
+        handleError('load_Sortie_Dechet api error', err, addNotification)
       }
       finally {
         setLoading(false)

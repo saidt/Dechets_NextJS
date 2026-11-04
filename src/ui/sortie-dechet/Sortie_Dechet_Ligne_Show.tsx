@@ -25,10 +25,12 @@ import { fetch_Unite } from "@/fetch/unite";
 import { Pesee_Type, PESEE_URL } from "@/types/pesee";
 import Pesee_List from "../pesee/Pesee_List";
 import { fetch_Pesee } from "@/fetch/pesee";
+import { useAppContext } from "@/app/context/AppContext";
+import { handleError } from "@/lib/error";
 //import { consoleInfo } from "@/lib/log";
 
 const Sortie_Dechet_Ligne_Show = () => {
-  //const { addNotification } = useAppContext();
+  const { addNotification } = useAppContext();
   const { id, childId } = useParams<{ id: string; childId: string }>();
 
   //consoleInfo('Sortie_Dechet_Ligne_Show id Param: ', id)
@@ -115,7 +117,8 @@ const Sortie_Dechet_Ligne_Show = () => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_article_code api error', err, addNotification)
+      return false
     }
   };
 	
@@ -169,7 +172,8 @@ const Sortie_Dechet_Ligne_Show = () => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_unite api error', err, addNotification)
+      return false
     }
   };
 	
@@ -219,7 +223,8 @@ const Sortie_Dechet_Ligne_Show = () => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_pesee_numero api error', err, addNotification)
+      return false
     }
   };
 	

@@ -19,9 +19,11 @@ import { Empty_Reglement_Dechet, Reglement_Dechet_Type, REGLEMENT_DECHET_URL } f
 import { VERSEMENT_DECHET_FETCH_URL } from "@/types/versement-dechet"; 
 import Reglement_Dechet_Reste_A_Verser, { RdravMemListPageProps } from "../reglement-dechet/Reglement_Dechet_Reste_A_Verser";
 import { fetch_Reglement_Dechet } from "@/fetch/reglement-dechet";
+import { useAppContext } from "@/app/context/AppContext";
+import { handleError } from "@/lib/error";
 
 const Versement_Dechet_Ligne_Show = () => {
-  //const { addNotification } = useAppContext();
+  const { addNotification } = useAppContext();
 
   const { id, childId } = useParams<{ id: string; childId: string }>();
 
@@ -108,7 +110,8 @@ const Versement_Dechet_Ligne_Show = () => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_reglement_dechet_numero api error', err, addNotification)
+      return false
     }
   };
 	
@@ -155,7 +158,7 @@ const Versement_Dechet_Ligne_Show = () => {
         }
       }
       catch (err) {
-        throw err;
+        handleError('load_Reglement_Dechet api error', err, addNotification)
       }
       finally {
         setLoading(false)

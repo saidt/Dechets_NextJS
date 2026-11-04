@@ -19,9 +19,11 @@ import { Article_Type, ARTICLE_URL } from "@/types/article";
 import Article_List from "../article/Article_List";
 import { SORTIE_DECHET_FETCH_URL } from "@/types/sortie-dechet";
 import { fetch_Article } from "@/fetch/article";
+import { useAppContext } from "@/app/context/AppContext";
+import { handleError } from "@/lib/error";
 
 const Sortie_Dechet_Detail_Show = () => {
-  //const { addNotification } = useAppContext();
+  const { addNotification } = useAppContext();
   const { id, childId } = useParams<{ id: string; childId: string }>();
 
   //consoleInfo('Sortie_Dechet_Detail_Show id Param: ', id)
@@ -105,7 +107,8 @@ const Sortie_Dechet_Detail_Show = () => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_article_code api error', err, addNotification)
+      return false
     }
   };
 	

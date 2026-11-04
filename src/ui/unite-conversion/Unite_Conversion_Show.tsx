@@ -18,9 +18,11 @@ import { getResponseData } from "@/lib/html";
 import { Unite_Type, UNITE_URL } from "@/types/unite";
 import Unite_List from "../unite/Unite_List";
 import { fetch_Unite } from "@/fetch/unite";
+import { useAppContext } from "@/app/context/AppContext";
+import { handleError } from "@/lib/error";
 
 const Unite_Conversion_Show = () => {
-  //const { addNotification } = useAppContext();
+  const { addNotification } = useAppContext();
 
 
   const { id } = useParams<{ id: string }>();
@@ -99,7 +101,8 @@ const Unite_Conversion_Show = () => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_unite_source api error', err, addNotification)
+      return false
     }
   };
 	
@@ -148,7 +151,8 @@ const Unite_Conversion_Show = () => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_unite_destination api error', err, addNotification)
+      return false
     }
   };
 	

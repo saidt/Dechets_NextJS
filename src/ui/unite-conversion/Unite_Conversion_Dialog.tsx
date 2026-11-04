@@ -75,7 +75,8 @@ const Unite_Conversion_Dialog = (props: DialogProps) => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_unite api error', err, addNotification)
+      return false
     }
   };
 

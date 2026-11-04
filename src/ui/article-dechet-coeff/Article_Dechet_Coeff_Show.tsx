@@ -19,9 +19,11 @@ import { Article_Type, ARTICLE_URL, Empty_Article } from "@/types/article";
 import Article_List from "../article/Article_List";
 import { getResponseData } from "@/lib/html";
 import { fetch_Article } from "@/fetch/article";
+import { useAppContext } from "@/app/context/AppContext";
+import { handleError } from "@/lib/error";
 
 const Article_Dechet_Coeff_Show = () => {
-  //const { addNotification } = useAppContext();
+  const { addNotification } = useAppContext();
 
   const { id } = useParams<{ id: string }>();
   //consoleInfo('Article_Dechet_Coeff_Show idParam: ', id)
@@ -108,7 +110,7 @@ const Article_Dechet_Coeff_Show = () => {
           }
         }
         catch (err) {
-          throw err;
+          handleError('load_Article api error', err, addNotification)
         }
         finally {
           setLoading(false)

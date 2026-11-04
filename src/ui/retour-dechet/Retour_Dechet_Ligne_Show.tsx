@@ -22,10 +22,12 @@ import Unite_List from "../unite/Unite_List";
 import { RETOUR_DECHET_FETCH_URL } from "@/types/retour-dechet";
 import { fetch_Article } from "@/fetch/article";
 import { fetch_Unite } from "@/fetch/unite";
+import { useAppContext } from "@/app/context/AppContext";
+import { handleError } from "@/lib/error";
 //import { consoleInfo } from "@/lib/log";
 
 const Retour_Dechet_Ligne_Show = () => {
-  //const { addNotification } = useAppContext();
+  const { addNotification } = useAppContext();
   const { id, childId } = useParams<{ id: string; childId: string }>();
 
   //consoleInfo('Retour_Dechet_Ligne_Show id Param: ', id)
@@ -111,7 +113,8 @@ const Retour_Dechet_Ligne_Show = () => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_article_code api error', err, addNotification)
+      return false
     }
   };
 	
@@ -165,7 +168,8 @@ const Retour_Dechet_Ligne_Show = () => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_unite api error', err, addNotification)
+      return false
     }
   };
 	

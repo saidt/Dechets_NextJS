@@ -110,7 +110,8 @@ const Client_Dechet_Sld_Ini_Show = () => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_article_code api error', err, addNotification)
+      return false
     }
   };
 	
@@ -159,7 +160,8 @@ const Client_Dechet_Sld_Ini_Show = () => {
       }
     }
     catch (err) {
-      throw err;
+      handleError('check_client_code api error', err, addNotification)
+      return false
     }
   };
 	
