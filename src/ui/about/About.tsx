@@ -1,11 +1,9 @@
 'use client';
 
 import { Typography, Container, styled, Paper, Stack } from '@mui/material';
-import NextVersionDisplay from '@/ui/version/NextVersion';
-import NextAuthVersionDisplay from '@/ui/version/NextAuthVersion';
-import ReactVersionDisplay from '@/ui/version/ReactVersion';
-import AppVersionDisplay from '@/ui/version/AppVersion';
-import MuiVersionDisplay from '@/ui/version/MuiVersion';
+import { version as muiVersion } from '@mui/material';
+import VersionCard from '@/ui/version/VersionCard';
+import type { Versions } from '@/lib/versions';
 import Libraries from './Libraries';
 
 const StyledPaper = styled(Paper) ({
@@ -16,7 +14,7 @@ const StyledPaper = styled(Paper) ({
   marginBottom: 10
 });
 
-const About = () => {
+const About = ({ versions }: { versions: Versions }) => {
   return (
     <Container maxWidth="lg">
       <br />
@@ -34,19 +32,19 @@ const About = () => {
       <br />
       <Stack direction="row" spacing={2}>
         <StyledPaper>
-          <AppVersionDisplay />
+          <VersionCard label="App" version={versions.app} color="primary" />
         </StyledPaper>
         <StyledPaper>
-          <NextVersionDisplay />
+          <VersionCard label="Next.js" version={versions.next} color="secondary" />
         </StyledPaper>
         <StyledPaper>
-          <NextAuthVersionDisplay />
+          <VersionCard label="NextAuth" version={versions.nextAuth} color="success" />
         </StyledPaper>
         <StyledPaper>
-          <ReactVersionDisplay />
+          <VersionCard label="React" version={versions.react} color="info" />
         </StyledPaper>
         <StyledPaper>
-          <MuiVersionDisplay />
+          <VersionCard label="Material UI" version={muiVersion ?? "unknown"} color="warning" />
         </StyledPaper>
       </Stack>
     </Container>
