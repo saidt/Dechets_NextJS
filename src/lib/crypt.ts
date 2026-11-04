@@ -1,57 +1,47 @@
 import * as crypto from 'crypto';
-
-/** @deprecated legacy unsalted hash, kept to check existing USER_.PSW_HASH values */
-export function createSHA256Hash(inputString: string): string {
-  const hash = crypto.createHash('sha256');
-  hash.update(inputString);
-  return hash.digest('hex'); // 'hex' for hexadecimal representation
-}
+import bcrypt from 'bcryptjs';
 
 /**
- * Per-user salt derived from USER_.ID.
- * The id is trimmed and upper-cased, so "ali", "ALI " and "Ali" give the same salt.
+ * bcrypt cost: 2^12 rounds, about 250 ms per hash on a typical server.
+ * Raise it over time as servers get faster; existing hashes keep their own cost
+ * (stored in the hash) and still verify.
  */
-export function passwordSalt(userId: string): string {
-  return createSHA256Hash(userId.trim().toUpperCase());
-}
+const BCRYPT_COST = 12;
 
 /**
- * Salted and peppered SHA-256 password hash, for storage in USER_.PSW_HASH
- * (64 hex characters):
- *   HMAC-SHA256(key = NEXTAUTH_SECRET, data = salt + password)
- *
+ * Server secret mixed into every password before bcrypt ("pepper").
+ * HMAC-SHA256 output is always 64 hex characters, which also stays under
+ * bcrypt's 72-byte input limit whatever the password length.
  * Server only: NEXTAUTH_SECRET must never reach the browser.
- * Changing NEXTAUTH_SECRET invalidates every hash produced by this function.
+ * Changing NEXTAUTH_SECRET invalidates every stored password hash.
  */
-export function createSaltedSHA256Hash(userId: string, password: string): string {
-  const pepper = process.env.NEXTAUTH_SECRET;
-  if (!pepper) {
+function pepper(password: string): string {
+  const secret = process.env.NEXTAUTH_SECRET;
+  if (!secret) {
     throw new Error('NEXTAUTH_SECRET is not set');
   }
-
-  return crypto
-    .createHmac('sha256', pepper)
-    .update(passwordSalt(userId) + password)
-    .digest('hex');
+  return crypto.createHmac('sha256', secret).update(password).digest('hex');
 }
 
 /**
- * Check a password against the value stored in USER_.PSW_HASH, using the salted
- * SHA-256 routine. Constant-time comparison, so a wrong password takes the same
- * time to reject whatever its content.
+ * Password hash for storage in USER_.PSW_HASH:
+ *   bcrypt( HMAC-SHA256(NEXTAUTH_SECRET, password), cost 12 )
+ * bcrypt generates a random salt and stores it in the result
+ * ("$2b$12$<22-char salt><31-char hash>", 60 characters), so the same password
+ * gives a different hash every time.
  */
-export function verifyPassword(userId: string, password: string, storedHash: string | null | undefined): boolean {
-  if (!storedHash) {
-    return false;
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(pepper(password), BCRYPT_COST);
+}
+
+/**
+ * Check a password against the value stored in USER_.PSW_HASH.
+ * bcrypt reads the salt and cost from the stored hash and compares in constant time.
+ */
+export async function verifyPassword(password: string, storedHash: string | null | undefined): Promise<boolean> {
+  const stored = storedHash?.trim();
+  if (!stored || !stored.startsWith('$2')) {
+    return false; // empty or not a bcrypt hash
   }
-
-  const candidate = Buffer.from(createSaltedSHA256Hash(userId, password), 'hex');
-  const stored = Buffer.from(storedHash.trim(), 'hex');
-
-  // timingSafeEqual requires equal lengths; a malformed stored value never matches
-  if (candidate.length !== stored.length) {
-    return false;
-  }
-
-  return crypto.timingSafeEqual(candidate, stored);
+  return bcrypt.compare(pepper(password), stored);
 }

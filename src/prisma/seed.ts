@@ -1,10 +1,10 @@
 import { consoleError } from '@/lib/clientLog';
-import { createSaltedSHA256Hash } from '@/lib/crypt'
+import { hashPassword } from '@/lib/crypt'
 import { prisma } from "@/lib/prisma";
 
 async function main() {
   const password = 'hashed_password'
-  const hash = createSaltedSHA256Hash('Example', password)   // needs NEXTAUTH_SECRET
+  const hash = await hashPassword(password)   // needs NEXTAUTH_SECRET
 
   await prisma.user.upsert({
     where: { email: 'example@example.com' },

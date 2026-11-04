@@ -4,7 +4,7 @@ import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
 import { credentials_Schema } from "@/types/credentials";
-import { createSaltedSHA256Hash } from "@/lib/crypt";
+import { hashPassword } from "@/lib/crypt";
 import { USER_UPDATE_PSWD_ROLE } from "@/types/user";
 
 // Generates a password hash for USER_.PSW_HASH. Display only: nothing is written
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const hash = createSaltedSHA256Hash(parsed.data.userId, parsed.data.password);
+    const hash = await hashPassword(parsed.data.password);
     return NextResponse.json({ hash });
   }
   catch (err: any) {

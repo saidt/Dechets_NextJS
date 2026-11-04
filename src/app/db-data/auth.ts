@@ -6,7 +6,7 @@ import { trimStrings } from "@/lib/lib";
 export async function dbLogin(credentials: Credentials) {
   const validateCredentials : Credentials = credentials_Schema.parse(credentials);
 
-  // The salted hash can't be searched for: read the user by id, then check the
+  // A bcrypt hash can't be searched for: read the user by id, then check the
   // password against its stored hash.
   const data = await prisma.user.findUnique({
     where: {
@@ -16,7 +16,7 @@ export async function dbLogin(credentials: Credentials) {
 
   const user = trimStrings(data)
 
-  if (user && verifyPassword(user.id, validateCredentials.password, user.psw_hash)) {
+  if (user && await verifyPassword(validateCredentials.password, user.psw_hash)) {
     return {
       id: user.id,
       name: user.name,
