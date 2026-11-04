@@ -32,6 +32,7 @@ import { useAppContext } from "@/app/context/AppContext";
 import useAuth from "@/app/context/UseAuth";
 import { fetch_Client_Dechet } from "@/fetch/client-dechet";
 import { put_Retour_Dechet } from "@/fetch/retour-dechet";
+import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
 
 const TAB_STORAGE_KEY = "RETOUR_DECHET_TAB";
 
@@ -62,7 +63,7 @@ const Retour_Dechet_Show = () => {
   const [errors, setErrors] = useState<Partial<Record<keyof Retour_Dechet_Type, string>>>({});
   const [client_code_forceOpen, set_client_code_forceOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
-  const [value, setValue] = useState(sessionStorage.getItem(TAB_STORAGE_KEY) || "1");
+  const [value, setValue] = useSessionStorageState(TAB_STORAGE_KEY, "1");
 
   function validate(retour_Dechet: Retour_Dechet_Type) : boolean {    
     const result = retour_Dechet_Schema.safeParse(retour_Dechet);
@@ -173,9 +174,6 @@ const Retour_Dechet_Show = () => {
     setValue(newValue);
   };
 
-  useEffect(() => {
-    sessionStorage.setItem(TAB_STORAGE_KEY, value);
-  }, [value]);
 
 
   const handle_Valide = async() => {

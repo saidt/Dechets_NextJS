@@ -33,6 +33,7 @@ import { DevaliderMenu, ValiderMenu } from "@/components/ui/menu/Menus";
 import Reglement_Dechet_Ligne_List from "./Reglement_Dechet_Ligne_List";
 import { fetch_Client_Dechet } from "@/fetch/client-dechet";
 import { put_Reglement_Dechet } from "@/fetch/reglement-dechet";
+import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
 
 const TAB_STORAGE_KEY = "REGLEMENT_DECHET_TAB";
 
@@ -64,7 +65,7 @@ const Reglement_Dechet_Show = () => {
   const [errors, setErrors] = useState<Partial<Record<keyof Reglement_Dechet_Type, string>>>({});
   const [client_code_forceOpen, set_client_code_forceOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
-  const [value, setValue] = useState(sessionStorage.getItem(TAB_STORAGE_KEY) || "1");
+  const [value, setValue] = useSessionStorageState(TAB_STORAGE_KEY, "1");
 
   function validate(reglement_Dechet: Reglement_Dechet_Type) : boolean {    
     const result = reglement_Dechet_Schema.safeParse(reglement_Dechet);
@@ -169,9 +170,6 @@ const Reglement_Dechet_Show = () => {
     setValue(newValue);
   };
 
-  useEffect(() => {
-    sessionStorage.setItem(TAB_STORAGE_KEY, value);
-  }, [value]);
 
 
 

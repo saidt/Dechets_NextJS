@@ -39,6 +39,7 @@ import PrintIcon from "@mui/icons-material/Print";
 import { sortie_Dechet_Show_Print_Simple } from "./Sortie_Dechet_Show_Print_Simple";
 import { fetch_Client_Dechet } from "@/fetch/client-dechet";
 import { put_Sortie_Dechet } from "@/fetch/sortie-dechet";
+import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
 
 const TAB_STORAGE_KEY = "SORTIE_DECHET_TAB";
 
@@ -78,7 +79,7 @@ const Sortie_Dechet_Show = () => {
   const [client_code_forceOpen, set_client_code_forceOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const [majPrixDetailOpen, setMajPrixDetailOpen] = useState(false);
-  const [value, setValue] = useState(sessionStorage.getItem(TAB_STORAGE_KEY) || "1");
+  const [value, setValue] = useSessionStorageState(TAB_STORAGE_KEY, "1");
 
   function validate(sortie_Dechet: Sortie_Dechet_Type) : boolean {    
     const result = sortie_Dechet_Schema.safeParse(sortie_Dechet);
@@ -189,9 +190,6 @@ const Sortie_Dechet_Show = () => {
     setValue(newValue);
   };
 
-  useEffect(() => {
-    sessionStorage.setItem(TAB_STORAGE_KEY, value);
-  }, [value]);
   
   
 

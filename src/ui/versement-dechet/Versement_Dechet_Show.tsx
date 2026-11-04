@@ -28,6 +28,7 @@ import { consoleInfo } from "@/lib/clientLog";
 import { handleError } from "@/lib/error";
 import { useAppContext } from "@/app/context/AppContext";
 import { put_Versement_Dechet } from "@/fetch/versement-dechet";
+import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
 
 const TAB_STORAGE_KEY = "VERSEMENT_DECHET_TAB";
 
@@ -54,7 +55,7 @@ const Versement_Dechet_Show = () => {
   const [mode, setMode] = useState<Mode>("Browse"); 
   const [errors, setErrors] = useState<Partial<Record<keyof Versement_Dechet_Type, string>>>({});
   const [loading, setLoading] = useState(false);
-  const [value, setValue] = useState(sessionStorage.getItem(TAB_STORAGE_KEY) || "1");
+  const [value, setValue] = useSessionStorageState(TAB_STORAGE_KEY, "1");
 
   function validate(versement_Dechet: Versement_Dechet_Type) : boolean {    
     const result = versement_Dechet_Schema.safeParse(versement_Dechet);
@@ -109,9 +110,6 @@ const Versement_Dechet_Show = () => {
     setValue(newValue);
   };
 
-  useEffect(() => {
-    sessionStorage.setItem(TAB_STORAGE_KEY, value);
-  }, [value]);
 
 
   const { addNotification } = useAppContext();

@@ -20,6 +20,7 @@ import useAuth from "@/app/context/UseAuth";
 import { ROLES_CACHE_KEY } from "@/lib/consts";
 import { useAppContext } from "@/app/context/AppContext";
 import type { Session } from "next-auth";
+import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
 
 const TAB_STORAGE_KEY = "PROFILE_TAB";
 
@@ -75,7 +76,7 @@ const UserData = ({ user, lastConnected, formattedExpiresAt }: UserData_Props) =
 );
 
 const ProfilePage = () => {
-  const [value, setValue] = useState(sessionStorage.getItem(TAB_STORAGE_KEY) || "1");
+  const [value, setValue] = useSessionStorageState(TAB_STORAGE_KEY, "1");
   const [formattedExpiresAt, setFormattedExpiresAt] = useState<string>('');
   const [lastConnected, setLastConnected] = useState<string>('');
 
@@ -105,9 +106,6 @@ const ProfilePage = () => {
     setValue(newValue);
   };
 
-  useEffect(() => {
-    sessionStorage.setItem(TAB_STORAGE_KEY, value);
-  }, [value]);
 
   async function handleRefresh(): Promise<void> {
     await refreshAuth();
