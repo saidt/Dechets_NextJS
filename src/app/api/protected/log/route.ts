@@ -1,6 +1,7 @@
 import { logDebug, logError, logInfo, logWarn } from "@/lib/serverLog";
 import { HttpStatus } from "@/types/http";
 import { NextRequest, NextResponse } from "next/server";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function POST(req: NextRequest) {
   const pathname = '/log';
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
   catch (err: any) {
     logError(`${pathname} POST route`, err);
     return NextResponse.json(
-      { error: `${pathname} POST route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.BAD_REQUEST }
     );
   }

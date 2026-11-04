@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { client_Dechet_Sld_Ini_Count, client_Dechet_Sld_Ini_List } from "@/app/db-data/client-dechet-sld-ini";
 import { Empty_Client_Dechet_Sld_Ini, CLIENT_DECHET_SLD_INI_DEFAULT_SORT, Client_Dechet_Sld_Ini_Type, CLIENT_DECHET_SLD_INI_TABLE_NAME } from "@/types/client-dechet-sld-ini";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(request: NextRequest) {
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

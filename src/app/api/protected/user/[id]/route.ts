@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { HttpStatus } from "@/types/http";
 import { read_User } from "@/app/db-data/user";
 import { logError } from "@/lib/serverLog";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function GET(
   request: NextRequest,
@@ -27,7 +28,7 @@ export async function GET(
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

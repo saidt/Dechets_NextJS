@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { unite_Conversion_Count, unite_Conversion_List } from "@/app/db-data/unite-conversion";
 import { Empty_Unite_Conversion, UNITE_CONVERSION_DEFAULT_SORT, Unite_Conversion_Type, UNITE_CONVERSION_TABLE_NAME } from "@/types/unite-conversion";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(request: NextRequest) {
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

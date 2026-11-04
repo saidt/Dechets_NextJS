@@ -7,6 +7,7 @@ import { sortie_Dechet_Detail_Count, sortie_Dechet_Detail_List } from "@/app/db-
 import { Empty_Sortie_Dechet_Detail, SORTIE_DECHET_DETAIL_DEFAULT_SORT, Sortie_Dechet_Detail_Type, SORTIE_DECHET_DETAIL_TABLE_NAME } from "@/types/sortie-dechet-detail";
 import { addTableStateFilter } from "@/lib/lib";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 //import { consoleInfo } from "@/lib/log";
 
 export async function  GET(
@@ -39,7 +40,7 @@ export async function  GET(
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

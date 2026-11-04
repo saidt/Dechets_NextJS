@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { parametre_Count, parametre_List } from "@/app/db-data/parametre";
 import { Empty_Parametre, PARAMETRE_DEFAULT_SORT, Parametre_Type, PARAMETRE_TABLE_NAME } from "@/types/parametre";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function GET(request: NextRequest) {
   const pathname = '/parametre';
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest) {
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

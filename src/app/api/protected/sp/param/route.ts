@@ -6,6 +6,7 @@ import { logError } from "@/lib/serverLog";
 import { HttpStatus } from "@/types/http";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function GET(request: NextRequest) {
   const pathname = '/sp/param';
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
       const err = new Error('Session not found  !')
       logError(`${pathname} GET route`, err);
       return NextResponse.json(
-        { error: `${pathname} GET route ${String(err)}` },
+        { error: getErrorMessage(err) },
         { status: HttpStatus.UNAUTHORIZED }
       );  
     }
@@ -24,7 +25,7 @@ export async function GET(request: NextRequest) {
       const err = new Error('User not found  !')
       logError(`${pathname} GET route`, err);
       return NextResponse.json(
-        { error: `${pathname} GET route ${String(err)}` },
+        { error: getErrorMessage(err) },
         { status: HttpStatus.UNAUTHORIZED }
       );  
     }
@@ -38,7 +39,7 @@ export async function GET(request: NextRequest) {
       const err = new Error('spName not found !')
       logError(`${pathname} GET route`, err);
       return NextResponse.json(
-        { error: `${pathname} GET route ${String(err)}` },
+        { error: getErrorMessage(err) },
         { status: HttpStatus.BAD_REQUEST }
       );  
     }
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
       const err = new Error(`User ${userId} does not have ${roleId} role  !`)
       logError(`${pathname} GET route`, err);
       return NextResponse.json(
-        { error: `${pathname} GET route ${String(err)}` },
+        { error: getErrorMessage(err) },
         { status: HttpStatus.UNAUTHORIZED }
       );
     }
@@ -65,7 +66,7 @@ export async function GET(request: NextRequest) {
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

@@ -6,6 +6,7 @@ import { httpList, httpListParams, HttpStatus } from "@/types/http";
 import { Empty_Unite, UNITE_DEFAULT_SORT, Unite_Type, UNITE_TABLE_NAME } from "@/types/unite";
 import { NextRequest, NextResponse } from "next/server";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function GET(request: NextRequest) {
   const pathname = '/unite';
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

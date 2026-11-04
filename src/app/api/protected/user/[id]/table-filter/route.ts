@@ -6,6 +6,7 @@ import { tableStateToPrismaQuery } from "@/lib/prismaUtils";
 import { user_Table_Filter_Count, user_Table_Filter_List } from "@/app/db-data/user-table-filter";
 import { logError } from "@/lib/serverLog";
 import { addTableStateFilter } from "@/lib/lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function  GET(
   request: NextRequest,
@@ -29,7 +30,7 @@ export async function  GET(
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

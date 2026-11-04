@@ -4,6 +4,7 @@ import { HttpStatus } from "@/types/http";
 import { NextRequest, NextResponse } from "next/server";
 import { SORTIE_DECHET_TABLE_NAME } from "@/types/sortie-dechet";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function GET(
   request: NextRequest,
@@ -31,7 +32,7 @@ export async function GET(
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

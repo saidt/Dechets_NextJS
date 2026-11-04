@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { HttpStatus } from "@/types/http";
 import { delete_User_Table_Filter, update_User_Table_Filter } from "@/app/db-data/user-table-filter";
 import { logError } from "@/lib/serverLog";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function PUT(request: Request) {
   const pathname = '/user/[id]/table-filter/[childId]';
@@ -29,7 +30,7 @@ export async function PUT(request: Request) {
   catch (err: any) {
     logError(`${pathname} PUT route`, err);
     return NextResponse.json(
-      { error: `${pathname} PUT route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
@@ -46,7 +47,7 @@ export async function DELETE(request: Request) {
   catch (err: any) {
     logError(`${pathname} DELETE route`, err);
     return NextResponse.json(
-      { error: `${pathname} DELETE route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

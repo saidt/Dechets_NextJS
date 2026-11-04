@@ -7,6 +7,7 @@ import { sortie_Dechet_Count, sortie_Dechet_List } from "@/app/db-data/sortie-de
 import { Empty_Sortie_Dechet, SORTIE_DECHET_DEFAULT_SORT, Sortie_Dechet_Type, SORTIE_DECHET_TABLE_NAME } from "@/types/sortie-dechet";
 import { consoleInfo } from "@/lib/clientLog";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function GET(request: NextRequest) {
   const pathname = '/sortie-dechet';
@@ -32,7 +33,7 @@ export async function GET(request: NextRequest) {
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

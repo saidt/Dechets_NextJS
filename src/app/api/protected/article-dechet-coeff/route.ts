@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { article_Dechet_Coeff_Count, article_Dechet_Coeff_List } from "@/app/db-data/article-dechet-coeff";
 import { Empty_Article_Dechet_Coeff, ARTICLE_DECHET_COEFF_DEFAULT_SORT, Article_Dechet_Coeff_Type, ARTICLE_DECHET_COEFF_TABLE_NAME } from "@/types/article-dechet-coeff";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function GET(request: NextRequest) {
   const pathname = '/article-dechet-coeff';
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest) {
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

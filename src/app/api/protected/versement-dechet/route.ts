@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { versement_Dechet_Count, versement_Dechet_List } from "@/app/db-data/versement-dechet";
 import { Empty_Versement_Dechet, VERSEMENT_DECHET_DEFAULT_SORT, Versement_Dechet_Type, VERSEMENT_DECHET_TABLE_NAME } from "@/types/versement-dechet";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(request: NextRequest) {
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

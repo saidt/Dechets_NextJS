@@ -7,6 +7,7 @@ import { parametre_Ligne_Count, parametre_Ligne_List } from "@/app/db-data/param
 import { Empty_Parametre_Ligne, PARAMETRE_LIGNE_DEFAULT_SORT, Parametre_Ligne_Type, PARAMETRE_LIGNE_TABLE_NAME } from "@/types/parametre-ligne";
 import { addTableStateFilter } from "@/lib/lib";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function  GET(
   request: NextRequest,
@@ -38,7 +39,7 @@ export async function  GET(
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { pesee_Count, pesee_List } from "@/app/db-data/pesee";
 import { Empty_Pesee, PESEE_DEFAULT_SORT, Pesee_Type, PESEE_TABLE_NAME } from "@/types/pesee";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 //import { isDevMode } from "@/lib/lib";
 
 export async function GET(request: NextRequest) {
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

@@ -7,6 +7,7 @@ import { reglement_Dechet_Ligne_Count, reglement_Dechet_Ligne_List } from "@/app
 import { Empty_Reglement_Dechet_Ligne, REGLEMENT_DECHET_LIGNE_DEFAULT_SORT, Reglement_Dechet_Ligne_Type, REGLEMENT_DECHET_LIGNE_TABLE_NAME } from "@/types/reglement-dechet-ligne";
 import { addTableStateFilter } from "@/lib/lib";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 //import { consoleInfo } from "@/lib/log";
 
 export async function  GET(
@@ -39,7 +40,7 @@ export async function  GET(
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

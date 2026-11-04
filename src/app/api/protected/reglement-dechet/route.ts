@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { reglement_Dechet_Count, reglement_Dechet_List } from "@/app/db-data/reglement-dechet";
 import { Empty_Reglement_Dechet, REGLEMENT_DECHET_DEFAULT_SORT, Reglement_Dechet_Type, REGLEMENT_DECHET_TABLE_NAME } from "@/types/reglement-dechet";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(request: NextRequest) {
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

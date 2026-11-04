@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 import { remoteLog } from "@/components/logger/remoteLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 //import { consoleInfo } from "@/lib/log";
 
 export async function GET(
@@ -43,7 +44,7 @@ export async function GET(
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
@@ -74,7 +75,7 @@ export async function POST(
   catch (err: any) {
     logError(`${pathname} POST route`, err);
     return NextResponse.json(
-      { error: `${pathname} POST route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
@@ -106,7 +107,7 @@ export async function PUT(
   catch (err: any) {
     logError(`${pathname} PUT route`, err);
     return NextResponse.json(
-      { error: `${pathname} PUT route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
@@ -148,7 +149,7 @@ export async function DELETE(
   catch (err: any) {
     logError(`${pathname} DELETE route`, err);
     return NextResponse.json(
-      { error: `${pathname} DELETE route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

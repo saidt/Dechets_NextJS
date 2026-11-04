@@ -6,6 +6,7 @@ import { LogType } from "@/types/log";
 import { getServerSession } from 'next-auth';
 //import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function POST(req: NextRequest) {
   const pathname = '/remote-log';
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
   catch (err) {
     logError(`${pathname} POST route`, err);
     return NextResponse.json(
-      { error: `${pathname} POST route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.BAD_REQUEST }
     );
   }

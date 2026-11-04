@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { article_Count, article_List } from "@/app/db-data/article";
 import { Empty_Article, ARTICLE_DEFAULT_SORT, Article_Type, ARTICLE_TABLE_NAME } from "@/types/article";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function GET(request: NextRequest) {
   const pathname = '/article';
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest) {
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }

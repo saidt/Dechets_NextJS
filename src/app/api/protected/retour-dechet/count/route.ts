@@ -4,6 +4,7 @@ import { HttpStatus } from "@/types/http";
 import { NextResponse } from "next/server";
 import { RETOUR_DECHET_TABLE_NAME } from "@/types/retour-dechet";
 import { checkRole } from "@/lib/auth-lib";
+import { getErrorMessage } from "@/lib/errorMessage";
 
 export async function GET() {
   const pathname = '/retour-dechet/count';
@@ -25,7 +26,7 @@ export async function GET() {
   catch (err: any) {
     logError(`${pathname} GET route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${String(err)}` },
+      { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR },
     );
   }
