@@ -34,3 +34,24 @@ export function createSaltedSHA256Hash(userId: string, password: string): string
     .update(passwordSalt(userId) + password)
     .digest('hex');
 }
+
+/**
+ * Check a password against the value stored in USER_.PSW_HASH, using the salted
+ * SHA-256 routine. Constant-time comparison, so a wrong password takes the same
+ * time to reject whatever its content.
+ */
+export function verifyPassword(userId: string, password: string, storedHash: string | null | undefined): boolean {
+  if (!storedHash) {
+    return false;
+  }
+
+  const candidate = Buffer.from(createSaltedSHA256Hash(userId, password), 'hex');
+  const stored = Buffer.from(storedHash.trim(), 'hex');
+
+  // timingSafeEqual requires equal lengths; a malformed stored value never matches
+  if (candidate.length !== stored.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(candidate, stored);
+}

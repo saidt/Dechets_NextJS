@@ -1,22 +1,22 @@
-import { createSHA256Hash } from "@/lib/crypt";
+import { verifyPassword } from "@/lib/crypt";
 import { Credentials, credentials_Schema } from "@/types/credentials";
 import { prisma } from "@/lib/prisma";
 import { trimStrings } from "@/lib/lib";
 
 export async function dbLogin(credentials: Credentials) {
   const validateCredentials : Credentials = credentials_Schema.parse(credentials);
-  const hashPswd = createSHA256Hash(credentials.password);
 
+  // The salted hash can't be searched for: read the user by id, then check the
+  // password against its stored hash.
   const data = await prisma.user.findUnique({
     where: {
       id: `${validateCredentials.userId}`,
-      psw_hash: `${hashPswd}`,
     },
   });
 
-  const user=trimStrings(data)
+  const user = trimStrings(data)
 
-  if (user) {
+  if (user && verifyPassword(user.id, validateCredentials.password, user.psw_hash)) {
     return {
       id: user.id,
       name: user.name,
@@ -25,6 +25,7 @@ export async function dbLogin(credentials: Credentials) {
     };
   } 
   else {
+    // Same message whether the user is unknown or the password is wrong
     throw new Error("Invalid credentials !");
   }
 }
