@@ -10,7 +10,6 @@ import {
   Collapse,
   styled,
   ListItemText,
-  useTheme,
   useMediaQuery,
   Theme,
 } from "@mui/material";
@@ -26,6 +25,36 @@ import { useTranslation } from "react-i18next";
 import { NavCollapseProps } from "../../types";
 
 // FC Component For Dropdown Menu
+// Module level: a styled component created inside a component is a new component
+// type on every render, so React remounted everything inside it.
+type NavCollapseStyleProps = { level: number; open: boolean; active: boolean; hideMenu?: boolean; radius: number };
+const ListItemStyled = styled(ListItemButton, {
+  shouldForwardProp: (prop) => !['level', 'open', 'active', 'hideMenu', 'radius'].includes(prop as string),
+})<NavCollapseStyleProps>(({ theme, level, open, active, hideMenu, radius }) => ({
+  marginBottom: "2px",
+  padding: "8px 10px",
+  paddingLeft: hideMenu ? "12px" : level > 2 ? `${level * 15}px` : "12px",
+  backgroundColor: open && level < 2 ? theme.palette.secondary.main : "",
+  whiteSpace: "nowrap",
+  "&:hover": {
+    backgroundColor:
+      active || open
+        ? theme.palette.secondary.main
+        : theme.palette.secondary.light,
+    color:
+      active || open
+        ? "white"
+        : theme.palette.secondary.main,
+  },
+  color:
+    open && level < 2
+      ? "white"
+      : level > 1 && open
+        ? theme.palette.secondary.main
+        : theme.palette.text.primary,
+  borderRadius: `${radius * 3}px`,
+}));
+
 export default function NavCollapse({
   menu,
   level,
@@ -39,7 +68,6 @@ export default function NavCollapse({
   const { isBorderRadius } = useContext(CustomizerContext);
 
   //const Icon = menu?.icon;
-  const theme = useTheme();
   const pathname = usePathname();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -65,31 +93,6 @@ export default function NavCollapse({
   }, [pathname, menu.children]);
 
 
-  const ListItemStyled = styled(ListItemButton)(() => ({
-    marginBottom: "2px",
-    padding: "8px 10px",
-    paddingLeft: hideMenu ? "12px" : level > 2 ? `${level * 15}px` : "12px",
-    backgroundColor: open && level < 2 ? theme.palette.secondary.main : "",
-    whiteSpace: "nowrap",
-    "&:hover": {
-      backgroundColor:
-        pathname.includes(menu.href || '') || open
-          ? theme.palette.secondary.main
-          : theme.palette.secondary.light,
-      color:
-        pathname.includes(menu.href || '') || open
-          ? "white"
-          : theme.palette.secondary.main,
-    },
-    color:
-      open && level < 2
-        ? "white"
-        : level > 1 && open
-          ? theme.palette.secondary.main
-          : theme.palette.text.primary,
-    borderRadius: `${isBorderRadius * 3}px`,
-  }));
-
   // If Menu has Children
   const submenus = menu.children?.map((item) => {
     if (item.children) {
@@ -100,7 +103,7 @@ export default function NavCollapse({
           level={level + 1}
           pathWithoutLastPart={pathWithoutLastPart}
           pathDirect={pathDirect}
-          hideMenu={hideMenu}
+          hideMenu={!!hideMenu}
           onClick={onClick}
         />
       );
@@ -111,7 +114,7 @@ export default function NavCollapse({
           item={item}
           level={level + 1}
           pathDirect={pathDirect}
-          hideMenu={hideMenu}
+          hideMenu={!!hideMenu}
           onClick={() => lgDown ? onClick : null}
         />
       );
@@ -121,6 +124,11 @@ export default function NavCollapse({
   return (
     <>
       <ListItemStyled
+        level={level}
+        open={open}
+        active={pathname.includes(menu.href || '')}
+        hideMenu={!!hideMenu}
+        radius={isBorderRadius}
         onClick={handleClick}
         selected={pathWithoutLastPart === menu.href}
         key={menu?.id}

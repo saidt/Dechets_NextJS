@@ -21,6 +21,24 @@ import { Icon } from "@iconify/react";
 import { CustomizerContext } from '@/app/context/customizerContext';
 
 
+// Module level: a styled component created inside a component is a new component
+// type on every render, so React remounted everything inside it.
+const AppBarStyled = styled(AppBar)(({ theme }) => ({
+  boxShadow: "none !important",
+  background: theme.palette.primary.main,
+  justifyContent: "center",
+  backdropFilter: "blur(4px)",
+  [theme.breakpoints.up("lg")]: {
+    minHeight: '64px',
+  },
+}));
+const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
+  width: "100%",
+  color: theme.palette.warning.contrastText,
+  gap: "8px",
+  padding: '0 20px'
+}));
+
 const Header = () => {
   const { isSidebarHover, isCollapse, setIsCollapse, setIsSidebarHover, isMobileSidebar, setIsMobileSidebar } = useContext(CustomizerContext);
   const [height, setHeight] = useState("0px");
@@ -35,22 +53,6 @@ const Header = () => {
     isCollapse == 'mini-sidebar' && !isSidebarHover
       ? '75px'
       : '256px';
-
-  const AppBarStyled = styled(AppBar)(({ theme }) => ({
-    boxShadow: "none !important",
-    background: theme.palette.primary.main,
-    justifyContent: "center",
-    backdropFilter: "blur(4px)",
-    [theme.breakpoints.up("lg")]: {
-      minHeight: '64px',
-    },
-  }));
-  const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
-    width: "100%",
-    color: theme.palette.warning.contrastText,
-    gap: "8px",
-    padding: '0 20px'
-  }));
 
   useEffect(() => {
     const handleResize = () => {

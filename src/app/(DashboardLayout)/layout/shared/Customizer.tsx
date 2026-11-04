@@ -24,22 +24,24 @@ interface colors {
   bgColor: string;
   disp?: string;
 }
+// Module level: a styled component created inside a component is a new component
+// type on every render, so React remounted everything inside it.
+// allow passing system/display props to StyledBox by loosening type
+const StyledBox = styled(Box)<any>(({ theme }) => ({
+  boxShadow: theme.shadows[8],
+  padding: '20px',
+  cursor: 'pointer',
+  justifyContent: 'center',
+  display: 'flex',
+  transition: '0.1s ease-in',
+  border: '1px solid rgba(145, 158, 171, 0.12)',
+  '&:hover': {
+    transform: 'scale(1.05)',
+  },
+}));
+
 const Customizer: FC = () => {
   const [showDrawer, setShowDrawer] = useState(false);
-
-  // allow passing system/display props to StyledBox by loosening type
-  const StyledBox = styled(Box)<any>(({ theme }) => ({
-    boxShadow: theme.shadows[8],
-    padding: '20px',
-    cursor: 'pointer',
-    justifyContent: 'center',
-    display: 'flex',
-    transition: '0.1s ease-in',
-    border: '1px solid rgba(145, 158, 171, 0.12)',
-    '&:hover': {
-      transform: 'scale(1.05)',
-    },
-  }));
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
