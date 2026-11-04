@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Box, Alert, Stack, IconButton } from '@mui/material';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
-import CloseIcon from '@mui/icons-material/Close';import { useAppContext } from '@/app/context/AppContext';
+import CloseIcon from '@mui/icons-material/Close';
+import { useAppContext } from '@/app/context/AppContext';
 import { Notification } from '@/lib/types';
 import { ALTERT_TIME } from '@/lib/consts';
+import { consoleDebug } from '@/lib/clientLog';
 
 interface AlertItemProps {
   notification: Notification;
@@ -67,7 +69,7 @@ const AlertManager: React.FC = () => {
   const { notifications, removeNotification } = useAppContext();
 
   notifications.map((notification) => {
-    console.log(notification.severity);
+    consoleDebug(notification.severity);
   });
 
   return (
