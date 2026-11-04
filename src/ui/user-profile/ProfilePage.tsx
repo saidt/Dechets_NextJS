@@ -19,8 +19,60 @@ import { clientError } from "@/lib/error";
 import useAuth from "@/app/context/UseAuth";
 import { ROLES_CACHE_KEY } from "@/lib/consts";
 import { useAppContext } from "@/app/context/AppContext";
+import type { Session } from "next-auth";
 
 const TAB_STORAGE_KEY = "PROFILE_TAB";
+
+type UserData_Props = {
+  user: Session['user'] | undefined;
+  lastConnected: string;
+  formattedExpiresAt: string;
+};
+
+// Module level: declared inside its parent it was a new component type on every
+// re-render, so React remounted it each time.
+const UserData = ({ user, lastConnected, formattedExpiresAt }: UserData_Props) => (
+    <BlankCard>
+      <Grid sx={{ m: 3 }}>
+        <TextField
+          label="Name"
+          value={user?.name}
+          slotProps={{ input: { readOnly: true } }}
+          variant="outlined"
+          fullWidth
+          sx={{ m: 1 }}
+        />
+
+        <TextField
+          label="Email"
+          value={user?.email}
+          slotProps={{ input: { readOnly: true } }}
+          variant="outlined"
+          fullWidth
+          sx={{ m: 1 }}
+        /> 
+
+        <TextField
+          label="Last connected"
+          value={lastConnected}
+          slotProps={{ input: { readOnly: true } }}
+          variant="outlined"
+          fullWidth
+          sx={{ m: 1 }}
+        /> 
+
+        <TextField
+          label="Session expires"
+          value={formattedExpiresAt}
+          slotProps={{ input: { readOnly: true } }}
+          variant="outlined"
+          fullWidth
+          sx={{ m: 1 }}
+        />
+
+      </Grid>
+    </BlankCard>
+);
 
 const ProfilePage = () => {
   const [value, setValue] = useState(sessionStorage.getItem(TAB_STORAGE_KEY) || "1");
@@ -67,50 +119,6 @@ const ProfilePage = () => {
     signOut({ callbackUrl: "/auth/login", redirect: true })
   };
 
-  const UserData = () => {
-    return (
-      <BlankCard>
-        <Grid sx={{ m: 3 }}>
-          <TextField
-            label="Name"
-            value={user?.name}
-            slotProps={{ input: { readOnly: true } }}
-            variant="outlined"
-            fullWidth
-            sx={{ m: 1 }}
-          />
-
-          <TextField
-            label="Email"
-            value={user?.email}
-            slotProps={{ input: { readOnly: true } }}
-            variant="outlined"
-            fullWidth
-            sx={{ m: 1 }}
-          /> 
-
-          <TextField
-            label="Last connected"
-            value={lastConnected}
-            slotProps={{ input: { readOnly: true } }}
-            variant="outlined"
-            fullWidth
-            sx={{ m: 1 }}
-          /> 
-
-          <TextField
-            label="Session expires"
-            value={formattedExpiresAt}
-            slotProps={{ input: { readOnly: true } }}
-            variant="outlined"
-            fullWidth
-            sx={{ m: 1 }}
-          />
-
-        </Grid>
-      </BlankCard>
-    )
-  }
 
   useEffect(() => {
     if (session?.expiresAt) {
@@ -170,7 +178,7 @@ const ProfilePage = () => {
         </TabList>
         <Divider />
         <TabPanel key={"1"} value={"1"}>
-          <UserData />
+          <UserData user={user} lastConnected={lastConnected} formattedExpiresAt={formattedExpiresAt} />
         </TabPanel>
         <TabPanel key={"2"} value={"2"}>
           <ProfileRoles />

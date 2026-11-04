@@ -216,20 +216,6 @@ const Envoi_Frs_Dechet_Show = () => {
     }
   };
 	
-  const Envoi_Frs_Dechet_Reste_Modal = () => (
-    <Envoi_Frs_Dechet_Reste
-      isModalList={true}
-      onRowClick={handleRowClick}
-    />
-  )
-
-  const Envoi_Frs_Dechet_Reste_Dialog = (props: DialogProps) => (
-    <MuiDialog {...props}
-      onClose={handle_Close}
-      title="Choisir un article"
-      children={<Envoi_Frs_Dechet_Reste_Modal  />}
-    />
-  )
 
   return (
     <GenericShowPage<Envoi_Frs_Dechet_Type>
@@ -337,7 +323,17 @@ const Envoi_Frs_Dechet_Show = () => {
               mode="Browse"
               checked={envoi_Frs_Dechet.valide === "O"}
             />
-          <Envoi_Frs_Dechet_Reste_Dialog open={open} />          
+          <MuiDialog
+            open={open}
+            onClose={handle_Close}
+            title="Choisir un article"
+            children={
+              <Envoi_Frs_Dechet_Reste
+                isModalList={true}
+                onRowClick={handleRowClick}
+              />
+            }
+          />
         </>
       }
     />

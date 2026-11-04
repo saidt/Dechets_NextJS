@@ -9,6 +9,15 @@ import { useParams, useSearchParams } from "next/navigation";
 import { Divider } from "@mui/material";
 import Parametre_Ligne_List from "./Parametre_Ligne_List";
 
+// Declared at module level (not inside Parametre_Show) so each keeps the same
+// component identity across re-renders: a component declared inside another
+// one is a new type on every render, which remounts it (list reloaded, state
+// lost) and, on an API error, re-notifies in an endless loop.
+// Per-render values (filters) are passed through ReferenceField dataTableProps.
+const Parametre_Ligne_Child = () => (
+  <Parametre_Ligne_List isModalList={false} />
+);
+
 const Parametre_Show = () => {
   //const { addNotification } = useAppContext();
 
@@ -72,9 +81,6 @@ const Parametre_Show = () => {
     setParametreValue(name, value);
   };
 	
-  const Parametre_Ligne_Child = () => (
-    <Parametre_Ligne_List isModalList={false} />
-  )
 
   return (
     <GenericShowPage<Parametre_Type>

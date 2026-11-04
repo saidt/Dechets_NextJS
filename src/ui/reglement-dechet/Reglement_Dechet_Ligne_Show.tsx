@@ -24,6 +24,15 @@ import { fetch_Reglement_Dechet } from "@/fetch/reglement-dechet";
 import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
 
+// Declared at module level (not inside Reglement_Dechet_Ligne_Show) so each keeps the same
+// component identity across re-renders: a component declared inside another
+// one is a new type on every render, which remounts it (list reloaded, state
+// lost) and, on an API error, re-notifies in an endless loop.
+// Per-render values (filters) are passed through ReferenceField dataTableProps.
+const Client_Dechet_Reste_A_Payer_Modal = (props: CdrapMemListPageProps) => (
+  <Client_Dechet_Reste_A_Payer {...props} isModalList={true} />
+);
+
 const Reglement_Dechet_Ligne_Show = () => {
   const { addNotification } = useAppContext();
   const { id, childId } = useParams<{ id: string; childId: string }>();
@@ -140,9 +149,6 @@ const Reglement_Dechet_Ligne_Show = () => {
     }
   };
 
-  const Client_Dechet_Reste_A_Payer_Modal = (props: CdrapMemListPageProps) => (
-    <Client_Dechet_Reste_A_Payer {...props} isModalList={true} code={reglement_Dechet.client_code}/>
-  )
 	
     useEffect(() => {
     const load_Reglement_Dechet = async () => {
@@ -244,6 +250,7 @@ return (
             }}
             maxRows="md"
             DataTableComponent={ Client_Dechet_Reste_A_Payer_Modal }
+            dataTableProps={{ code: reglement_Dechet.client_code }}
             followUrl={`${ SORTIE_DECHET_URL}/${ reglement_Dechet_Ligne.sortie_dechet_numero }`}
             forceOpen={ sortie_dechet_numero_forceOpen }
           />

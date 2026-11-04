@@ -36,6 +36,19 @@ import { put_Reglement_Dechet } from "@/fetch/reglement-dechet";
 
 const TAB_STORAGE_KEY = "REGLEMENT_DECHET_TAB";
 
+// Declared at module level (not inside Reglement_Dechet_Show) so each keeps the same
+// component identity across re-renders: a component declared inside another
+// one is a new type on every render, which remounts it (list reloaded, state
+// lost) and, on an API error, re-notifies in an endless loop.
+// Per-render values (filters) are passed through ReferenceField dataTableProps.
+const Client_Dechet_List_Modal = (props: CmListProps<Client_Dechet_Type>) => (
+  <Client_Dechet_List {...props} isModalList={true} />
+);
+
+const Reglement_Dechet_Ligne_Child = () => (
+  <Reglement_Dechet_Ligne_List isModalList={false} />
+);
+
 const Reglement_Dechet_Show = () => {
   const { addNotification } = useAppContext();
 
@@ -151,9 +164,6 @@ const Reglement_Dechet_Show = () => {
     code: reglement_Dechet.client_code
   };
 	
-	const Client_Dechet_List_Modal = (props: CmListProps<Client_Dechet_Type>) => (
-    <Client_Dechet_List {...props} isModalList={true} initialFilter={ client_dechet_fk_initialFilter}/>
-  )
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -163,9 +173,6 @@ const Reglement_Dechet_Show = () => {
     sessionStorage.setItem(TAB_STORAGE_KEY, value);
   }, [value]);
 
-  const Reglement_Dechet_Ligne_Child = () => (
-    <Reglement_Dechet_Ligne_List isModalList={false} />
-  )
 
 
   const handle_Valide = async() => {
@@ -296,6 +303,7 @@ const Reglement_Dechet_Show = () => {
                 }}
                 maxRows="md"
                 DataTableComponent={ Client_Dechet_List_Modal }
+                dataTableProps={{ initialFilter: client_dechet_fk_initialFilter }}
                 followUrl={`${ CLIENT_DECHET_URL}/${ reglement_Dechet.client_code }`}
                 forceOpen={ client_code_forceOpen }
               />

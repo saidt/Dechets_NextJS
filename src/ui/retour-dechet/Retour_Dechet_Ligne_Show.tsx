@@ -26,6 +26,19 @@ import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
 //import { consoleInfo } from "@/lib/log";
 
+// Declared at module level (not inside Retour_Dechet_Ligne_Show) so each keeps the same
+// component identity across re-renders: a component declared inside another
+// one is a new type on every render, which remounts it (list reloaded, state
+// lost) and, on an API error, re-notifies in an endless loop.
+// Per-render values (filters) are passed through ReferenceField dataTableProps.
+const Article_List_Modal = (props: CmListProps<Article_Type>) => (
+  <Article_List {...props} isModalList={true} />
+);
+
+const Unite_List_Modal = (props: CmListProps<Unite_Type>) => (
+  <Unite_List {...props} isModalList={true} />
+);
+
 const Retour_Dechet_Ligne_Show = () => {
   const { addNotification } = useAppContext();
   const { id, childId } = useParams<{ id: string; childId: string }>();
@@ -150,9 +163,6 @@ const Retour_Dechet_Ligne_Show = () => {
     nature: 'DECHET',
   };
 
-	const Article_List_Modal = (props: CmListProps<Article_Type>) => (
-    <Article_List {...props} isModalList={true} permanentFilter={articlePermanentFilter}initialFilter={ article_initialFilter}/>
-  )
   
 	const check_unite = async(value: string) : Promise<boolean> =>{
     try {
@@ -201,9 +211,6 @@ const Retour_Dechet_Ligne_Show = () => {
     code: retour_Dechet_Ligne.unite
   };
 	
-	const Unite_List_Modal = (props: CmListProps<Unite_Type>) => (
-    <Unite_List {...props} isModalList={true} initialFilter={unite_initialFilter}/>
-  )
 	
   return (
     <GenericShowPage<Retour_Dechet_Ligne_Type>
@@ -274,6 +281,7 @@ const Retour_Dechet_Ligne_Show = () => {
             }}
             maxRows="md"
             DataTableComponent={ Article_List_Modal }
+            dataTableProps={{ permanentFilter: articlePermanentFilter, initialFilter: article_initialFilter }}
             followUrl={`${ ARTICLE_URL}/${ retour_Dechet_Ligne.article_code }`}
             forceOpen={ article_code_forceOpen }
           />
@@ -305,6 +313,7 @@ const Retour_Dechet_Ligne_Show = () => {
             }}
             maxRows="md"
             DataTableComponent={ Unite_List_Modal }
+            dataTableProps={{ initialFilter: unite_initialFilter }}
             followUrl={`${ UNITE_URL}/${ retour_Dechet_Ligne.unite }`}
             forceOpen={ unite_forceOpen }
           />

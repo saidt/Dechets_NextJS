@@ -22,6 +22,15 @@ import { fetch_Reglement_Dechet } from "@/fetch/reglement-dechet";
 import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
 
+// Declared at module level (not inside Versement_Dechet_Ligne_Show) so each keeps the same
+// component identity across re-renders: a component declared inside another
+// one is a new type on every render, which remounts it (list reloaded, state
+// lost) and, on an API error, re-notifies in an endless loop.
+// Per-render values (filters) are passed through ReferenceField dataTableProps.
+const Reglement_Dechet_Reste_A_Verser_Modal = (props: RdravMemListPageProps) => (
+  <Reglement_Dechet_Reste_A_Verser {...props} isModalList={true} />
+);
+
 const Versement_Dechet_Ligne_Show = () => {
   const { addNotification } = useAppContext();
 
@@ -139,9 +148,6 @@ const Versement_Dechet_Ligne_Show = () => {
     }
   };
 
-	const Reglement_Dechet_Reste_A_Verser_Modal = (props: RdravMemListPageProps) => (
-    <Reglement_Dechet_Reste_A_Verser {...props} isModalList={true} />
-  )
 
   useEffect(() => {
     const load_Reglement_Dechet = async () => {

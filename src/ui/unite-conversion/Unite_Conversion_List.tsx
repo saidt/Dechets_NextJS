@@ -47,12 +47,6 @@ const Unite_Conversion_List = (props: CmListProps<Unite_Conversion_Type>) => {
     <ConvertMenu onClick={() => setDialogOpen(true)} />
   ]
 
-  const Unite_Conversion_Dialog_Page = () => (
-    <Unite_Conversion_Dialog
-      open={dialogOpen}
-      onClose={() => setDialogOpen(false)}
-    />
-  )
 
   return (
     <TitleCard title={ UNITE_CONVERSION_LIST_TITLE }>
@@ -65,7 +59,10 @@ const Unite_Conversion_List = (props: CmListProps<Unite_Conversion_Type>) => {
         getId={(unite_Conversion: Unite_Conversion_Type) => unite_Conversion.id }
         optionsMenu={optionsMenu}
       />
-      <Unite_Conversion_Dialog_Page />
+      <Unite_Conversion_Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+      />
     </TitleCard>
   )
 };

@@ -29,6 +29,23 @@ import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
 //import { consoleInfo } from "@/lib/log";
 
+// Declared at module level (not inside Sortie_Dechet_Ligne_Show) so each keeps the same
+// component identity across re-renders: a component declared inside another
+// one is a new type on every render, which remounts it (list reloaded, state
+// lost) and, on an API error, re-notifies in an endless loop.
+// Per-render values (filters) are passed through ReferenceField dataTableProps.
+const Article_List_Modal = (props: CmListProps<Article_Type>) => (
+  <Article_List {...props} isModalList={true} />
+);
+
+const Unite_List_Modal = (props: CmListProps<Unite_Type>) => (
+  <Unite_List {...props} isModalList={true} />
+);
+
+const Pesee_List_Modal = (props: CmListProps<Pesee_Type>) => (
+  <Pesee_List {...props} isModalList={true} />
+);
+
 const Sortie_Dechet_Ligne_Show = () => {
   const { addNotification } = useAppContext();
   const { id, childId } = useParams<{ id: string; childId: string }>();
@@ -154,9 +171,6 @@ const Sortie_Dechet_Ligne_Show = () => {
     nature: 'DECHET',
   };
 
-	const Article_List_Modal = (props: CmListProps<Article_Type>) => (
-    <Article_List {...props} isModalList={true} permanentFilter={articlePermanentFilter}initialFilter={ article_initialFilter}/>
-  )
   
 	const check_unite = async(value: string) : Promise<boolean> =>{
     try {
@@ -205,9 +219,6 @@ const Sortie_Dechet_Ligne_Show = () => {
     code: sortie_Dechet_Ligne.unite
   };
 	
-	const Unite_List_Modal = (props: CmListProps<Unite_Type>) => (
-    <Unite_List {...props} isModalList={true} initialFilter={unite_initialFilter}/>
-  )
 
   const check_pesee_numero = async(value: string) : Promise<boolean> =>{
     try {
@@ -256,9 +267,6 @@ const Sortie_Dechet_Ligne_Show = () => {
     numero_1: sortie_Dechet_Ligne.pesee_numero ?? undefined
   };
 	
-	const Pesee_List_Modal = (props: CmListProps<Pesee_Type>) => (
-    <Pesee_List {...props} isModalList={true} initialFilter={ pesee_fk_initialFilter}/>
-  )
 	
   return (
     <GenericShowPage<Sortie_Dechet_Ligne_Type>
@@ -327,6 +335,7 @@ const Sortie_Dechet_Ligne_Show = () => {
             }}
             maxRows="md"
             DataTableComponent={ Article_List_Modal }
+            dataTableProps={{ permanentFilter: articlePermanentFilter, initialFilter: article_initialFilter }}
             followUrl={`${ ARTICLE_URL}/${ sortie_Dechet_Ligne.article_code }`}
             forceOpen={ article_code_forceOpen }
           />
@@ -358,6 +367,7 @@ const Sortie_Dechet_Ligne_Show = () => {
             }}
             maxRows="md"
             DataTableComponent={ Unite_List_Modal }
+            dataTableProps={{ initialFilter: unite_initialFilter }}
             followUrl={`${ UNITE_URL}/${ sortie_Dechet_Ligne.unite }`}
             forceOpen={ unite_forceOpen }
           />
@@ -411,6 +421,7 @@ const Sortie_Dechet_Ligne_Show = () => {
             }}
             maxRows="md"
             DataTableComponent={ Pesee_List_Modal }
+            dataTableProps={{ initialFilter: pesee_fk_initialFilter }}
             followUrl={`${ PESEE_URL}/${ sortie_Dechet_Ligne.pesee_numero }`}
             forceOpen={ pesee_numero_forceOpen }
           />

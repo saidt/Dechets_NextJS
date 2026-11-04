@@ -30,6 +30,19 @@ import { handleError } from "@/lib/error";
 import { consoleInfo } from "@/lib/clientLog";
 import useAuth from "@/app/context/UseAuth";
 
+// Declared at module level (not inside Client_Dechet_Sld_Ini_Show) so each keeps the same
+// component identity across re-renders: a component declared inside another
+// one is a new type on every render, which remounts it (list reloaded, state
+// lost) and, on an API error, re-notifies in an endless loop.
+// Per-render values (filters) are passed through ReferenceField dataTableProps.
+const Article_List_Modal = (props: CmListProps<Article_Type>) => (
+  <Article_List {...props} isModalList={true} />
+);
+
+const Client_Dechet_List_Modal = (props: CmListProps<Client_Dechet_Type>) => (
+  <Client_Dechet_List {...props} isModalList={true} />
+);
+
 const Client_Dechet_Sld_Ini_Show = () => {
   const { addNotification } = useAppContext();
 
@@ -143,9 +156,6 @@ const Client_Dechet_Sld_Ini_Show = () => {
     code: client_Dechet_Sld_Ini.article_code
   };
 	
-	const Article_List_Modal = (props: CmListProps<Article_Type>) => (
-    <Article_List {...props} isModalList={true} initialFilter={ article_initialFilter}/>
-  )
 	const check_client_code = async(value: string) : Promise<boolean> =>{
     try {
       const response = await fetch_Client_Dechet(value)
@@ -193,9 +203,6 @@ const Client_Dechet_Sld_Ini_Show = () => {
     code: client_Dechet_Sld_Ini.client_code
   };
 	
-	const Client_Dechet_List_Modal = (props: CmListProps<Client_Dechet_Type>) => (
-    <Client_Dechet_List {...props} isModalList={true} initialFilter={ client_dechet_initialFilter}/>
-  )
 
 const handle_Valide = async() => {
     if (client_Dechet_Sld_Ini.valide === 'O') {
@@ -311,6 +318,7 @@ const handle_Valide = async() => {
             }}
             maxRows="md"
             DataTableComponent={ Article_List_Modal }
+            dataTableProps={{ initialFilter: article_initialFilter }}
             followUrl={`${ ARTICLE_URL}/${ client_Dechet_Sld_Ini.article_code }`}
             forceOpen={ article_code_forceOpen }
           />
@@ -331,6 +339,7 @@ const handle_Valide = async() => {
             }}
             maxRows="md"
             DataTableComponent={ Client_Dechet_List_Modal }
+            dataTableProps={{ initialFilter: client_dechet_initialFilter }}
             followUrl={`${ CLIENT_DECHET_URL}/${ client_Dechet_Sld_Ini.client_code }`}
             forceOpen={ client_code_forceOpen }
           />

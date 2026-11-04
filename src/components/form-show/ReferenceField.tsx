@@ -17,6 +17,10 @@ interface ReferenceFieldProps extends MuiTextFieldProps {
   onClear: () => void;
   maxWidth?: Breakpoint;
   DataTableComponent: React.ComponentType<any>;
+  // Extra props for DataTableComponent (e.g. initialFilter, permanentFilter).
+  // Pass a module-level DataTableComponent and put per-render values here,
+  // so the list keeps its identity and is not remounted on every re-render.
+  dataTableProps?: Record<string, any>;
   followUrl?: string;
   isPK?: boolean;
   forceOpen?: boolean;
@@ -26,6 +30,7 @@ export function ReferenceField<T extends Record<string, any>>({
   fieldName,
   setValue,
   DataTableComponent,
+  dataTableProps,
   followUrl,
   isPK,
   forceOpen,
@@ -57,10 +62,6 @@ export function ReferenceField<T extends Record<string, any>>({
   const handleListClick = () => {
     setOpen(true);
   };
-
-  const ListGridComponent = () => (
-    <DataTableComponent onRowClick={handleRowClick} />
-  );
 
   return (
     <>
@@ -101,7 +102,7 @@ export function ReferenceField<T extends Record<string, any>>({
       <MuiDialog
         open={open}
         title="Choisir une valeur référence"
-        children={<ListGridComponent />}
+        children={<DataTableComponent {...dataTableProps} onRowClick={handleRowClick} />}
       />
     </>
   );

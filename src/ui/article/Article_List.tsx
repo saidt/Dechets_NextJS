@@ -164,17 +164,6 @@ const Article_List = (props: CmListProps<Article_Type>) => {
     fetch_Periode();
   }, []);
 
-  const Periode_Page = () => (
-    <PeriodeDialog
-      open={periodeOpen}
-      onClose={handleClosePeriode}
-      dateDeb={dateDeb}
-      dateFin={dateFin}
-      setDateDeb={setDateDeb} 
-      setDateFin={setDateFin}
-      onExecuteClick={handle_Execute_Periode}
-    />
-  )
 
   useEffect(() => {
     async function fetch_Date_Deb() {
@@ -198,25 +187,7 @@ const Article_List = (props: CmListProps<Article_Type>) => {
     fetch_Date_Deb();
   }, []);
 
-  const Date_Page = () => (
-    <DateDialog
-      open={dateOpen}
-      onClose={handleCloseDate}
-      date={date}
-      setDate={setDate} 
-      onExecuteClick={handle_Execute_Date}
-    />
-  )
 
-  const Stats_Page = () => (
-    <Stored_Proc_List
-      spName={spName}
-      open={statsOpen}
-      onClose={handleCloseStats}
-      title={title}
-      params={params}
-    />
-  )
 
   return (
     <TitleCard title={ ARTICLE_LIST_TITLE }>
@@ -230,9 +201,29 @@ const Article_List = (props: CmListProps<Article_Type>) => {
         optionsMenu={optionsMenu}
         loading={loading}
       />
-      <Periode_Page  />
-      <Date_Page />
-      <Stats_Page />
+      <PeriodeDialog
+        open={periodeOpen}
+        onClose={handleClosePeriode}
+        dateDeb={dateDeb}
+        dateFin={dateFin}
+        setDateDeb={setDateDeb}
+        setDateFin={setDateFin}
+        onExecuteClick={handle_Execute_Periode}
+      />
+      <DateDialog
+        open={dateOpen}
+        onClose={handleCloseDate}
+        date={date}
+        setDate={setDate}
+        onExecuteClick={handle_Execute_Date}
+      />
+      <Stored_Proc_List
+        spName={spName}
+        open={statsOpen}
+        onClose={handleCloseStats}
+        title={title}
+        params={params}
+      />
     </TitleCard>
   )
 };

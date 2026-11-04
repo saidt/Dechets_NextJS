@@ -62,18 +62,16 @@ export default function UserTableFilterLoadDialog<T extends Record<string, any>>
   if (status === "loading" || authLoading) return <Loading />;
   if (!session || !user) return null;
 
-  const User_Table_Filter_List_Page = () => (
-    <User_Table_Filter_List
-      isModalList={true}
-      permanentFilter={permanentFilter}
-      onRowClick={handleRowClick}
-    />
-  )
-
   return (
     <MuiDialog {...props}
       title=""
-      children={ <User_Table_Filter_List_Page />}
+      children={
+        <User_Table_Filter_List
+          isModalList={true}
+          permanentFilter={permanentFilter}
+          onRowClick={handleRowClick}
+        />
+      }
       maxWidth={"md"}
     />
   );

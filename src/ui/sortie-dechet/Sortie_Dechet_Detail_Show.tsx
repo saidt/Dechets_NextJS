@@ -22,6 +22,15 @@ import { fetch_Article } from "@/fetch/article";
 import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
 
+// Declared at module level (not inside Sortie_Dechet_Detail_Show) so each keeps the same
+// component identity across re-renders: a component declared inside another
+// one is a new type on every render, which remounts it (list reloaded, state
+// lost) and, on an API error, re-notifies in an endless loop.
+// Per-render values (filters) are passed through ReferenceField dataTableProps.
+const Article_List_Modal = (props: CmListProps<Article_Type>) => (
+  <Article_List {...props} isModalList={true} />
+);
+
 const Sortie_Dechet_Detail_Show = () => {
   const { addNotification } = useAppContext();
   const { id, childId } = useParams<{ id: string; childId: string }>();
@@ -144,9 +153,6 @@ const Sortie_Dechet_Detail_Show = () => {
     nature: 'PF',
   };
 
-  const Article_List_Modal = (props: CmListProps<Article_Type>) => (
-    <Article_List {...props} isModalList={true} permanentFilter={articlePermanentFilter} initialFilter={ article_fk_initialFilter} />
-  )
 
   return (
     <GenericShowPage<Sortie_Dechet_Detail_Type>
@@ -215,6 +221,7 @@ const Sortie_Dechet_Detail_Show = () => {
             }}
             maxRows="md"
             DataTableComponent={ Article_List_Modal }
+            dataTableProps={{ permanentFilter: articlePermanentFilter, initialFilter: article_fk_initialFilter }}
             followUrl={`${ ARTICLE_URL}/${ sortie_Dechet_Detail.article_code }`}
             forceOpen={ article_code_forceOpen }
           />

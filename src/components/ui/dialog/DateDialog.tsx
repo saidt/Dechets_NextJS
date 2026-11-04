@@ -12,29 +12,37 @@ interface CmsDialogProps extends DialogProps {
   onExecuteClick?: () => void;
 }
 
-const DateDialog = ({date, setDate, onExecuteClick, ...restProps}: CmsDialogProps) => {
+type DateFormProps = {
+  date: Date | null;
+  setDate: (value: Date | null) => void;
+  onExecuteClick?: () => void;
+};
 
-  const PeriodeForm = () => (
-    <>
-      <MuiDateTimePicker
-        name="date"
-        label='Date'
-        value={dayjs(date)}
-        onChange={(date) => setDate(date ? date.toDate() : null)}
-        mode={"Edit"}
-        onClear={() => setDate(null)}
-        format="DD/MM/YYYY HH:mm:ss"
-      />
-      <ExecuteButton onClick={onExecuteClick}>
-        Exécuter
-      </ExecuteButton>
-    </>
-  )
+// Module level: a component declared inside DateDialog would be a new type on
+// every re-render, remounting the picker and losing what the user is typing.
+const DateForm = ({ date, setDate, onExecuteClick }: DateFormProps) => (
+  <>
+    <MuiDateTimePicker
+      name="date"
+      label='Date'
+      value={dayjs(date)}
+      onChange={(date) => setDate(date ? date.toDate() : null)}
+      mode={"Edit"}
+      onClear={() => setDate(null)}
+      format="DD/MM/YYYY HH:mm:ss"
+    />
+    <ExecuteButton onClick={onExecuteClick}>
+      Exécuter
+    </ExecuteButton>
+  </>
+)
+
+const DateDialog = ({date, setDate, onExecuteClick, ...restProps}: CmsDialogProps) => {
 
   return (
     <MuiDialog {...restProps}
       title="Période"
-      children={ <PeriodeForm />}
+      children={<DateForm date={date} setDate={setDate} onExecuteClick={onExecuteClick} />}
       maxWidth={"xs"}
     />
   );

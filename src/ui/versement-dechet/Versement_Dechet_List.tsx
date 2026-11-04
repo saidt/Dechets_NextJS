@@ -52,13 +52,6 @@ const Versement_Dechet_List = (props: CmListProps<Versement_Dechet_Type>) => {
     setSpManagerOpen(false);
   };
 
-  const Stored_Proc_Manager_Page = () => (
-    <Stored_Proc_Manager
-      spNames={VrfStoredProcs}
-      open={spManagerOpen}    
-      onClose={handleClose}
-    />
-  )
 
   return (
     <TitleCard title={ VERSEMENT_DECHET_LIST_TITLE }>
@@ -71,7 +64,11 @@ const Versement_Dechet_List = (props: CmListProps<Versement_Dechet_Type>) => {
         getId={(versement_Dechet: Versement_Dechet_Type) => versement_Dechet.numero }
         optionsMenu={optionsMenu}
       />
-      <Stored_Proc_Manager_Page />
+      <Stored_Proc_Manager
+        spNames={VrfStoredProcs}
+        open={spManagerOpen}
+        onClose={handleClose}
+      />
     </TitleCard>
   )
 };

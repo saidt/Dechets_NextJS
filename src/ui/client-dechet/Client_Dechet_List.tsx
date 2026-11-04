@@ -85,13 +85,6 @@ const Client_Dechet_List = (props: CmListProps<Client_Dechet_Type>) => {
     setSpManagerOpen(false);
   };
 
-  const Stored_Proc_Manager_Page = () => (
-    <Stored_Proc_Manager
-      spNames={VrfStoredProcs}
-      open={spManagerOpen}    
-      onClose={handleClose}
-    />
-  )
 
   const handle_Execute_Periode = () => {
     if (spName === "dbo.STAT_SORTIE_DECHET_TOUS_RESUME") {
@@ -150,27 +143,7 @@ const Client_Dechet_List = (props: CmListProps<Client_Dechet_Type>) => {
     fetch_Periode();
   }, []);
 
-  const Periode_Page = () => (
-    <PeriodeDialog
-      open={periodeOpen}
-      onClose={handleClosePeriode}
-      dateDeb={dateDeb}
-      dateFin={dateFin}
-      setDateDeb={setDateDeb} 
-      setDateFin={setDateFin}
-      onExecuteClick={handle_Execute_Periode}
-    />
-  )
 
-  const Stats_Page = () => (
-    <Stored_Proc_List
-      spName={spName}
-      open={statsOpen}
-      onClose={handleCloseStats}
-      title={title}
-      params={params}
-    />
-  )
 
   return (
     <TitleCard title={ CLIENT_DECHET_LIST_TITLE }>
@@ -184,9 +157,27 @@ const Client_Dechet_List = (props: CmListProps<Client_Dechet_Type>) => {
         getId={(client_Dechet: Client_Dechet_Type) => client_Dechet.code }
         optionsMenu={optionsMenu}
       />
-      <Stored_Proc_Manager_Page />
-      <Periode_Page  />
-      <Stats_Page />
+      <Stored_Proc_Manager
+        spNames={VrfStoredProcs}
+        open={spManagerOpen}
+        onClose={handleClose}
+      />
+      <PeriodeDialog
+        open={periodeOpen}
+        onClose={handleClosePeriode}
+        dateDeb={dateDeb}
+        dateFin={dateFin}
+        setDateDeb={setDateDeb}
+        setDateFin={setDateFin}
+        onExecuteClick={handle_Execute_Periode}
+      />
+      <Stored_Proc_List
+        spName={spName}
+        open={statsOpen}
+        onClose={handleCloseStats}
+        title={title}
+        params={params}
+      />
     </TitleCard>
   )
 };

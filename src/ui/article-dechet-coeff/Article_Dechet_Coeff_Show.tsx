@@ -22,6 +22,15 @@ import { fetch_Article } from "@/fetch/article";
 import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
 
+// Declared at module level (not inside Article_Dechet_Coeff_Show) so each keeps the same
+// component identity across re-renders: a component declared inside another
+// one is a new type on every render, which remounts it (list reloaded, state
+// lost) and, on an API error, re-notifies in an endless loop.
+// Per-render values (filters) are passed through ReferenceField dataTableProps.
+const Article_List_Modal = (props: CmListProps<Article_Type>) => (
+  <Article_List {...props} isModalList={true} />
+);
+
 const Article_Dechet_Coeff_Show = () => {
   const { addNotification } = useAppContext();
 
@@ -91,9 +100,6 @@ const Article_Dechet_Coeff_Show = () => {
     nature: 'DECHET',
   };
 
-	const Article_List_Modal = (props: CmListProps<Article_Type>) => (
-    <Article_List {...props} isModalList={true} permanentFilter={articlePermanentFilter}/>
-  )
 
   useEffect(() => {
       const load_Article = async () => {
@@ -154,7 +160,8 @@ const Article_Dechet_Coeff_Show = () => {
               setArticle_Dechet_CoeffValue('article_code', value);
             } }
             maxRows="md"
-            DataTableComponent={Article_List_Modal}
+            DataTableComponent={ Article_List_Modal }
+            dataTableProps={{ permanentFilter: articlePermanentFilter }}
             followUrl={`${ARTICLE_URL}/${article_Dechet_Coeff.article_code}`} 
             isPK={true}
           />

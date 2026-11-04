@@ -21,6 +21,19 @@ import { fetch_Unite } from "@/fetch/unite";
 import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
 
+// Declared at module level (not inside Unite_Conversion_Show) so each keeps the same
+// component identity across re-renders: a component declared inside another
+// one is a new type on every render, which remounts it (list reloaded, state
+// lost) and, on an API error, re-notifies in an endless loop.
+// Per-render values (filters) are passed through ReferenceField dataTableProps.
+const Unite_Source_List_Modal = (props: CmListProps<Unite_Type>) => (
+  <Unite_List {...props} isModalList={true} />
+);
+
+const Unite_Destination_List_Modal = (props: CmListProps<Unite_Type>) => (
+  <Unite_List {...props} isModalList={true} />
+);
+
 const Unite_Conversion_Show = () => {
   const { addNotification } = useAppContext();
 
@@ -134,9 +147,6 @@ const Unite_Conversion_Show = () => {
     code: unite_Conversion.unite_source
   };
 	
-	const Unite_Source_List_Modal = (props: CmListProps<Unite_Type>) => (
-    <Unite_List {...props} isModalList={true} initialFilter={ unite_source_initialFilter}/>
-  )
 	const check_unite_destination = async(value: string) : Promise<boolean> =>{
     try {
       const response = await fetch_Unite(value)
@@ -184,9 +194,6 @@ const Unite_Conversion_Show = () => {
     code: unite_Conversion.unite_destination
   };
 	
-	const Unite_Destination_List_Modal = (props: CmListProps<Unite_Type>) => (
-    <Unite_List {...props} isModalList={true} initialFilter={ unite_destination_initialFilter }/>
-  )
   return (
     <GenericShowPage<Unite_Conversion_Type>
       tableName={ UNITE_CONVERSION_TABLE_NAME }
@@ -233,6 +240,7 @@ const Unite_Conversion_Show = () => {
             }}
             maxRows="md"
             DataTableComponent={ Unite_Source_List_Modal }
+            dataTableProps={{ initialFilter: unite_source_initialFilter }}
             followUrl={`${ UNITE_URL}/${ unite_Conversion.unite_source }`}
             forceOpen={ unite_source_forceOpen }
           />
@@ -253,6 +261,7 @@ const Unite_Conversion_Show = () => {
             }}
             maxRows="md"
             DataTableComponent={ Unite_Destination_List_Modal }
+            dataTableProps={{ initialFilter: unite_destination_initialFilter }}
             followUrl={`${ UNITE_URL}/${ unite_Conversion.unite_destination }`}
             forceOpen={ unite_destination_forceOpen }
           />

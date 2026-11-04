@@ -148,27 +148,7 @@ const Article_Show = () => {
     fetch_Periode();
   }, []);
 
-  const Periode_Page = () => (
-    <PeriodeDialog
-      open={periodeOpen}
-      onClose={handleClosePeriode}
-      dateDeb={dateDeb}
-      dateFin={dateFin}
-      setDateDeb={setDateDeb} 
-      setDateFin={setDateFin}
-      onExecuteClick={handle_Execute_Periode}
-    />
-  )
 
-  const Stats_Page = () => (
-    <Stored_Proc_List
-      spName={spName}
-      open={statsOpen}
-      onClose={handleCloseStats}
-      title={title}
-      params={params}
-    />
-  )
 
   return (
     <>
@@ -238,8 +218,22 @@ const Article_Show = () => {
           </>
         }
       />
-      <Periode_Page />
-      <Stats_Page />
+      <PeriodeDialog
+        open={periodeOpen}
+        onClose={handleClosePeriode}
+        dateDeb={dateDeb}
+        dateFin={dateFin}
+        setDateDeb={setDateDeb}
+        setDateFin={setDateFin}
+        onExecuteClick={handle_Execute_Periode}
+      />
+      <Stored_Proc_List
+        spName={spName}
+        open={statsOpen}
+        onClose={handleCloseStats}
+        title={title}
+        params={params}
+      />
     </>
   );
 };

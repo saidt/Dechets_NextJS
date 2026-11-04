@@ -12,6 +12,189 @@ import { ROLES_CACHE_KEY } from '@/lib/consts';
 import { useRouter } from 'next/navigation';
 import { clientError } from '@/lib/error';
 import { useAppContext } from '@/app/context/AppContext';
+import type { Session } from "next-auth";
+
+type LoggedIn_Props = {
+  session: Session | null;
+  activeMode: string;
+  setActiveMode: (mode: string) => void;
+  handleLogout: () => void;
+};
+
+// Module level: declared inside its parent it was a new component type on every
+// re-render, so React remounted it each time.
+const LoggedIn = ({ session, activeMode, setActiveMode, handleLogout }: LoggedIn_Props) => (
+  <>
+    <Stack direction="row" sx={{ p: 2, alignItems: 'center' }} spacing={2}>
+      <AccountCircleIcon />
+        <Box>
+          <Typography variant="h6" color="text.primary" sx={{ fontWeight: 600 }}>
+            {session?.user.id} ({session?.user.name})
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            color="text.secondary"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              fontWeight: 400,
+            }}
+          >
+            {session?.user.email}
+          </Typography>
+        </Box>
+    </Stack>
+    <Divider />
+    <Box sx={{ p: 2 }}>
+      {dropdownData.profile.map((profile) => (
+        <Box key={profile.title}>
+          <Box
+            sx={{
+              px: 2,
+              py: '10px',
+              '&:hover': {
+                backgroundColor: 'primary.light',
+              },
+            }}
+            className="hover-text-primary"
+          >
+            <Link href={profile.href}>
+              <Stack direction="row" spacing={2}>
+                <Box>
+                  <Typography
+                    variant="subtitle2"
+                    color="text.primary"
+                    className="text-hover"
+                    noWrap
+                    sx={{
+                      width: '240px',
+                      fontWeight: 500,
+                    }}
+                  >
+                    {profile.title}
+                  </Typography>
+                </Box>
+              </Stack>
+            </Link>
+          </Box>
+        </Box>
+      ))}
+    </Box>
+    <Divider />
+    <Box sx={{ p: 2 }}>
+      <Box
+        sx={{
+          px: 2,
+          py: '10px',
+          '&:hover': {
+            backgroundColor: 'primary.light',
+          },
+        }}
+        className="hover-text-primary"
+      >
+        <Link href="/">
+          <Stack direction="row" spacing={2} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box onClick={() => {
+              setActiveMode(activeMode === 'light' ? 'dark' : 'light');
+            }}>
+              <Typography
+                variant="subtitle2"
+                color="text.primary"
+                className="text-hover"
+                noWrap
+                sx={{
+                  width: '240px',
+                  fontWeight: 500,
+                }}
+              >
+                Mode
+              </Typography>
+            </Box>
+            <IconButton color="primary" size="small">
+              {activeMode === 'light' ? (
+                <Icon
+                  icon="solar:moon-line-duotone"
+                  height={18}
+                  onClick={() => setActiveMode('dark')}
+                />
+              ) : (
+                <Icon
+                  icon="solar:sun-2-line-duotone"
+                  height={18}
+                  onClick={() => setActiveMode('light')}
+                />
+              )}
+            </IconButton>
+          </Stack>
+        </Link>
+      </Box>
+      <Box
+        sx={{
+          px: 2,
+          py: '10px',
+          '&:hover': {
+            backgroundColor: 'primary.light',
+          },
+        }}
+        className="hover-text-primary"
+      >
+        <Stack direction="row" spacing={2}>
+          <Box onClick={handleLogout} sx={{ cursor: "pointer" }} >
+            <Typography
+              variant="subtitle2"
+              color="text.primary"
+              className="text-hover"
+              noWrap
+              sx={{
+                width: '240px',
+                fontWeight: 500,
+              }}
+            >
+              Logout
+            </Typography>
+          </Box>
+        </Stack>
+      </Box>
+    </Box>
+  </>
+);
+
+type NotLoggedIn_Props = {
+  handleLogin: () => void;
+};
+
+// Module level: declared inside its parent it was a new component type on every
+// re-render, so React remounted it each time.
+const NotLoggedIn = ({ handleLogin }: NotLoggedIn_Props) => (
+  <Box
+    sx={{
+      px: 2,
+      py: '10px',
+      '&:hover': {
+        backgroundColor: 'primary.light',
+      },
+    }}
+    className="hover-text-primary"
+  >
+    <Stack direction="row" spacing={2}>
+      <Box onClick={handleLogin} sx={{ cursor: "pointer" }} >
+        <Typography
+          variant="subtitle2"
+          color="text.primary"
+          className="text-hover"
+          noWrap
+          sx={{
+            width: '240px',
+            fontWeight: 500,
+          }}
+        >
+          Login
+        </Typography>
+      </Box>
+    </Stack>
+  </Box>
+);
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState<HTMLElement | null>(null);
@@ -49,172 +232,7 @@ const Profile = () => {
     return <Loading />
   }
 
-  const LoggedIn = () => (
-    <>
-      <Stack direction="row" sx={{ p: 2, alignItems: 'center' }} spacing={2}>
-        <AccountCircleIcon />
-          <Box>
-            <Typography variant="h6" color="text.primary" sx={{ fontWeight: 600 }}>
-              {session?.user.id} ({session?.user.name})
-            </Typography>
-            <Typography
-              variant="subtitle2"
-              color="text.secondary"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-                fontWeight: 400,
-              }}
-            >
-              {session?.user.email}
-            </Typography>
-          </Box>
-      </Stack>
-      <Divider />
-      <Box sx={{ p: 2 }}>
-        {dropdownData.profile.map((profile) => (
-          <Box key={profile.title}>
-            <Box
-              sx={{
-                px: 2,
-                py: '10px',
-                '&:hover': {
-                  backgroundColor: 'primary.light',
-                },
-              }}
-              className="hover-text-primary"
-            >
-              <Link href={profile.href}>
-                <Stack direction="row" spacing={2}>
-                  <Box>
-                    <Typography
-                      variant="subtitle2"
-                      color="text.primary"
-                      className="text-hover"
-                      noWrap
-                      sx={{
-                        width: '240px',
-                        fontWeight: 500,
-                      }}
-                    >
-                      {profile.title}
-                    </Typography>
-                  </Box>
-                </Stack>
-              </Link>
-            </Box>
-          </Box>
-        ))}
-      </Box>
-      <Divider />
-      <Box sx={{ p: 2 }}>
-        <Box
-          sx={{
-            px: 2,
-            py: '10px',
-            '&:hover': {
-              backgroundColor: 'primary.light',
-            },
-          }}
-          className="hover-text-primary"
-        >
-          <Link href="/">
-            <Stack direction="row" spacing={2} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-              <Box onClick={() => {
-                setActiveMode(activeMode === 'light' ? 'dark' : 'light');
-              }}>
-                <Typography
-                  variant="subtitle2"
-                  color="text.primary"
-                  className="text-hover"
-                  noWrap
-                  sx={{
-                    width: '240px',
-                    fontWeight: 500,
-                  }}
-                >
-                  Mode
-                </Typography>
-              </Box>
-              <IconButton color="primary" size="small">
-                {activeMode === 'light' ? (
-                  <Icon
-                    icon="solar:moon-line-duotone"
-                    height={18}
-                    onClick={() => setActiveMode('dark')}
-                  />
-                ) : (
-                  <Icon
-                    icon="solar:sun-2-line-duotone"
-                    height={18}
-                    onClick={() => setActiveMode('light')}
-                  />
-                )}
-              </IconButton>
-            </Stack>
-          </Link>
-        </Box>
-        <Box
-          sx={{
-            px: 2,
-            py: '10px',
-            '&:hover': {
-              backgroundColor: 'primary.light',
-            },
-          }}
-          className="hover-text-primary"
-        >
-          <Stack direction="row" spacing={2}>
-            <Box onClick={handleLogout} sx={{ cursor: "pointer" }} >
-              <Typography
-                variant="subtitle2"
-                color="text.primary"
-                className="text-hover"
-                noWrap
-                sx={{
-                  width: '240px',
-                  fontWeight: 500,
-                }}
-              >
-                Logout
-              </Typography>
-            </Box>
-          </Stack>
-        </Box>
-      </Box>
-    </>
-  )
 
-  const NotLoggedIn = () => (
-    <Box
-      sx={{
-        px: 2,
-        py: '10px',
-        '&:hover': {
-          backgroundColor: 'primary.light',
-        },
-      }}
-      className="hover-text-primary"
-    >
-      <Stack direction="row" spacing={2}>
-        <Box onClick={handleLogin} sx={{ cursor: "pointer" }} >
-          <Typography
-            variant="subtitle2"
-            color="text.primary"
-            className="text-hover"
-            noWrap
-            sx={{
-              width: '240px',
-              fontWeight: 500,
-            }}
-          >
-            Login
-          </Typography>
-        </Box>
-      </Stack>
-    </Box>
-  )
            
   return (
     <Box>
@@ -237,7 +255,7 @@ const Profile = () => {
           },
         }}
       >
-        {session ? (<LoggedIn />) : (<NotLoggedIn />)}
+        {session ? (<LoggedIn session={session} activeMode={activeMode} setActiveMode={setActiveMode} handleLogout={handleLogout} />) : (<NotLoggedIn handleLogin={handleLogin} />)}
       </Menu>
     </Box>
   );

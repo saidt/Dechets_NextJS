@@ -68,23 +68,7 @@ const Reglement_Dechet_List = (props: CmListProps<Reglement_Dechet_Type>) => {
     setSpManagerOpen(false);
   };
 
-  const Stored_Proc_Manager_Page = () => (
-    <Stored_Proc_Manager
-      spNames={VrfStoredProcs}
-      open={spManagerOpen}    
-      onClose={handleClose}
-    />
-  )
 
-  const Stats_Page = () => (
-    <Stored_Proc_List
-      spName={spName}
-      open={statsOpen}
-      onClose={() => setStatsOpen(false)}
-      title={title}
-      params={params}
-    />
-  )
 
   return (
     <TitleCard title={ REGLEMENT_DECHET_LIST_TITLE }>
@@ -97,8 +81,18 @@ const Reglement_Dechet_List = (props: CmListProps<Reglement_Dechet_Type>) => {
         getId={(reglement_Dechet: Reglement_Dechet_Type) => reglement_Dechet.numero }
         optionsMenu={optionsMenu}
       />
-      <Stored_Proc_Manager_Page />
-      <Stats_Page />
+      <Stored_Proc_Manager
+        spNames={VrfStoredProcs}
+        open={spManagerOpen}
+        onClose={handleClose}
+      />
+      <Stored_Proc_List
+        spName={spName}
+        open={statsOpen}
+        onClose={() => setStatsOpen(false)}
+        title={title}
+        params={params}
+      />
     </TitleCard>
   )
 };

@@ -54,13 +54,6 @@ const Retour_Dechet_List = (props: CmListProps<Retour_Dechet_Type>) => {
     setSpManagerOpen(false);
   };
 
-  const Stored_Proc_Manager_Page = () => (
-    <Stored_Proc_Manager
-      spNames={VrfStoredProcs}
-      open={spManagerOpen}    
-      onClose={handleClose}
-    />
-  )
 
   return (
     <TitleCard title={ RETOUR_DECHET_LIST_TITLE }>
@@ -73,7 +66,11 @@ const Retour_Dechet_List = (props: CmListProps<Retour_Dechet_Type>) => {
         getId={(retour_Dechet: Retour_Dechet_Type) => retour_Dechet.numero }
         optionsMenu={optionsMenu}
       />
-      <Stored_Proc_Manager_Page />
+      <Stored_Proc_Manager
+        spNames={VrfStoredProcs}
+        open={spManagerOpen}
+        onClose={handleClose}
+      />
     </TitleCard>
   )
 };

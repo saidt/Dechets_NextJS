@@ -31,6 +31,15 @@ import { put_Versement_Dechet } from "@/fetch/versement-dechet";
 
 const TAB_STORAGE_KEY = "VERSEMENT_DECHET_TAB";
 
+// Declared at module level (not inside Versement_Dechet_Show) so each keeps the same
+// component identity across re-renders: a component declared inside another
+// one is a new type on every render, which remounts it (list reloaded, state
+// lost) and, on an API error, re-notifies in an endless loop.
+// Per-render values (filters) are passed through ReferenceField dataTableProps.
+const Versement_Dechet_Ligne_Child = () => (
+  <Versement_Dechet_Ligne_List isModalList={false} />
+);
+
 const Versement_Dechet_Show = () => {
   //const { addNotification } = useAppContext();
 
@@ -104,9 +113,6 @@ const Versement_Dechet_Show = () => {
     sessionStorage.setItem(TAB_STORAGE_KEY, value);
   }, [value]);
 
-  const Versement_Dechet_Ligne_Child = () => (
-    <Versement_Dechet_Ligne_List isModalList={false} />
-  )
 
   const { addNotification } = useAppContext();
 

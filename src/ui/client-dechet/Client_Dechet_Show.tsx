@@ -226,27 +226,7 @@ const Client_Dechet_Show = () => {
     fetch_Periode();
   }, []);
 
-  const Periode_Page = () => (
-    <PeriodeDialog
-      open={periodeOpen}
-      onClose={() => setPeriodeOpen(false)}
-      dateDeb={dateDeb}
-      dateFin={dateFin}
-      setDateDeb={setDateDeb} 
-      setDateFin={setDateFin}
-      onExecuteClick={handle_Execute_Periode}
-    />
-  )
 
-  const Stats_Page = () => (
-    <Stored_Proc_List
-      spName={spName}
-      open={statsOpen}
-      onClose={() => setStatsOpen(false)}
-      title={title}
-      params={params}
-    />
-  )
 
   return (
     <>
@@ -294,8 +274,22 @@ const Client_Dechet_Show = () => {
           </>
         }
       />
-      <Periode_Page />
-      <Stats_Page />
+      <PeriodeDialog
+        open={periodeOpen}
+        onClose={() => setPeriodeOpen(false)}
+        dateDeb={dateDeb}
+        dateFin={dateFin}
+        setDateDeb={setDateDeb}
+        setDateFin={setDateFin}
+        onExecuteClick={handle_Execute_Periode}
+      />
+      <Stored_Proc_List
+        spName={spName}
+        open={statsOpen}
+        onClose={() => setStatsOpen(false)}
+        title={title}
+        params={params}
+      />
     </>
   );
 };

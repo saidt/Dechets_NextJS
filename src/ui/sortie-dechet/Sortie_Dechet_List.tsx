@@ -75,27 +75,11 @@ const Sortie_Dechet_List = (props: CmListProps<Sortie_Dechet_Type>) => {
     setSpManagerOpen(false);
   };
 
-  const Stored_Proc_Manager_Page = () => (
-    <Stored_Proc_Manager
-      spNames={VrfStoredProcs}
-      open={spManagerOpen}    
-      onClose={handleClose}
-    />
-  )
 
   const handlePrint = async(data: Sortie_Dechet_Type[]) : Promise<void> => {
     await sortie_Dechet_List_Print(data, user?.id);
   };
 
-  const Stats_Page = () => (
-    <Stored_Proc_List
-      spName={spName}
-      open={statsOpen}
-      onClose={() => setStatsOpen(false)}
-      title={title}
-      params={params}
-    />
-  )
 
   return (
     <TitleCard title={ SORTIE_DECHET_LIST_TITLE }>
@@ -109,8 +93,18 @@ const Sortie_Dechet_List = (props: CmListProps<Sortie_Dechet_Type>) => {
         optionsMenu={optionsMenu}
         onPrint={handlePrint}
       />
-      <Stored_Proc_Manager_Page />
-      <Stats_Page />
+      <Stored_Proc_Manager
+        spNames={VrfStoredProcs}
+        open={spManagerOpen}
+        onClose={handleClose}
+      />
+      <Stored_Proc_List
+        spName={spName}
+        open={statsOpen}
+        onClose={() => setStatsOpen(false)}
+        title={title}
+        params={params}
+      />
     </TitleCard>
   )
 };
