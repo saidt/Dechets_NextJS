@@ -7,7 +7,7 @@ import { pesee_Count, pesee_List } from "@/app/db-data/pesee";
 import { Empty_Pesee, PESEE_DEFAULT_SORT, Pesee_Type, PESEE_TABLE_NAME } from "@/types/pesee";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
-//import { isDevMode } from "@/lib/lib";
+//import { consoleDebug } from "@/lib/clientLog";
 
 export async function GET(request: NextRequest) {
   const pathname = '/pesee';
@@ -21,11 +21,11 @@ export async function GET(request: NextRequest) {
   }
   try {
     const searchParams = request.nextUrl.searchParams
-    //isDevMode() && console.log("Item GET searchParams....................:", searchParams);
+    //consoleDebug("Item GET searchParams....................:", searchParams);
     const params : TableState<Pesee_Type> = httpListParams<Pesee_Type>(searchParams, PESEE_DEFAULT_SORT)
     const quickSearchColumns :  (keyof Pesee_Type)[] =  ['numero_1',  'date_1','heure_1','numero_2','date_2','heure_2','client_raison_sociale','frs_raison_sociale','article_designation','immatriculation','poids_brut','tare','poids_net','sens',] 
     const prismaParams : PrismaQuery = tableStateToPrismaQuery<Pesee_Type>(params, Empty_Pesee, quickSearchColumns);
-    //isDevMode() && console.log("Pesee GET prismaParams================:", JSON.stringify(prismaParams));
+    //consoleDebug("Pesee GET prismaParams================:", JSON.stringify(prismaParams));
 
     return httpList<any>(() => pesee_List(prismaParams), () => pesee_Count(prismaParams.where) )
   }

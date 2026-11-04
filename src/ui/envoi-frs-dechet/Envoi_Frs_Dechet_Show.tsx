@@ -17,7 +17,6 @@ import { useState } from "react";
 import { MuiDateTimePicker, MuiNumberField, MuiPKNumberField, MuiSwitch, MuiTextField } from "@/components/form-show/Inputs";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
-//import { isDevMode } from "@/lib/lib";
 import Envoi_Frs_Dechet_Reste, { Envoi_Frs_Dechet_Reste_Type } from "./Envoi_Frs_Dechet_Reste";
 import useAuth from "@/app/context/UseAuth";
 import { DevaliderMenu, ImporterMenu, ValiderMenu } from "@/components/ui/menu/Menus";
@@ -27,17 +26,17 @@ import { getResponseData } from "@/lib/html";
 import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
 import { put_Envoi_Frs_Dechet } from "@/fetch/envoi-frs-dechet";
-//import { consoleInfo } from "@/lib/clientLog";
+//import { consoleDebug, consoleInfo } from "@/lib/clientLog";
 
 const Envoi_Frs_Dechet_Show = () => {
   //const { addNotification } = useAppContext();
 
   const { id } = useParams<{ id: string }>();
-  //isDevMode() && console.log('Envoi_Frs_Dechet_Show idParam: ', id)
+  //consoleDebug('Envoi_Frs_Dechet_Show idParam: ', id)
   
   const searchParams = useSearchParams();
   const edit = Boolean(searchParams.get('edit'));
-  //isDevMode() && console.log('Envoi_Frs_Dechet_Show edit: ', edit)
+  //consoleDebug('Envoi_Frs_Dechet_Show edit: ', edit)
 
   const [envoi_Frs_Dechet, set_Envoi_Frs_Dechet] = useState<Envoi_Frs_Dechet_Type>(Empty_Envoi_Frs_Dechet);
   const [mode, setMode] = useState<Mode>("Browse"); 
@@ -47,7 +46,7 @@ const Envoi_Frs_Dechet_Show = () => {
 
   function validate(envoi_Frs_Dechet: Envoi_Frs_Dechet_Type) : boolean {    
     const result = envoi_Frs_Dechet_Schema.safeParse(envoi_Frs_Dechet);
-    //isDevMode() && console.log('validate result: ', result);
+    //consoleDebug('validate result: ', result);
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       const validationErrors = result.error;
@@ -55,7 +54,7 @@ const Envoi_Frs_Dechet_Show = () => {
         fieldErrors[issue.path.toString()] = issue.message;
       };
       setErrors(fieldErrors);
-      //isDevMode() && console.log('Envoi_Frs_Dechet_Show validate errors : ', JSON.stringify(fieldErrors));
+      //consoleDebug('Envoi_Frs_Dechet_Show validate errors : ', JSON.stringify(fieldErrors));
       return false
     }
     setErrors({}); 
@@ -70,7 +69,7 @@ const Envoi_Frs_Dechet_Show = () => {
   const get_Duplicate_Envoi_Frs_Dechet = () => {
     const { id, ...rest } : Envoi_Frs_Dechet_Type = envoi_Frs_Dechet;
     const dupEntity : Envoi_Frs_Dechet_Type = { id:0, ...rest}
-    //isDevMode() && console.log('Envoi_Frs_Dechet_Show getDuplicateEnvoi_Frs_Dechet dupEntity: ', dupEntity)
+    //consoleDebug('Envoi_Frs_Dechet_Show getDuplicateEnvoi_Frs_Dechet dupEntity: ', dupEntity)
     return dupEntity
   }
 	
@@ -80,7 +79,7 @@ const Envoi_Frs_Dechet_Show = () => {
   }
 
   function set_Envoi_Frs_Dechet_Value(name: string, value: any) {
-    //isDevMode() && console.log('Envoi_Frs_Dechet_Show set_Envoi_Frs_Dechet_Value name/value ', name, '/', value)
+    //consoleDebug('Envoi_Frs_Dechet_Show set_Envoi_Frs_Dechet_Value name/value ', name, '/', value)
     set_Envoi_Frs_Dechet((prevEnvoi_Frs_Dechet) => ({
       ...prevEnvoi_Frs_Dechet,
       [name]: value,

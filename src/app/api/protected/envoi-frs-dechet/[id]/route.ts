@@ -8,8 +8,8 @@ import { remoteLog } from "@/components/logger/remoteLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
+//import { consoleDebug } from "@/lib/clientLog";
 
-//import { isDevMode } from "@/lib/lib";
 
 export async function GET(
   request: NextRequest,
@@ -29,7 +29,7 @@ export async function GET(
     const id = prms.id;
 
 
-    //isDevMode() && console.log('Envoi_Frs_Dechet GET id: ', id);
+    //consoleDebug('Envoi_Frs_Dechet GET id: ', id);
 
     if (!id) {
       return NextResponse.json(
@@ -39,7 +39,7 @@ export async function GET(
     }
 
     const data = await read_Envoi_Frs_Dechet(Number(id))  
-    //isDevMode() && console.log('envoi_Frs_Dechet/[id] GET data: ', JSON.stringify(data));
+    //consoleDebug('envoi_Frs_Dechet/[id] GET data: ', JSON.stringify(data));
     return NextResponse.json(data);
   }
   catch (err: any) {
@@ -97,7 +97,7 @@ export async function PUT(
   try {
     const data = await request.json();
     const response = await httpAction<Envoi_Frs_Dechet_Type>(() => update_Envoi_Frs_Dechet(data.data))
-    //isDevMode() && console.log('envoi_Frs_Dechet api PUT response.ok: ', response.ok)
+    //consoleDebug('envoi_Frs_Dechet api PUT response.ok: ', response.ok)
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Envoi_Frs_Dechet updated", cookieHeader, {id: data.data.id});
@@ -130,7 +130,7 @@ export async function DELETE(
   try {
     const prms = await params;
     const id = prms.id;
-    //isDevMode() && console.log('Envoi_Frs_Dechet DELETE id: ', id);
+    //consoleDebug('Envoi_Frs_Dechet DELETE id: ', id);
 
     if (!id) {
       return NextResponse.json(

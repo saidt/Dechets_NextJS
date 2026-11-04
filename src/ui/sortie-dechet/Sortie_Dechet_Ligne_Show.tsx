@@ -28,6 +28,7 @@ import { fetch_Pesee } from "@/fetch/pesee";
 import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
 //import { consoleInfo } from "@/lib/log";
+//import { consoleDebug } from "@/lib/clientLog";
 
 // Declared at module level (not inside Sortie_Dechet_Ligne_Show) so each keeps the same
 // component identity across re-renders: a component declared inside another
@@ -224,7 +225,7 @@ const Sortie_Dechet_Ligne_Show = () => {
     try {
       const response = await fetch_Pesee(value)
       const data : Pesee_Type = await getResponseData(response, 'check_pesee_numero api error')
-      //isDevMode() && console.log('Sortie_Dechet_Ligne_Show check_pesee_numero data ', data)
+      //consoleDebug('Sortie_Dechet_Ligne_Show check_pesee_numero data ', data)
 
       if (! data) {
         return false
@@ -240,10 +241,10 @@ const Sortie_Dechet_Ligne_Show = () => {
   };
 	
   async function set_Pesee_Numero(value: string) {
-    //isDevMode() && console.log('Sortie_Dechet_Ligne_Show set_pesee_numero value ', value)
+    //consoleDebug('Sortie_Dechet_Ligne_Show set_pesee_numero value ', value)
     set_Sortie_Dechet_Ligne_Value('pesee_numero', value);
     const ret = await check_pesee_numero(value)
-    //isDevMode() && console.log('Sortie_Dechet_Ligne_Show set_pesee_numero ret ', ret)
+    //consoleDebug('Sortie_Dechet_Ligne_Show set_pesee_numero ret ', ret)
     set_pesee_numero_forceOpen(false)
     if (ret === false) {
       set_pesee_numero_forceOpen(true)
@@ -254,9 +255,9 @@ const Sortie_Dechet_Ligne_Show = () => {
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { value } = e.target;
-    //isDevMode() && console.log('Sortie_Dechet_Ligne_Show handleBlur pesee_numero ', value)
+    //consoleDebug('Sortie_Dechet_Ligne_Show handleBlur pesee_numero ', value)
     const ret = await check_pesee_numero(value)
-    //isDevMode() && console.log('Sortie_Dechet_Ligne_Show handle_Pesee_Numero_Blur ret ', ret)
+    //consoleDebug('Sortie_Dechet_Ligne_Show handle_Pesee_Numero_Blur ret ', ret)
     set_pesee_numero_forceOpen(false)
     if (ret === false) {
       set_pesee_numero_forceOpen(true)

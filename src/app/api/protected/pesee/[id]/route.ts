@@ -5,8 +5,8 @@ import { logError } from "@/lib/serverLog";
 import { PESEE_TABLE_NAME } from "@/types/pesee";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
+//import { consoleDebug } from "@/lib/clientLog";
 
-//import { isDevMode } from "@/lib/lib";
 
 export async function GET(
   request: NextRequest,
@@ -26,7 +26,7 @@ export async function GET(
     const id = prms.id;
 
 
-    //isDevMode() && console.log('Pesee GET id: ', id);
+    //consoleDebug('Pesee GET id: ', id);
 
     if (!id) {
       return NextResponse.json(
@@ -36,7 +36,7 @@ export async function GET(
     }
 
     const data = await read_Pesee(id)  
-    //isDevMode() && console.log('pesee/[id] GET data: ', JSON.stringify(data));
+    //consoleDebug('pesee/[id] GET data: ', JSON.stringify(data));
     return NextResponse.json(data);
   }
   catch (err: any) {

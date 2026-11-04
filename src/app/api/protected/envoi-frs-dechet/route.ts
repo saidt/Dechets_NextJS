@@ -7,7 +7,7 @@ import { envoi_Frs_Dechet_Count, envoi_Frs_Dechet_List } from "@/app/db-data/env
 import { Empty_Envoi_Frs_Dechet, ENVOI_FRS_DECHET_DEFAULT_SORT, Envoi_Frs_Dechet_Type, ENVOI_FRS_DECHET_TABLE_NAME } from "@/types/envoi-frs-dechet";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
-//import { isDevMode } from "@/lib/lib";
+//import { consoleDebug } from "@/lib/clientLog";
 
 export async function GET(request: NextRequest) {
   const pathname = '/envoi-frs-dechet';
@@ -21,11 +21,11 @@ export async function GET(request: NextRequest) {
   }
   try {
     const searchParams = request.nextUrl.searchParams
-    //isDevMode() && console.log("Item GET searchParams....................:", searchParams);
+    //consoleDebug("Item GET searchParams....................:", searchParams);
     const params : TableState<Envoi_Frs_Dechet_Type> = httpListParams<Envoi_Frs_Dechet_Type>(searchParams, ENVOI_FRS_DECHET_DEFAULT_SORT)
     const quickSearchColumns :  (keyof Envoi_Frs_Dechet_Type)[] =  ['id', 'article_code', 'annee','no_dos_exp','no_cmd_exp','date_cmd','quantite',] 
     const prismaParams : PrismaQuery = tableStateToPrismaQuery<Envoi_Frs_Dechet_Type>(params, Empty_Envoi_Frs_Dechet, quickSearchColumns);
-    //isDevMode() && console.log("Envoi_Frs_Dechet GET prismaParams================:", JSON.stringify(prismaParams));
+    //consoleDebug("Envoi_Frs_Dechet GET prismaParams================:", JSON.stringify(prismaParams));
 
     return httpList<any>(() => envoi_Frs_Dechet_List(prismaParams), () => envoi_Frs_Dechet_Count(prismaParams.where) )
   }

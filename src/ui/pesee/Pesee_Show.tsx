@@ -15,18 +15,18 @@ import { useState } from "react";
 import { MuiDateTimePicker, MuiNumberField, MuiPKTextField, MuiTextField } from "@/components/form-show/Inputs";
 import { useParams, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
-//import { isDevMode } from "@/lib/lib";
+//import { consoleDebug } from "@/lib/clientLog";
 
 const Pesee_Show = () => {
   //const { addNotification } = useAppContext();
 
 
   const { id } = useParams<{ id: string }>();
-  //isDevMode() && console.log('Pesee_Show idParam: ', id)
+  //consoleDebug('Pesee_Show idParam: ', id)
   
   const searchParams = useSearchParams();
   const edit = Boolean(searchParams.get('edit'));
-  //isDevMode() && console.log('Pesee_Show edit: ', edit)
+  //consoleDebug('Pesee_Show edit: ', edit)
 
   const [pesee, set_Pesee] = useState<Pesee_Type>(Empty_Pesee);
   const [mode, setMode] = useState<Mode>("Browse"); 
@@ -34,7 +34,7 @@ const Pesee_Show = () => {
 
   function validate(pesee: Pesee_Type) : boolean {    
     const result = pesee_Schema.safeParse(pesee);
-    //isDevMode() && console.log('validate result: ', result);
+    //consoleDebug('validate result: ', result);
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       const validationErrors = result.error;
@@ -42,7 +42,7 @@ const Pesee_Show = () => {
         fieldErrors[issue.path.toString()] = issue.message;
       };
       setErrors(fieldErrors);
-      //isDevMode() && console.log('Pesee_Show validate errors : ', JSON.stringify(fieldErrors));
+      //consoleDebug('Pesee_Show validate errors : ', JSON.stringify(fieldErrors));
       return false
     }
     setErrors({}); 
@@ -57,7 +57,7 @@ const Pesee_Show = () => {
   const get_Duplicate_Pesee = () => {
     const { numero_1, ...rest } : Pesee_Type = pesee;
     const dupEntity : Pesee_Type = { numero_1:'', ...rest}
-    //isDevMode() && console.log('Pesee_Show getDuplicatePesee dupEntity: ', dupEntity)
+    //consoleDebug('Pesee_Show getDuplicatePesee dupEntity: ', dupEntity)
     return dupEntity
   }
 	
@@ -67,7 +67,7 @@ const Pesee_Show = () => {
   }
 
   function set_Pesee_Value(name: string, value: any) {
-    //isDevMode() && console.log('Pesee_Show set_Pesee_Value name/value ', name, '/', value)
+    //consoleDebug('Pesee_Show set_Pesee_Value name/value ', name, '/', value)
     set_Pesee((prevPesee) => ({
       ...prevPesee,
       [name]: value,
