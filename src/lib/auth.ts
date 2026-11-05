@@ -2,12 +2,14 @@ import { AuthOptions } from 'next-auth';
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { v4 as uuid } from "uuid"
 import CredentialsProvider  from 'next-auth/providers/credentials';
-import { getResponseData } from './html';
 import { credentials_Schema } from '@/types/credentials';
 import { prisma } from './prisma';
 import { updateUserLastConnected } from '@/app/db-data/user';
 import { LogType } from '@/types/log';
 import { createLog } from '@/app/db-data/log';
+import { dbLogin, INVALID_CREDENTIALS } from '@/app/db-data/auth';
+import { ZodError } from 'zod';
+import { logError } from './serverLog';
 import { SESSION_MAX_AGE } from './consts';
 import { getClientInfo } from './client-info';
 import { consoleDebug, consoleError, consoleWarn } from './clientLog';
@@ -25,29 +27,31 @@ export const authOptions: AuthOptions = {
         userId: { label: "User Id" },
         password: { label: "Password", type: "password" },
       },
+      // Checks the password directly (no HTTP call to a public login route)
       async authorize(credentials) {
-        const parsedCredentials = credentials_Schema.parse(credentials);
-
-        if (!parsedCredentials) {
-          throw new Error("Invalid credentials format.");
+        try {
+          const parsedCredentials = credentials_Schema.parse(credentials);
+          return await dbLogin(parsedCredentials);
         }
-
-        const response  = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId: credentials?.userId,
-            password: credentials?.password,
-          }),
-        });
-
-        const data = await getResponseData(response, 'login api response')
-        //consoleInfo('authorize data : ', JSON.stringify(data));
-
-        if (data.user) {
-          return data.user;
+        catch (err) {
+          const rejected = err instanceof ZodError || (err instanceof Error && err.message === INVALID_CREDENTIALS);
+          if (!rejected) {
+            // Database or other technical error: not a failed login
+            logError('authorize', err);
+            throw new Error("Login unavailable, please try again later !");
+          }
+          // Failed attempts are logged (user id only, never the password), to spot password guessing
+          await createLog({
+            id: 0,
+            date_oper: new Date(),
+            user_id: typeof credentials?.userId === 'string' ? credentials.userId.slice(0, 20) : undefined,
+            severite: 'warn',
+            message: 'Login failed',
+            contexte: '',
+          }).catch(() => undefined);
+          // Same message whatever the reason (unknown user, wrong password, invalid input)
+          throw new Error(INVALID_CREDENTIALS);
         }
-        return null;
       }
     }),
   ],

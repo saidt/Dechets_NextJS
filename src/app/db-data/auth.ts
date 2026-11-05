@@ -3,6 +3,8 @@ import { Credentials, credentials_Schema } from "@/types/credentials";
 import { prisma } from "@/lib/prisma";
 import { trimStrings } from "@/lib/lib";
 
+export const INVALID_CREDENTIALS = "Invalid credentials !";
+
 export async function dbLogin(credentials: Credentials) {
   const validateCredentials : Credentials = credentials_Schema.parse(credentials);
 
@@ -26,6 +28,6 @@ export async function dbLogin(credentials: Credentials) {
   } 
   else {
     // Same message whether the user is unknown or the password is wrong
-    throw new Error("Invalid credentials !");
+    throw new Error(INVALID_CREDENTIALS);
   }
 }
