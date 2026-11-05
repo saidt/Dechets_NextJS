@@ -18,10 +18,10 @@ import { clientError, handleError } from "@/lib/error";
 import { PASSWORD_HASH_FETCH_URL, USER_UPDATE_PSWD_ROLE } from "@/types/user";
 import { BasicTextField, MuiTextField } from "@/components/form-show/Inputs";
 
-// Generates a USER_.PSW_HASH value for a user id + password (display only).
+// Generates a USER_.PSW_HASH value for a password (display only). The bcrypt hash has
+// its own random salt, so it does not depend on the user id.
 // The hash is computed by the API route: NEXTAUTH_SECRET never reaches the browser.
 const Password_Hash = () => {
-  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [hash, setHash] = useState("");
@@ -41,8 +41,8 @@ const Password_Hash = () => {
 
   const handleGenerate = async () => {
     setHash("");
-    if (!userId.trim() || !password) {
-      addNotification("Saisir l'utilisateur et le mot de passe", "warning");
+    if (!password) {
+      addNotification("Saisir le mot de passe", "warning");
       return;
     }
     setLoading(true);
@@ -50,7 +50,7 @@ const Password_Hash = () => {
       const response = await apiFetch(PASSWORD_HASH_FETCH_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: userId.trim(), password }),
+        body: JSON.stringify({ password }),
       });
       const data = await getResponseData(response, "Password_Hash handleGenerate");
       setHash(data.hash);
@@ -80,13 +80,6 @@ const Password_Hash = () => {
     <TitleCard title="Hash mot de passe">
       <LoadingBar loading={loading} />
       <Stack spacing={2} sx={{ maxWidth: 700, pt: 2}}>
-        <BasicTextField
-          label="Utilisateur"
-          value={userId}
-          onChange={(e) => { setUserId(e.target.value); setHash(""); }}
-          autoComplete="off"
-          fullWidth
-        />
         <BasicTextField
           label="Mot de passe"
           type={showPassword ? "text" : "password"}

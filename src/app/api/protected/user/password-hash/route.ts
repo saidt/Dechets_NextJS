@@ -21,7 +21,8 @@ export async function POST(request: NextRequest) {
   }
   try {
     const body = await request.json();
-    const parsed = credentials_Schema.safeParse({ userId: body?.userId, password: body?.password });
+    // Only the password is needed: bcrypt adds its own random salt
+    const parsed = credentials_Schema.shape.password.safeParse(body?.password);
     if (!parsed.success) {
       return NextResponse.json(
         { error: parsed.error.issues.map((issue) => issue.message).join(', ') },
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const hash = await hashPassword(parsed.data.password);
+    const hash = await hashPassword(parsed.data);
     return NextResponse.json({ hash });
   }
   catch (err: any) {
