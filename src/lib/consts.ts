@@ -3,5 +3,7 @@ export const ALTERT_TIME = 6000 // ms
 export const ADMIN_ROLE = 'ADMIN'
 export const ROLES_CACHE_KEY = "AUTH_USER_CACHE";
 export const MAX_ALL_DATA_SIZE = 1000000;
+export const LOGIN_MAX_FAILURES = 5; // failed logins (within LOGIN_LOCK_MINUTES) that lock a user id
+export const LOGIN_LOCK_MINUTES = 15; // lock duration, counted from the oldest of those failures
 export const SESSION_MAX_AGE = 24 * 60 * 60; // 1 day in seconds: a session expires this long after login
 export const FILTER_DEBOUCE_TIME = 500; // ms

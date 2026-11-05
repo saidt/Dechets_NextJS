@@ -7,10 +7,10 @@ import { prisma } from './prisma';
 import { updateUserLastConnected } from '@/app/db-data/user';
 import { LogType } from '@/types/log';
 import { createLog } from '@/app/db-data/log';
-import { dbLogin, INVALID_CREDENTIALS } from '@/app/db-data/auth';
+import { dbLogin, INVALID_CREDENTIALS, loginLockedUntil, LOGIN_BLOCKED_MESSAGE, LOGIN_FAILED_MESSAGE, LOGIN_SUCCESS_MESSAGE } from '@/app/db-data/auth';
 import { ZodError } from 'zod';
 import { logError } from './serverLog';
-import { SESSION_MAX_AGE } from './consts';
+import { LOGIN_MAX_FAILURES, SESSION_MAX_AGE } from './consts';
 import { getClientInfo } from './client-info';
 import { consoleDebug, consoleError, consoleWarn } from './clientLog';
 
@@ -29,6 +29,31 @@ export const authOptions: AuthOptions = {
       },
       // Checks the password directly (no HTTP call to a public login route)
       async authorize(credentials) {
+        // User id as stored in LOG (USER_ID is 20 characters)
+        const userId = typeof credentials?.userId === 'string' ? credentials.userId.trim().slice(0, 20) : '';
+
+        // Lockout after LOGIN_MAX_FAILURES failed logins: refuse without checking the password
+        let lockedUntil: Date | null = null;
+        try {
+          lockedUntil = userId ? await loginLockedUntil(userId) : null;
+        }
+        catch (err) {
+          logError('authorize lockout check', err);
+          throw new Error("Login unavailable, please try again later !");
+        }
+        if (lockedUntil) {
+          await createLog({
+            id: 0,
+            date_oper: new Date(),
+            user_id: userId,
+            severite: 'warn',
+            message: LOGIN_BLOCKED_MESSAGE,
+            contexte: JSON.stringify({ lockedUntil }),
+          }).catch(() => undefined);
+          const minutes = Math.max(1, Math.ceil((lockedUntil.getTime() - Date.now()) / 60000));
+          throw new Error(`Too many failed logins (${LOGIN_MAX_FAILURES}): try again in ${minutes} minute(s) !`);
+        }
+
         try {
           const parsedCredentials = credentials_Schema.parse(credentials);
           return await dbLogin(parsedCredentials);
@@ -44,9 +69,9 @@ export const authOptions: AuthOptions = {
           await createLog({
             id: 0,
             date_oper: new Date(),
-            user_id: typeof credentials?.userId === 'string' ? credentials.userId.slice(0, 20) : undefined,
+            user_id: userId || undefined,
             severite: 'warn',
-            message: 'Login failed',
+            message: LOGIN_FAILED_MESSAGE,
             contexte: '',
           }).catch(() => undefined);
           // Same message whatever the reason (unknown user, wrong password, invalid input)
@@ -168,7 +193,7 @@ export const authOptions: AuthOptions = {
         date_oper: new Date(),
         user_id: user.id,
         severite: 'info',
-        message: `User logged in`,
+        message: LOGIN_SUCCESS_MESSAGE,
         contexte: ''
       }
       await createLog(log)
