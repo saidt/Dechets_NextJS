@@ -7,7 +7,24 @@ export interface Sort<T extends Record<string, any>> {
   direction: SortDirection;
 }
 
-export type Filter<T> = Partial<Record<keyof T, string>>;
+/**
+ * A filter value: a plain string is a 'contains' search (what users type in column
+ * filters; exactFilter defaults to false). The object form with exactFilter: true is an
+ * exact match, for masterFilter (parent of a child list) and permanentFilter only.
+ */
+export type FilterValue = string | { value: string; exactFilter?: boolean };
+
+export type Filter<T> = Partial<Record<keyof T, FilterValue>>;
+
+/** The text of a filter value, whatever its form. */
+export function filterValueText(v: FilterValue | null | undefined): string {
+  return v === null || v === undefined ? '' : typeof v === 'string' ? v : String(v.value ?? '');
+}
+
+/** True for an exact-match filter value ({ value, exactFilter: true }). */
+export function isExactFilter(v: FilterValue | null | undefined): boolean {
+  return typeof v === 'object' && v !== null && v.exactFilter === true;
+}
 
 export interface TableState<T extends Record<string, any>> {
   page: number;

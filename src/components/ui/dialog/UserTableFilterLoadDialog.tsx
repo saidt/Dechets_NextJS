@@ -55,8 +55,8 @@ export default function UserTableFilterLoadDialog<T extends Record<string, any>>
   };
 
   const permanentFilter: Filter<User_Table_Filter_Type> = {
-    user_id: user?.id,
-    table_name: props.tableName,
+    user_id: { value: user?.id ?? '', exactFilter: true },
+    table_name: { value: props.tableName, exactFilter: true },
   };
 
   if (status === "loading" || authLoading) return <Loading />;

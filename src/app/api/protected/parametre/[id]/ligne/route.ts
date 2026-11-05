@@ -28,7 +28,7 @@ export async function  GET(
     const searchParams = request.nextUrl.searchParams
     //consoleInfo("Item GET searchParams....................:", searchParams);
     const params : TableState<Parametre_Ligne_Type> = httpListParams<Parametre_Ligne_Type>(searchParams, PARAMETRE_LIGNE_DEFAULT_SORT)
-    const masterFilter : Filter<Parametre_Ligne_Type> = {'parametre_rubrique': id } // adjust to master column name !
+    const masterFilter : Filter<Parametre_Ligne_Type> = {'parametre_rubrique': { value: id, exactFilter: true } } // adjust to master column name !
     const mergedParams = addTableStateFilter(params, masterFilter)
     const quickSearchColumns :  (keyof Parametre_Ligne_Type)[] =  ['id', 'parametre_rubrique', 'code','designation',] 
     const prismaParams : PrismaQuery = tableStateToPrismaQuery<Parametre_Ligne_Type>(mergedParams, Empty_Parametre_Ligne, quickSearchColumns);

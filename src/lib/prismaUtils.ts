@@ -1,6 +1,6 @@
 import { consoleWarn } from "./clientLog";
 import { DateStrToDate } from "./date-utils";
-import { OrderBy, PrismaQuery, SortDirection, TableState } from "./types";
+import { filterValueText, isExactFilter, OrderBy, PrismaQuery, SortDirection, TableState } from "./types";
 
 export enum PrismaFieldType {
   STRING,
@@ -85,7 +85,9 @@ export function tableStateToPrismaQuery<T extends object>(
   // 4a. Column-specific filter
   const columnFilterClauses = (Object.keys(filter) as Array<keyof T>)
     .map(key => {
-        const filterValue = filter[key];
+        // Plain string: 'contains' search; { value, exactFilter: true }: exact match
+        const exact = isExactFilter(filter[key]);
+        const filterValue = filterValueText(filter[key]);
         //consoleInfo(`tableStateToPrismaQuery key/filterValue: ${String(key)}/${filterValue}`)
 
         if (filterValue === null || filterValue === undefined || filterValue === '') {
@@ -98,7 +100,7 @@ export function tableStateToPrismaQuery<T extends object>(
 
         switch (fieldType) {
         case PrismaFieldType.STRING:
-            clause = { [key as string]: { contains: filterValue } };
+            clause = { [key as string]: exact ? { equals: filterValue } : { contains: filterValue } };
             break;
         case PrismaFieldType.NUMBER:
             const numValue = parseFloat(filterValue);
@@ -140,7 +142,7 @@ export function tableStateToPrismaQuery<T extends object>(
             break;
         default:
             // Fallback for unknown types
-            clause = { [key as string]: { contains: filterValue } };
+            clause = { [key as string]: exact ? { equals: filterValue } : { contains: filterValue } };
             break;
         }
         

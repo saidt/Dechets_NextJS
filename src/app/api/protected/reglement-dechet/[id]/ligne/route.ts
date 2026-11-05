@@ -29,7 +29,7 @@ export async function  GET(
     const searchParams = request.nextUrl.searchParams
     //consoleInfo("Item GET searchParams....................:", searchParams);
     const params : TableState<Reglement_Dechet_Ligne_Type> = httpListParams<Reglement_Dechet_Ligne_Type>(searchParams, REGLEMENT_DECHET_LIGNE_DEFAULT_SORT)
-    const masterFilter : Filter<Reglement_Dechet_Ligne_Type> = {'reglement_dechet_numero': id }
+    const masterFilter : Filter<Reglement_Dechet_Ligne_Type> = {'reglement_dechet_numero': { value: id, exactFilter: true } }
     const mergedParams = addTableStateFilter(params, masterFilter)
     const quickSearchColumns :  (keyof Reglement_Dechet_Ligne_Type)[] =  ['id', 'reglement_dechet_numero','sortie_dechet_numero', 'montant',] 
     const prismaParams : PrismaQuery = tableStateToPrismaQuery<Reglement_Dechet_Ligne_Type>(mergedParams, Empty_Reglement_Dechet_Ligne, quickSearchColumns);

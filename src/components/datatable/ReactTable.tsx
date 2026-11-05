@@ -13,7 +13,7 @@ import {
   Box,
 } from "@mui/material";
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Column, Filter, TableState } from "@/lib/types";
+import { Column, Filter, filterValueText, TableState } from "@/lib/types";
 import Pagination, { PaginationProps } from "./Pagination";
 import { LoadingBar } from "../ui/LoadingBar";
 import { formatValue } from "@/lib/number-utils";
@@ -240,7 +240,7 @@ export function ReactTable<T extends Record<string, any>>({
                         variant="outlined"
                         size="small"
                         fullWidth
-                        value={localFilter[col.accessor]}
+                        value={filterValueText(localFilter[col.accessor])}
                         onChange={(e) => handleFilterChange(col.accessor, e.target.value)}
                         onClick={(e) => e.stopPropagation()}
                       />

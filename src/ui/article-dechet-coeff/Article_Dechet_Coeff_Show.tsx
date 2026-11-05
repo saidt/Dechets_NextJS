@@ -97,7 +97,7 @@ const Article_Dechet_Coeff_Show = () => {
   };
 
   const articlePermanentFilter: Filter<Article_Type> = {
-    nature: 'DECHET',
+    nature: { value: 'DECHET', exactFilter: true },
   };
 
 

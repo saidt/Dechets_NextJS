@@ -150,7 +150,7 @@ const Sortie_Dechet_Detail_Show = () => {
   };
 
   const articlePermanentFilter: Filter<Article_Type> = {
-    nature: 'PF',
+    nature: { value: 'PF', exactFilter: true },
   };
 
 

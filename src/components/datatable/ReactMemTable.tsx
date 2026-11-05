@@ -12,7 +12,7 @@ import {
   Container,
   Box,
 } from "@mui/material";
-import { Column, Filter, TableState } from "@/lib/types";
+import { Column, Filter, filterValueText, TableState } from "@/lib/types";
 import Pagination, { PaginationProps } from "./Pagination";
 import { removeEmptyValues } from "@/lib/lib";
 import { LoadingBar } from "../ui/LoadingBar";
@@ -291,7 +291,7 @@ export function ReactMemTable<T extends Record<string, any>>({
                         variant="outlined"
                         size="small"
                         fullWidth
-                        value={localFilter[col.accessor]}
+                        value={filterValueText(localFilter[col.accessor])}
                         onChange={(e) => handleFilterChange(col.accessor, e.target.value)}
                         onClick={(e) => e.stopPropagation()}
                       />

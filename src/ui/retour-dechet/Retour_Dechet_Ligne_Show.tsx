@@ -160,7 +160,7 @@ const Retour_Dechet_Ligne_Show = () => {
   };
 
   const articlePermanentFilter: Filter<Article_Type> = {
-    nature: 'DECHET',
+    nature: { value: 'DECHET', exactFilter: true },
   };
 
   

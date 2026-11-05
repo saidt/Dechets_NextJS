@@ -1,4 +1,4 @@
-import { Filter, Sort } from "./types";
+import { Filter, FilterValue, filterValueText, isExactFilter, Sort } from "./types";
 
 export const applyFilter = <T extends Record<string, any>>(
   data: T[],
@@ -25,15 +25,16 @@ export const applyFilter = <T extends Record<string, any>>(
   // Column filters
   
   Object.entries(filter).forEach(([key, value]) => {
-    if (value) {
-      const filterValue = String(value).toLowerCase();
+    const text = filterValueText(value as FilterValue);
+    if (text) {
+      // Plain string: 'contains' search; { value, exactFilter: true }: exact match
+      // (trimmed, case-insensitive, like SQL Server equality)
+      const exact = isExactFilter(value as FilterValue);
+      const filterValue = exact ? text.trim().toLowerCase() : text.toLowerCase();
 
       filteredData = filteredData.filter(item => {
-        const fieldValue = resolve(item, key);
-
-        return String(fieldValue ?? "")
-          .toLowerCase()
-          .includes(filterValue);
+        const fieldValue = String(resolve(item, key) ?? "").toLowerCase();
+        return exact ? fieldValue.trim() === filterValue : fieldValue.includes(filterValue);
       });
     }
   });
