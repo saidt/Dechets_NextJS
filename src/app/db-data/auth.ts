@@ -1,10 +1,21 @@
-import { verifyPassword } from "@/lib/crypt";
+import { isBcryptHash, verifyPassword } from "@/lib/crypt";
 import { Credentials, credentials_Schema } from "@/types/credentials";
 import { prisma } from "@/lib/prisma";
 import { trimStrings } from "@/lib/lib";
 import { LOGIN_LOCK_MINUTES, LOGIN_MAX_FAILURES } from "@/lib/consts";
 
 export const INVALID_CREDENTIALS = "Invalid credentials !";
+
+/**
+ * Login refused. The message is always INVALID_CREDENTIALS (shown to the user, so it
+ * reveals nothing); reason says why, for the server log only.
+ */
+export class LoginRejectedError extends Error {
+  constructor(public readonly reason: string) {
+    super(INVALID_CREDENTIALS);
+    this.name = "LoginRejectedError";
+  }
+}
 
 // LOG.MESSAGE values written by the login process (also used to count failures)
 export const LOGIN_SUCCESS_MESSAGE = "User logged in";
@@ -57,16 +68,21 @@ export async function dbLogin(credentials: Credentials) {
 
   const user = trimStrings(data)
 
-  if (user && await verifyPassword(validateCredentials.password, user.psw_hash)) {
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      last_connect: user.last_connect,
-    };
-  } 
-  else {
-    // Same message whether the user is unknown or the password is wrong
-    throw new Error(INVALID_CREDENTIALS);
+  // Same message for the user whatever the reason; the reason is for the server log
+  if (!user) {
+    throw new LoginRejectedError("user not found");
   }
+  if (!isBcryptHash(user.psw_hash)) {
+    throw new LoginRejectedError("stored password hash is empty or not a bcrypt hash");
+  }
+  if (!await verifyPassword(validateCredentials.password, user.psw_hash)) {
+    throw new LoginRejectedError("wrong password (or NEXTAUTH_SECRET differs from when the hash was made)");
+  }
+
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    last_connect: user.last_connect,
+  };
 }

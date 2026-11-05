@@ -6,9 +6,9 @@ import { prisma } from './prisma';
 import { updateUserLastConnected } from '@/app/db-data/user';
 import { LogType } from '@/types/log';
 import { createLog } from '@/app/db-data/log';
-import { dbLogin, INVALID_CREDENTIALS, loginLockedUntil, LOGIN_BLOCKED_MESSAGE, LOGIN_FAILED_MESSAGE, LOGIN_SUCCESS_MESSAGE } from '@/app/db-data/auth';
+import { dbLogin, INVALID_CREDENTIALS, LoginRejectedError, loginLockedUntil, LOGIN_BLOCKED_MESSAGE, LOGIN_FAILED_MESSAGE, LOGIN_SUCCESS_MESSAGE } from '@/app/db-data/auth';
 import { ZodError } from 'zod';
-import { logError } from './serverLog';
+import { logError, logWarn } from './serverLog';
 import { LOGIN_MAX_FAILURES, SESSION_MAX_AGE } from './consts';
 import { getClientInfo } from './client-info';
 import { hashSessionToken } from './crypt';
@@ -52,6 +52,7 @@ export const authOptions: AuthOptions = {
             contexte: JSON.stringify({ lockedUntil }),
           }).catch(() => undefined);
           const minutes = Math.max(1, Math.ceil((lockedUntil.getTime() - Date.now()) / 60000));
+          logWarn(`Login refused for user "${userId}"`, `user id locked for ${minutes} more minute(s) after ${LOGIN_MAX_FAILURES} failed logins`);
           throw new Error(`Too many failed logins (${LOGIN_MAX_FAILURES}): try again in ${minutes} minute(s) !`);
         }
 
@@ -66,6 +67,11 @@ export const authOptions: AuthOptions = {
             logError('authorize', err);
             throw new Error("Login unavailable, please try again later !");
           }
+          // Why it was refused: server log only (the user always gets INVALID_CREDENTIALS)
+          const reason = err instanceof ZodError
+            ? `invalid input (${err.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ')})`
+            : err instanceof LoginRejectedError ? err.reason : 'invalid credentials';
+          logWarn(`Login failed for user "${userId}"`, reason);
           // Failed attempts are logged (user id only, never the password), to spot password guessing
           await createLog({
             id: 0,

@@ -38,9 +38,15 @@ export async function hashPassword(password: string): Promise<string> {
  * Check a password against the value stored in USER_.PSW_HASH.
  * bcrypt reads the salt and cost from the stored hash and compares in constant time.
  */
+/** True if the stored value is a bcrypt hash ("$2b$12$...", 60 characters). */
+export function isBcryptHash(storedHash: string | null | undefined): boolean {
+  const stored = storedHash?.trim();
+  return !!stored && stored.startsWith('$2');
+}
+
 export async function verifyPassword(password: string, storedHash: string | null | undefined): Promise<boolean> {
   const stored = storedHash?.trim();
-  if (!stored || !stored.startsWith('$2')) {
+  if (!stored || !isBcryptHash(stored)) {
     return false; // empty or not a bcrypt hash
   }
   return bcrypt.compare(pepper(password), stored);
