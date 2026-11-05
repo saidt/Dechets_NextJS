@@ -1,6 +1,8 @@
 "use client"; 
 
-import { Box, TextField, Button, Typography, Divider } from '@mui/material'
+import { Box, TextField, Button, Typography, Divider, IconButton, InputAdornment } from '@mui/material'
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useEffect, useState } from 'react'
 import { useSearchParams } from "next/navigation";
 import { useForm } from 'react-hook-form';
@@ -27,6 +29,7 @@ export default function LoginForm({
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [error, setError] = useState(errorMsg)
+  const [showPassword, setShowPassword] = useState(false)
 
   consoleInfo('LoginForm callbackUrl: ', callbackUrl)
 
@@ -91,10 +94,26 @@ export default function LoginForm({
       />
       <TextField
         label="Password"
-        type="password"
+        type={showPassword ? "text" : "password"}
         {...register("password")}
         id="password"
         autoComplete="current-password"
+        slotProps={{
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                  onClick={() => setShowPassword((v) => !v)}
+                  onMouseDown={(e) => e.preventDefault()}   // keep the focus in the password field
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          },
+        }}
         error={!!errors.password}
         helperText={errors.password?.message}
         fullWidth
