@@ -15,11 +15,13 @@ model User {
 
 model Session {
   id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
+  sessionToken String   @unique                  @map("SESSION_TOKEN")
+  userId       String                            @map("USER_ID")
   expires      DateTime @db.DateTime
   userAgent    String?  @map("USER_AGENT") @db.NVarChar(500)
   ipAddress    String?  @map("IP_ADDRESS") @db.NVarChar(45)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("SESSION")
 }

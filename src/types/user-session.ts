@@ -42,7 +42,7 @@ export const user_Session_Columns: Column<User_Session_Type>[] = [
   {
     accessor: "current",
     header: "Session actuelle",
-    width: 130,
+    width: 150,
     accessorFn: (row: User_Session_Type) => (row.current ? "Oui" : ""),
   },
 ];
