@@ -37,9 +37,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const [user, setUser] = useState<User_Type | null>(() => getCachedUser());
+  // The first render must be the same on the server (no sessionStorage there) and in the
+  // browser, otherwise React reports a hydration mismatch: start with no user and
+  // authLoading = true (pages wait instead of deciding "no role"), then read the cached
+  // user after mount.
+  const [user, setUser] = useState<User_Type | null>(null);
   const [userError, setUserError] = useState<Error | null>(null);
-  const [authLoading, setAuthLoading] = useState<boolean>(false);
+  const [authLoading, setAuthLoading] = useState<boolean>(true);
+
+  // Declared before the fetch effect below: if that one starts a refresh, its
+  // setAuthLoading(true) comes after this setAuthLoading(false) and wins.
+  useEffect(() => {
+    setUser(getCachedUser());
+    setAuthLoading(false);
+  }, []);
 
   const { data: session, status } = useSession();
   const userId = session?.user.id;
