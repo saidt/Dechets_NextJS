@@ -50,5 +50,5 @@ export async function fetch_Sortie_Dechet_Poids_DataSet(): Promise<Response> {
 }
 
 export async function fetch_Sortie_Dechet_Maj_Prix_Detail(numero: number): Promise<Response> {
-  return await apiFetch(`${SORTIE_DECHET_FETCH_URL}/${numero}/maj-prix-detail`);
+  return await apiFetch(`${SORTIE_DECHET_FETCH_URL}/${numero}/maj-prix-detail`, { method: "POST" });
 }

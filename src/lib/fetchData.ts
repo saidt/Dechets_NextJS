@@ -39,8 +39,11 @@ export async function fetchAllData<T extends Record<string, any>>(url: string, t
 }
 
 export async function fetchStoredProc(spName: string, params: Stored_Proc_Param_Type[]): Promise<NextResponse> {
-  const jsonParams = JSON.stringify(params)
-  const response  = await apiFetch(`/api/protected/sp/exec?spName=${spName}&params=${jsonParams}`, {});
+  const response  = await apiFetch(`/api/protected/sp/exec`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ spName, params }),
+  });
   const data = await response.json();
   return NextResponse.json(data);
 }

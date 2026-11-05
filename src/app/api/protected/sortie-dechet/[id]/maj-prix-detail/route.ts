@@ -6,16 +6,19 @@ import { SORTIE_DECHET_TABLE_NAME } from "@/types/sortie-dechet";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
 
-export async function GET(
+// POST, not GET: this runs an update (SORTIE_DECHET_DETAIL_MAJ_PRIX_VENTE). Browsers send
+// the session cookie (SameSite=Lax) with cross-site links, so a GET could be triggered from
+// another site; a cross-site POST is sent without it.
+export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const pathname = '/sortie-dechet/[id]/maj-prix-detail';
   if (! await checkRole(SORTIE_DECHET_TABLE_NAME+'.UPDATE')) {
     const err = new Error(`Forbidden: ${SORTIE_DECHET_TABLE_NAME}.UPDATE`);
-    logError(`${pathname} GET route`, err);
+    logError(`${pathname} POST route`, err);
     return NextResponse.json(
-      { error: `${pathname} GET route ${err.message}` },
+      { error: `${pathname} POST route ${err.message}` },
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
@@ -30,7 +33,7 @@ export async function GET(
     });
   } 
   catch (err: any) {
-    logError(`${pathname} GET route`, err);
+    logError(`${pathname} POST route`, err);
     return NextResponse.json(
       { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }

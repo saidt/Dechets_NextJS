@@ -8,14 +8,18 @@ import { getValidSession } from "@/lib/auth-lib";
 import { NextRequest, NextResponse } from "next/server";
 import { getErrorMessage } from "@/lib/errorMessage";
 
-export async function GET(request: NextRequest) {
+// POST, not GET: stored procedures can update data (e.g. MAJ = 'O' correction mode). Browsers
+// send the session cookie (SameSite=Lax) with cross-site links, so a GET could be triggered from
+// another site; a cross-site POST is sent without it.
+// Body: { spName: string, params: Stored_Proc_Param_Type[] }
+export async function POST(request: NextRequest) {
   const pathname = '/sp/exec';
   try {
     const session = await getValidSession();
 
     if (! session) {
       const err = new Error('Session not found  !')
-      logError(`${pathname} GET route`, err);
+      logError(`${pathname} POST route`, err);
       return NextResponse.json(
         { error: getErrorMessage(err) },
         { status: HttpStatus.UNAUTHORIZED }
@@ -24,21 +28,19 @@ export async function GET(request: NextRequest) {
 
     if (! session.user || ! session.user.id) {
       const err = new Error('User not found  !')
-      logError(`${pathname} GET route`, err);
+      logError(`${pathname} POST route`, err);
       return NextResponse.json(
         { error: getErrorMessage(err) },
         { status: HttpStatus.UNAUTHORIZED }
       );  
     }
 
-    const searchParams = request.nextUrl.searchParams
-    //consoleInfo("sp exec GET searchParams....................:", searchParams);
-    const spName = searchParams.get('spName')
-    //consoleInfo("sp exec GET spName....................:", spName);
+    const body = await request.json().catch(() => ({}))
+    const spName : string | undefined = typeof body?.spName === 'string' ? body.spName : undefined
 
     if (! spName) {
       const err = new Error('spName not found !')
-      logError(`${pathname} GET route`, err);
+      logError(`${pathname} POST route`, err);
       return NextResponse.json(
         { error: getErrorMessage(err) },
         { status: HttpStatus.BAD_REQUEST }
@@ -50,16 +52,22 @@ export async function GET(request: NextRequest) {
 
     if (! await exists_User_Role(userId, roleId)) {
       const err = new Error(`User ${userId} does not have ${roleId} role  !`)
-      logError(`${pathname} GET route`, err);
+      logError(`${pathname} POST route`, err);
       return NextResponse.json(
         { error: getErrorMessage(err) },
         { status: HttpStatus.UNAUTHORIZED }
       );
     }
 
-    const paramsStr = searchParams.get('params')
-    //consoleInfo("sp exec GET params....................:", paramsStr);
-    const params : Stored_Proc_Param_Type[] = paramsStr ? JSON.parse(paramsStr) : []
+    if (body?.params !== undefined && !Array.isArray(body.params)) {
+      const err = new Error('params must be an array !')
+      logError(`${pathname} POST route`, err);
+      return NextResponse.json(
+        { error: getErrorMessage(err) },
+        { status: HttpStatus.BAD_REQUEST }
+      );
+    }
+    const params : Stored_Proc_Param_Type[] = body?.params ?? []
 
     const data = await execStoredProc(spName, params)
 
@@ -69,7 +77,7 @@ export async function GET(request: NextRequest) {
     );
   }
   catch (err: any) {
-    logError(`${pathname} GET route`, err);
+    logError(`${pathname} POST route`, err);
     return NextResponse.json(
       { error: getErrorMessage(err) },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
