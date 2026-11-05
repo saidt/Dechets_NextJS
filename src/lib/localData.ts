@@ -1,9 +1,28 @@
-import { Filter, FilterValue, filterValueText, isExactFilter, Sort } from "./types";
+import { Column, Filter, FilterValue, filterValueText, isExactFilter, Sort } from "./types";
+import { formatValue } from "./number-utils";
 
+// Safely get a (possibly nested, "a.b") property value
+const resolvePath = (obj: any, path: string): any =>
+  path.split('.').reduce((prev, curr) => (prev ? prev[curr] : undefined), obj);
+
+/** The text a table cell shows for a row: accessorFn if any, then the table's formatting. */
+export function displayedValue<T extends Record<string, any>>(row: T, col: Column<T>): string {
+  const raw = col.accessorFn ? col.accessorFn(row) : resolvePath(row, String(col.accessor));
+  const { formatted } = formatValue(raw, col.meta?.decimals);
+  return formatted === null || formatted === undefined ? '' : String(formatted);
+}
+
+/**
+ * In-memory filtering. With columns, column filters and the quick search compare with
+ * what the table displays (accessorFn, date and number formatting), so what the user
+ * types matches what they see. Exact filters (permanentFilter) and filters without a
+ * matching column compare with the raw value.
+ */
 export const applyFilter = <T extends Record<string, any>>(
   data: T[],
   filter: Filter<T>,
-  quickSearch: string
+  quickSearch: string,
+  columns?: Column<T>[]
 ): T[] => {
   let filteredData = [...data];
 
@@ -12,13 +31,13 @@ export const applyFilter = <T extends Record<string, any>>(
     return path.split('.').reduce((prev, curr) => (prev ? prev[curr] : undefined), obj);
   };
 
-  // Global filter
+  // Global filter: the displayed values of the columns (or all raw values without columns)
   if (quickSearch) {
     const globalSearch = quickSearch.toLowerCase();
     filteredData = filteredData.filter(item =>
-      Object.values(item).some(val =>
-        String(val).toLowerCase().includes(globalSearch)
-      )
+      columns && columns.length > 0
+        ? columns.some(col => displayedValue(item, col).toLowerCase().includes(globalSearch))
+        : Object.values(item).some(val => String(val).toLowerCase().includes(globalSearch))
     );
   }
 
@@ -32,8 +51,10 @@ export const applyFilter = <T extends Record<string, any>>(
       const exact = isExactFilter(value as FilterValue);
       const filterValue = exact ? text.trim().toLowerCase() : text.toLowerCase();
 
+      const col = exact ? undefined : columns?.find(c => String(c.accessor) === key);
+
       filteredData = filteredData.filter(item => {
-        const fieldValue = String(resolve(item, key) ?? "").toLowerCase();
+        const fieldValue = (col ? displayedValue(item, col) : String(resolve(item, key) ?? "")).toLowerCase();
         return exact ? fieldValue.trim() === filterValue : fieldValue.includes(filterValue);
       });
     }

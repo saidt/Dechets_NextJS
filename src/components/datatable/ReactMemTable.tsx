@@ -69,7 +69,8 @@ export function ReactMemTable<T extends Record<string, any>>({
     try {
       //consoleInfo('ReactMemTable filterDataCallback tableState.filter: ', tableState.filter)
       const cleanFilter : Filter<T> =  removeEmptyValues(tableState.filter)
-      const data = applyFilter(allData, cleanFilter, tableState.quickSearch);
+      // Compare with the displayed values (columns), like what the user sees
+      const data = applyFilter(allData, cleanFilter, tableState.quickSearch, columns);
       //consoleInfo('ReactMemTable filterDataCallback data: ', data)
       //consoleInfo('ReactMemTable filterDataCallback total: ', data.length)
       setFilteredData(data);
@@ -81,7 +82,7 @@ export function ReactMemTable<T extends Record<string, any>>({
     finally {
       setLocalLoading(false);
     }
-  }, [allData, filter, quickSearch]);
+  }, [allData, filter, quickSearch, columns]);
 
   const sortDataCallback = useCallback(async () => {
     //consoleInfo('ReactMemTable sortDataCallback')
