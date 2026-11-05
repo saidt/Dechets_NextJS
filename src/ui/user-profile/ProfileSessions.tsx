@@ -1,83 +1,67 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import {
-  Box, Chip, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Tooltip, Typography,
-} from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
+import BlankCard from "../../components/shared/BlankCard";
+import { GenericMemListPage } from "@/components/datatable/GenericMemListPage";
+import { USER_SESSION_CHILD_URL, user_Session_Columns, User_Session_Type } from "@/types/user-session";
 import { signOut, useSession } from "next-auth/react";
-import BlankCard from "@/components/shared/BlankCard";
-import { RefreshButton } from "@/components/ui/ActionButtons";
-import { LoadingBar } from "@/components/ui/LoadingBar";
-import ConfirmationDialog from "@/components/ui/dialog/ConfirmationDialog";
-import { useAppContext } from "@/app/context/AppContext";
+import { USER_FETCH_URL } from "@/types/user";
 import { apiFetch } from "@/lib/apiFetch";
 import { getResponseData } from "@/lib/html";
-import { handleError } from "@/lib/error";
-import { formatDateTime } from "@/lib/date-utils";
+import { useRouter } from "next/navigation";
+import useAuth from "@/app/context/UseAuth";
+import { useEffect, useState } from "react";
+import { clientError, handleError } from "@/lib/error";
+import { useAppContext } from "@/app/context/AppContext";
+import { IconButton, Tooltip } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import ConfirmationDialog from "@/components/ui/dialog/ConfirmationDialog";
 import { ROLES_CACHE_KEY } from "@/lib/consts";
-import { USER_FETCH_URL } from "@/types/user";
-import { USER_SESSION_CHILD_URL, User_Session_Type } from "@/types/user-session";
-
-/** "Chrome 131 / Windows" from a User-Agent string (best effort, for display only). */
-function describeBrowser(userAgent: string | null): string {
-  if (!userAgent) return "Inconnu";
-  const browser =
-    userAgent.match(/Edg\/(\d+)/) ? `Edge ${userAgent.match(/Edg\/(\d+)/)![1]}` :
-    userAgent.match(/OPR\/(\d+)/) ? `Opera ${userAgent.match(/OPR\/(\d+)/)![1]}` :
-    userAgent.match(/Firefox\/(\d+)/) ? `Firefox ${userAgent.match(/Firefox\/(\d+)/)![1]}` :
-    userAgent.match(/Chrome\/(\d+)/) ? `Chrome ${userAgent.match(/Chrome\/(\d+)/)![1]}` :
-    userAgent.match(/Version\/(\d+).*Safari/) ? `Safari ${userAgent.match(/Version\/(\d+)/)![1]}` :
-    "Navigateur inconnu";
-  const os =
-    /Windows/.test(userAgent) ? "Windows" :
-    /Android/.test(userAgent) ? "Android" :
-    /iPhone|iPad/.test(userAgent) ? "iOS" :
-    /Mac OS X/.test(userAgent) ? "macOS" :
-    /Linux/.test(userAgent) ? "Linux" :
-    "OS inconnu";
-  return `${browser} / ${os}`;
-}
+import { describeBrowser } from "@/lib/user-agent";
 
 const ProfileSessions = () => {
-  const { data: session } = useSession();
-  const { addNotification } = useAppContext();
-  const [sessions, setSessions] = useState<User_Session_Type[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { data: session, status } = useSession();
+  const { authLoading } = useAuth();
+  const router = useRouter();
+  const { getCurrentUrl, addNotification } = useAppContext();
+  const curUrl = getCurrentUrl()
+  const user = session?.user;
+
   const [toTerminate, setToTerminate] = useState<User_Session_Type | null>(null);
-
-  const userId = session?.user?.id;
-  const sessionsUrl = userId ? `${USER_FETCH_URL}/${encodeURIComponent(userId)}/${USER_SESSION_CHILD_URL}` : null;
-
-  const loadSessions = useCallback(async () => {
-    if (!sessionsUrl) return;
-    setLoading(true);
-    try {
-      const response = await apiFetch(sessionsUrl);
-      const result = await getResponseData(response, "ProfileSessions loadSessions");
-      setSessions(result.data);
-    }
-    catch (err) {
-      handleError("Failed to load sessions", err, addNotification);
-    }
-    finally {
-      setLoading(false);
-    }
-  }, [sessionsUrl, addNotification]);
+  const [terminating, setTerminating] = useState(false);
+  // Changing the key remounts the list, which reloads the sessions
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
-    loadSessions();
-  }, [loadSessions]);
+    if (status !== "loading" && !session) {
+      clientError("Session introuvable", null, curUrl, router);
+    }
+  }, [status, session, curUrl, router]);
+
+  useEffect(() => {
+    if (status !== "loading" && !authLoading && (!user || !user.id)) {
+      clientError("ProfileSessions: no user data!", null, curUrl, router);
+    }
+  }, [user, status, authLoading, curUrl, router]);
+
+  const sessionsUrl = user ? `${USER_FETCH_URL}/${encodeURIComponent(user.id)}/${USER_SESSION_CHILD_URL}` : '';
+
+  async function fetchAllRows() : Promise<User_Session_Type[]> {
+    if (! user) {
+      return Promise.reject(null)
+    }
+    const response = await apiFetch(sessionsUrl);
+    const result = await getResponseData(response, 'ProfileSessions fetchAllRows');
+    return result.data
+  }
 
   const handleTerminate = async () => {
     const target = toTerminate;
     setToTerminate(null);
-    if (!target || !sessionsUrl) return;
-    setLoading(true);
+    if (!target || !user) return;
+    setTerminating(true);
     try {
       const response = await apiFetch(`${sessionsUrl}/${encodeURIComponent(target.id)}`, { method: "DELETE" });
-      await getResponseData(response, "ProfileSessions handleTerminate");
+      await getResponseData(response, 'ProfileSessions handleTerminate');
       if (target.current) {
         // This browser's own session: log out now instead of waiting for the next request
         sessionStorage.removeItem(ROLES_CACHE_KEY);
@@ -85,78 +69,40 @@ const ProfileSessions = () => {
         return;
       }
       addNotification("Session terminée", "success");
-      await loadSessions();
+      setReloadKey((k) => k + 1);
     }
     catch (err) {
       handleError("Failed to terminate session", err, addNotification);
     }
     finally {
-      setLoading(false);
+      setTerminating(false);
     }
   };
 
+  // Per-row "Terminer" button, in the Actions column (same mechanism as GenericListPage)
+  const renderRowActions = (row: User_Session_Type) => (
+    <Tooltip title={row.current ? "Terminer cette session (vous serez déconnecté)" : "Terminer cette session"}>
+      <span>
+        <IconButton aria-label="Terminer la session" color="error" size="small" onClick={() => setToTerminate(row)}>
+          <LogoutIcon fontSize="small" />
+        </IconButton>
+      </span>
+    </Tooltip>
+  );
+
+  if (!session || !user) return null;
+
   return (
     <BlankCard>
-      <LoadingBar loading={loading} />
-      <Box sx={{ p: 2 }}>
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2, gap: 2, flexWrap: "wrap" }}>
-          <Typography variant="body2" color="text.secondary">
-            Sessions ouvertes avec votre compte. Terminer une session déconnecte le navigateur qui l&apos;utilise.
-          </Typography>
-          <RefreshButton onClick={loadSessions}>Rafraîchir</RefreshButton>
-        </Box>
-        <TableContainer>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Début</TableCell>
-                <TableCell>Expire</TableCell>
-                <TableCell>Navigateur</TableCell>
-                <TableCell>Adresse IP</TableCell>
-                <TableCell />
-                <TableCell align="right">Terminer</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {sessions.length === 0 && !loading && (
-                <TableRow>
-                  <TableCell colSpan={6}>Aucune session active</TableCell>
-                </TableRow>
-              )}
-              {sessions.map((s) => (
-                <TableRow key={s.id} hover>
-                  <TableCell>{formatDateTime(new Date(s.started))}</TableCell>
-                  <TableCell>{formatDateTime(new Date(s.expires))}</TableCell>
-                  <TableCell>
-                    <Tooltip title={s.userAgent ?? ""}>
-                      <span>{describeBrowser(s.userAgent)}</span>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell>{s.ipAddress || "—"}</TableCell>
-                  <TableCell>
-                    {s.current && <Chip label="Session actuelle" color="primary" size="small" />}
-                  </TableCell>
-                  <TableCell align="right">
-                    <Tooltip title={s.current ? "Terminer cette session (vous serez déconnecté)" : "Terminer cette session"}>
-                      <span>
-                        <IconButton
-                          aria-label="Terminer la session"
-                          color="error"
-                          onClick={() => setToTerminate(s)}
-                          disabled={loading}
-                        >
-                          <LogoutIcon />
-                        </IconButton>
-                      </span>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-
+      <GenericMemListPage<User_Session_Type>
+        key={reloadKey}
+        title="Sessions de l'utilisateur"
+        columns={user_Session_Columns}
+        isModalList={false}
+        fetchAllData={fetchAllRows}
+        renderRowActions={renderRowActions}
+        loading={authLoading || terminating}
+      />
       <ConfirmationDialog
         open={toTerminate !== null}
         onClose={() => setToTerminate(null)}
@@ -165,7 +111,7 @@ const ProfileSessions = () => {
         description={
           toTerminate?.current
             ? "C'est la session de ce navigateur : vous serez déconnecté. Continuer ?"
-            : `Terminer la session ${describeBrowser(toTerminate?.userAgent ?? null)} (${toTerminate?.ipAddress || "IP inconnue"}) ?`
+            : `Terminer la session ${describeBrowser(toTerminate?.userAgent)} (${toTerminate?.ipAddress || "IP inconnue"}) ?`
         }
       />
     </BlankCard>

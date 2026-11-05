@@ -28,6 +28,7 @@ export interface GenericMemListPageProps<T extends Record<string, any>> {
   optionsMenu?: React.ReactNode[];
   fetchAllData?: () => Promise<T[]>;
   //getId: (item: T) => string | number;
+  renderRowActions?: (item: T) => React.ReactNode;
   onRowClick?: (item: T) => void;
   onPrint?: (data: T[]) => Promise<void>;
 }
@@ -43,6 +44,7 @@ export function GenericMemListPage<T extends Record<string, any>>({
   optionsMenu,
   fetchAllData,
   //getId,
+  renderRowActions,
   onRowClick,
   onPrint
 }: GenericMemListPageProps<T>) {
@@ -210,6 +212,7 @@ export function GenericMemListPage<T extends Record<string, any>>({
         tableState={tableState}
         loading={localLoading || (loading ?? false)}
         onTableStateChange={setTableState}
+        renderRowActions={renderRowActions}
         onRowClick={onRowClick}
       />
     </Box>

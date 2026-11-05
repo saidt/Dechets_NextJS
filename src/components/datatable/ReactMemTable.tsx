@@ -38,6 +38,8 @@ export interface ReactMemTableProps<T extends Record<string, any>> {
   tableState: TableState<T>;
   loading: boolean;
   allData: T[];
+  // Same as ReactTable: adds an "Actions" column (no sort/filter) rendering these per row
+  renderRowActions?: (row: T) => React.ReactNode;
   onRowClick?: (row: T) => void;
   onTableStateChange: React.Dispatch<React.SetStateAction<TableState<T>>>;
 }
@@ -47,6 +49,7 @@ export function ReactMemTable<T extends Record<string, any>>({
   tableState,
   loading,
   allData,
+  renderRowActions,
   onRowClick,
   onTableStateChange,
 }: ReactMemTableProps<T>) {
@@ -170,6 +173,14 @@ export function ReactMemTable<T extends Record<string, any>>({
     onTableStateChange((prev) => ({ ...prev, page: 0, pageSize: newPageSize }));
   };
 
+  const tableColumns: Column<T>[] = useMemo(() => {
+    const cols = [...columns];
+    if (renderRowActions) {
+      cols.push({ accessor: "actions" as any, header: "Actions", width: 100 });
+    }
+    return cols;
+  }, [columns, renderRowActions]);
+
   const tableRows = useMemo(() => {
     if (paginatedData.length === 0) {
       return (
@@ -188,7 +199,19 @@ export function ReactMemTable<T extends Record<string, any>>({
         onClick={() => onRowClick && onRowClick(row)}
         sx={onRowClick ? { cursor: "pointer" } : {}}
       >
-        {columns.map((col: Column<T>) => {
+        {tableColumns.map((col: Column<T>) => {
+          if (col.accessor === "actions") {
+            return (
+              <TableCell
+                key={String(col.accessor)}
+                align="center"
+                style={{ width: col.width }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {renderRowActions ? renderRowActions(row) : null}
+              </TableCell>
+            );
+          }
           const raw = col.accessorFn ? col.accessorFn(row) : row[col.accessor];
           const { formatted, align } = formatValue(raw, col.meta?.decimals);
           return (
@@ -203,7 +226,7 @@ export function ReactMemTable<T extends Record<string, any>>({
         })}
       </TableRow>
     ));
-  }, [paginatedData, loading, localLoading]);
+  }, [paginatedData, loading, localLoading, tableColumns]);
 
   useEffect(() => {
     filterDataCallback();
@@ -224,7 +247,7 @@ export function ReactMemTable<T extends Record<string, any>>({
           <Table>
             <TableHead>
               <TableRow sx={{ backgroundColor: "primary.main" }}>
-                {columns.map((col) => (
+                {tableColumns.map((col) => (
                   <TableCell
                     key={`${String(col.accessor)}-header`}
                     style={{ width: col.width }}
@@ -257,7 +280,7 @@ export function ReactMemTable<T extends Record<string, any>>({
                 ))}
               </TableRow>
               <TableRow>
-                {columns.map((col) => (
+                {tableColumns.map((col) => (
                   <TableCell
                     key={`${String(col.accessor)}-filter`}
                     sx={{ py: 1 }}
@@ -277,7 +300,7 @@ export function ReactMemTable<T extends Record<string, any>>({
                 ))}
               </TableRow>
               <TableRow>
-                <TableCell colSpan={columns.length} style={{ padding: 0 }}>
+                <TableCell colSpan={tableColumns.length} style={{ padding: 0 }}>
                   <LoadingBar loading={loading || localLoading} />
                 </TableCell>
               </TableRow>
