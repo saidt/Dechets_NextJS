@@ -2,7 +2,7 @@
 
 import { Box, TextField, Button, Typography, Divider } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { credentials_Schema, Credentials_Form_Data, Credentials } from '../../types/credentials';
@@ -30,7 +30,6 @@ export default function LoginForm({
 
   consoleInfo('LoginForm callbackUrl: ', callbackUrl)
 
-  const router = useRouter();
 
   useEffect(() => {
     if (credentials) {
@@ -54,7 +53,11 @@ export default function LoginForm({
         setError(result.error,)
       } 
       else if (result?.ok) {
-        router.push(callbackUrl || '/');
+        // Full page load (not router.push): browsers' password managers (Firefox in
+        // particular) offer to save the credentials when the page is left after a login
+        // form submission; a client-side route change is not detected.
+        window.location.assign(callbackUrl || '/');
+        return;
       }
     } 
     catch (err) {
@@ -79,6 +82,8 @@ export default function LoginForm({
       <TextField
         label="User id"        
         {...register("userId")}
+        id="userId"
+        autoComplete="username"   // lets password managers recognise the login form
         error={!!errors.userId}
         helperText={errors.userId?.message}
         fullWidth
@@ -88,6 +93,8 @@ export default function LoginForm({
         label="Password"
         type="password"
         {...register("password")}
+        id="password"
+        autoComplete="current-password"
         error={!!errors.password}
         helperText={errors.password?.message}
         fullWidth
