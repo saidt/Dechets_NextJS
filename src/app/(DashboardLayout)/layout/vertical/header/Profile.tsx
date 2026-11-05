@@ -1,4 +1,4 @@
-import { useState, useContext, SetStateAction, useEffect } from 'react';
+import { useState, useContext, SetStateAction } from 'react';
 import Link from "next/link";
 import { Box, Menu, Typography, Divider, IconButton } from '@mui/material';
 import * as dropdownData from './data';
@@ -9,9 +9,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Loading from '@/components/ui/Loading';
 import { ROLES_CACHE_KEY } from '@/lib/consts';
-import { useRouter } from 'next/navigation';
-import { clientError } from '@/lib/error';
-import { useAppContext } from '@/app/context/AppContext';
 import type { Session } from "next-auth";
 
 type LoggedIn_Props = {
@@ -218,15 +215,9 @@ const Profile = () => {
 
   const { data: session, status } = useSession()
 
-  const router =  useRouter()
-  const { getCurrentUrl } = useAppContext();
-  const curUrl = getCurrentUrl()
-
-  useEffect(() => {
-    if (status !== "loading" && !session) {
-      clientError("Profile: session introuvable", null, curUrl, router);
-    }
-  }, [status, session, curUrl, router]); 
+  // No redirect when there is no session: public pages (/, /about, /error) use this
+  // header too, and show the "Login" entry instead. Protected pages are already sent
+  // to the login page by proxy.ts.
 
   if (status === 'loading') {
     return <Loading />
