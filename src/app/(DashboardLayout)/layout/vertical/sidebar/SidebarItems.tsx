@@ -1,4 +1,5 @@
-import Menuitems from './MenuItems';
+import Menuitems, { filterMenuByRole } from './MenuItems';
+import useAuth from '@/app/context/UseAuth';
 import { usePathname } from "next/navigation";
 import { Box, List, useMediaQuery } from '@mui/material';
 import NavItem from './NavItem';
@@ -53,11 +54,13 @@ const SidebarItems = () => {
   }
 
   const { data: session} = useSession()
+  // Only the menus the user has the role for
+  const { hasRole } = useAuth()
 
   return (
     <Box sx={{ px: 2, borderRadius: 0, mt: 2 }}>
       <List sx={{ pt: 0 }} className="sidebarNav">
-      { session ? showItems(Menuitems) : showItems(GuestMenuitems)} 
+      { session ? showItems(filterMenuByRole(Menuitems, hasRole)) : showItems(GuestMenuitems)} 
       </List>
     </Box>
   );

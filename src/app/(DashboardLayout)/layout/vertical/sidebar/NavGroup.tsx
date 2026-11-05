@@ -6,11 +6,13 @@ type NavGroupType = {
   subheader?: string;
 };
 
-type NavElementType = {
+export type NavElementType = {
   id: string;
   title: string;
   icon: string;
   href: string;
+  // Role needed to see this menu (same role the page checks); none = visible to all logged-in users
+  role?: string;
   children?: NavElementType[];
 }
 

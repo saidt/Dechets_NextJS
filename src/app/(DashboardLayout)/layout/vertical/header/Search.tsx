@@ -13,7 +13,8 @@ import {
   ListItemButton,
 } from '@mui/material';
 import { IconX } from '@tabler/icons-react';
-import Menuitems from '../sidebar/MenuItems';
+import Menuitems, { filterMenuByRole } from '../sidebar/MenuItems';
+import useAuth from '@/app/context/UseAuth';
 import Link from 'next/link';
 import { Icon } from "@iconify/react";
 import { useSession } from 'next-auth/react';
@@ -47,7 +48,9 @@ const Search = () => {
 
     return rotr;
   };
-  const searchData = filterRoutes(Menuitems as menuType[], search);
+  const { hasRole } = useAuth();
+  // Search only among the menus the user has the role for
+  const searchData = filterRoutes(filterMenuByRole(Menuitems, hasRole) as menuType[], search);
 
 
   if (!session) {
