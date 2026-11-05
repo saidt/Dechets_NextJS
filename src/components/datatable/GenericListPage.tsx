@@ -198,7 +198,7 @@ export function GenericListPage<T extends Record<string, any>>({
         addNotification('Filtre sauvegardé', 'success')
       }
       catch (err: any) {
-        addNotification(String(err), 'error')
+        addNotification(err instanceof Error ? err.message : String(err), 'error')
       }
     }
   };

@@ -138,7 +138,7 @@ export function GenericMemListPage<T extends Record<string, any>>({
     } 
     catch (err: any) {
       consoleError(`Failed to print ${title}`, { error: String(err) });
-      addNotification(String(err), "error");
+      addNotification(err instanceof Error ? err.message : String(err), "error");
     }
   };
 
