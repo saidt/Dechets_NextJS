@@ -1,5 +1,4 @@
 import { AuthOptions } from 'next-auth';
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { v4 as uuid } from "uuid"
 import CredentialsProvider  from 'next-auth/providers/credentials';
 import { credentials_Schema } from '@/types/credentials';
@@ -16,7 +15,8 @@ import { hashSessionToken } from './crypt';
 import { consoleDebug, consoleError, consoleWarn } from './clientLog';
 
 export const authOptions: AuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // No adapter: with Credentials + JWT strategy NextAuth never uses one; the Session
+  // rows are created, checked and deleted by this app (jwt callback, auth-lib).
   session: {
     strategy: "jwt",
     maxAge: SESSION_MAX_AGE, // 1 day in seconds

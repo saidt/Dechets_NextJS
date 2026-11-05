@@ -44,6 +44,24 @@ create unique index IDX_UQ_SESSION_TOKEN on DBO.SESSION (
 )
 go
 
+/*==============================================================*/
+/* Index : IDX_SESSION_USER_ID                                  */
+/* (a user's sessions: profile list, terminate other sessions)  */
+/*==============================================================*/
+create index IDX_SESSION_USER_ID on DBO.SESSION (
+	USER_ID ASC
+)
+go
+
+/*==============================================================*/
+/* Index : IDX_SESSION_EXPIRES                                  */
+/* (active sessions list, cleanup of expired sessions)          */
+/*==============================================================*/
+create index IDX_SESSION_EXPIRES on DBO.SESSION (
+	EXPIRES ASC
+)
+go
+
 alter table DBO.SESSION
    add constraint FK_USER_SESSION foreign key (USER_ID)
       references USER_ (ID)
