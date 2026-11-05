@@ -17,6 +17,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ConfirmationDialog from "@/components/ui/dialog/ConfirmationDialog";
 import { ROLES_CACHE_KEY } from "@/lib/consts";
 import { describeBrowser } from "@/lib/user-agent";
+import { TerminateOtherSessionsMenu } from "@/components/ui/menu/Menus";
 
 const ProfileSessions = () => {
   const { data: session, status } = useSession();
@@ -27,6 +28,7 @@ const ProfileSessions = () => {
   const user = session?.user;
 
   const [toTerminate, setToTerminate] = useState<User_Session_Type | null>(null);
+  const [confirmOthers, setConfirmOthers] = useState(false);
   const [terminating, setTerminating] = useState(false);
   // Changing the key remounts the list, which reloads the sessions
   const [reloadKey, setReloadKey] = useState(0);
@@ -79,6 +81,29 @@ const ProfileSessions = () => {
     }
   };
 
+  // Log out everywhere else: all sessions except this browser's
+  const handleTerminateOthers = async () => {
+    setConfirmOthers(false);
+    if (!user) return;
+    setTerminating(true);
+    try {
+      const response = await apiFetch(sessionsUrl, { method: "DELETE" });
+      const result = await getResponseData(response, 'ProfileSessions handleTerminateOthers');
+      addNotification(result.deleted > 0 ? `${result.deleted} session(s) terminée(s)` : "Aucune autre session", "success");
+      setReloadKey((k) => k + 1);
+    }
+    catch (err) {
+      handleError("Failed to terminate other sessions", err, addNotification);
+    }
+    finally {
+      setTerminating(false);
+    }
+  };
+
+  const optionsMenu = [
+    <TerminateOtherSessionsMenu key="terminate-others" onClick={() => setConfirmOthers(true)} />,
+  ];
+
   // Per-row "Terminer" button, in the Actions column (same mechanism as GenericListPage)
   const renderRowActions = (row: User_Session_Type) => (
     <Tooltip title={row.current ? "Terminer cette session (vous serez déconnecté)" : "Terminer cette session"}>
@@ -101,7 +126,15 @@ const ProfileSessions = () => {
         isModalList={false}
         fetchAllData={fetchAllRows}
         renderRowActions={renderRowActions}
+        optionsMenu={optionsMenu}
         loading={authLoading || terminating}
+      />
+      <ConfirmationDialog
+        open={confirmOthers}
+        onClose={() => setConfirmOthers(false)}
+        onConfirm={handleTerminateOthers}
+        title="Terminer les autres sessions"
+        description="Toutes vos sessions seront terminées, sauf celle de ce navigateur. Continuer ?"
       />
       <ConfirmationDialog
         open={toTerminate !== null}

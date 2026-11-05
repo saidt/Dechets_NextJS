@@ -11,6 +11,7 @@ import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 interface LastAccessedMenuProps extends MenuItemProps {
   lastAccessed: number | string | null;
@@ -164,5 +165,16 @@ export const StatistiqueMenu = ({caption, ...restProps} : StatistiqueMenuProps) 
       </ListItemIcon>
       {caption}
     </MenuItem>    
+  );
+};
+
+export const TerminateOtherSessionsMenu = (props : MenuItemProps) => {
+  return (
+    <MenuItem {...props}>
+      <ListItemIcon>
+        <LogoutIcon color="error" />
+      </ListItemIcon>
+      Terminer les autres sessions
+    </MenuItem>
   );
 };

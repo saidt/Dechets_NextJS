@@ -65,3 +65,11 @@ export async function delete_Session(sessionId: string): Promise<string | null> 
   await prisma.session.deleteMany({ where: { id: sessionId } });
   return row.userId.trim();
 }
+
+/** Deletes all sessions of a user except the given one ("log out everywhere else"). Returns how many. */
+export async function delete_Other_User_Sessions(userId: string, currentSessionId: string): Promise<number> {
+  const result = await prisma.session.deleteMany({
+    where: { userId, NOT: { sessionToken: hashSessionToken(currentSessionId) } },
+  });
+  return result.count;
+}
