@@ -4,7 +4,7 @@ import { create_Unite_Conversion, delete_Unite_Conversion, read_Unite_Conversion
 import { localLog } from "@/components/logger/localLog";
 import { Unite_Conversion_Type, UNITE_CONVERSION_TABLE_NAME } from "@/types/unite-conversion";
 import { cookies } from "next/headers";
-import { remoteLog } from "@/components/logger/remoteLog";
+import { auditLog } from "@/lib/auditLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -68,7 +68,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Unite_Conversion created", cookieHeader, {id: data.data.id});
-      remoteLog("info", "Unite_Conversion created", cookieHeader, {id: data.data.id});
+      await auditLog("info", "Unite_Conversion created", {id: data.data.id});
     }
     return response;
   }
@@ -100,7 +100,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Unite_Conversion updated", cookieHeader, {id: data.data.id});
-      remoteLog("info", "Unite_Conversion updated", cookieHeader, {id: data.data.id});
+      await auditLog("info", "Unite_Conversion updated", {id: data.data.id});
     }
     return response;
   }
@@ -142,7 +142,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Unite_Conversion deleted", cookieHeader, {id});
-      remoteLog("info", "Unite_Conversion deleted", cookieHeader, {id});
+      await auditLog("info", "Unite_Conversion deleted", {id});
     }
     return response;
   }

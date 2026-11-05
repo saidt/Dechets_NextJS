@@ -4,7 +4,7 @@ import { create_Reglement_Dechet_Ligne, delete_Reglement_Dechet_Ligne, read_Regl
 import { localLog } from "@/components/logger/localLog";
 import { Reglement_Dechet_Ligne_Type, REGLEMENT_DECHET_LIGNE_TABLE_NAME } from "@/types/reglement-dechet-ligne";
 import { cookies } from "next/headers";
-import { remoteLog } from "@/components/logger/remoteLog";
+import { auditLog } from "@/lib/auditLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -66,7 +66,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Reglement_Dechet_Ligne created", cookieHeader, {id: data.data.id});
-      remoteLog("info", "Reglement_Dechet_Ligne created", cookieHeader, {id: data.data.id});
+      await auditLog("info", "Reglement_Dechet_Ligne created", {id: data.data.id});
     }
     return response;
   }
@@ -98,7 +98,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Reglement_Dechet_Ligne updated", cookieHeader, {id: data.data.id});
-      remoteLog("info", "Reglement_Dechet_Ligne updated", cookieHeader, {id: data.data.id});
+      await auditLog("info", "Reglement_Dechet_Ligne updated", {id: data.data.id});
     }
     return response;
   }
@@ -140,7 +140,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Reglement_Dechet_Ligne deleted", cookieHeader, {id});
-      remoteLog("info", "Reglement_Dechet_Ligne deleted", cookieHeader, {id});
+      await auditLog("info", "Reglement_Dechet_Ligne deleted", {id});
     }
     return response;
   }

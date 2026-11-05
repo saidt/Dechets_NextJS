@@ -4,7 +4,7 @@ import { create_Article_Dechet_Coeff, delete_Article_Dechet_Coeff, read_Article_
 import { localLog } from "@/components/logger/localLog";
 import { Article_Dechet_Coeff_Type, ARTICLE_DECHET_COEFF_TABLE_NAME } from "@/types/article-dechet-coeff";
 import { cookies } from "next/headers";
-import { remoteLog } from "@/components/logger/remoteLog";
+import { auditLog } from "@/lib/auditLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -65,7 +65,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Article_Dechet_Coeff created", cookieHeader, {id: data.data.article_code});
-      remoteLog("info", "Article_Dechet_Coeff created", cookieHeader, {id: data.data.article_code});
+      await auditLog("info", "Article_Dechet_Coeff created", {id: data.data.article_code});
     }
     return response;
   }
@@ -97,7 +97,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Article_Dechet_Coeff updated", cookieHeader, {id: data.data.article_code});
-      remoteLog("info", "Article_Dechet_Coeff updated", cookieHeader, {id: data.data.article_code});
+      await auditLog("info", "Article_Dechet_Coeff updated", {id: data.data.article_code});
     }
     return response;
   }
@@ -139,7 +139,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Article_Dechet_Coeff deleted", cookieHeader, {id});
-      remoteLog("info", "Article_Dechet_Coeff deleted", cookieHeader, {id});
+      await auditLog("info", "Article_Dechet_Coeff deleted", {id});
     }
     return response;
   }

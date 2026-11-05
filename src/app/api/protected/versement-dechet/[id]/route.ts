@@ -4,7 +4,7 @@ import { create_Versement_Dechet, delete_Versement_Dechet, read_Versement_Dechet
 import { localLog } from "@/components/logger/localLog";
 import { Versement_Dechet_Type, VERSEMENT_DECHET_TABLE_NAME } from "@/types/versement-dechet";
 import { cookies } from "next/headers";
-import { remoteLog } from "@/components/logger/remoteLog";
+import { auditLog } from "@/lib/auditLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -68,7 +68,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Versement_Dechet created", cookieHeader, {id: data.data.numero});
-      remoteLog("info", "Versement_Dechet created", cookieHeader, {id: data.data.numero});
+      await auditLog("info", "Versement_Dechet created", {id: data.data.numero});
     }
     return response;
   }
@@ -100,7 +100,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Versement_Dechet updated", cookieHeader, {id: data.data.numero});
-      remoteLog("info", "Versement_Dechet updated", cookieHeader, {id: data.data.numero});
+      await auditLog("info", "Versement_Dechet updated", {id: data.data.numero});
     }
     return response;
   }
@@ -142,7 +142,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Versement_Dechet deleted", cookieHeader, {id});
-      remoteLog("info", "Versement_Dechet deleted", cookieHeader, {id});
+      await auditLog("info", "Versement_Dechet deleted", {id});
     }
     return response;
   }

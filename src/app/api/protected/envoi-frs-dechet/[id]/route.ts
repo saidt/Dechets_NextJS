@@ -4,7 +4,7 @@ import { create_Envoi_Frs_Dechet, delete_Envoi_Frs_Dechet, read_Envoi_Frs_Dechet
 import { localLog } from "@/components/logger/localLog";
 import { Envoi_Frs_Dechet_Type, ENVOI_FRS_DECHET_TABLE_NAME } from "@/types/envoi-frs-dechet";
 import { cookies } from "next/headers";
-import { remoteLog } from "@/components/logger/remoteLog";
+import { auditLog } from "@/lib/auditLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -69,7 +69,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Envoi_Frs_Dechet created", cookieHeader, {id: data.data.id});
-      remoteLog("info", "Envoi_Frs_Dechet created", cookieHeader, {id: data.data.id});
+      await auditLog("info", "Envoi_Frs_Dechet created", {id: data.data.id});
     }
     return response;
   }
@@ -101,7 +101,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Envoi_Frs_Dechet updated", cookieHeader, {id: data.data.id});
-      remoteLog("info", "Envoi_Frs_Dechet updated", cookieHeader, {id: data.data.id});
+      await auditLog("info", "Envoi_Frs_Dechet updated", {id: data.data.id});
     }
     return response;
   }
@@ -143,7 +143,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Envoi_Frs_Dechet deleted", cookieHeader, {id});
-      remoteLog("info", "Envoi_Frs_Dechet deleted", cookieHeader, {id});
+      await auditLog("info", "Envoi_Frs_Dechet deleted", {id});
     }
     return response;
   }

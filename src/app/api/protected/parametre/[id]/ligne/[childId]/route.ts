@@ -4,7 +4,7 @@ import { create_Parametre_Ligne, delete_Parametre_Ligne, read_Parametre_Ligne, u
 import { localLog } from "@/components/logger/localLog";
 import { Parametre_Ligne_Type, PARAMETRE_LIGNE_TABLE_NAME } from "@/types/parametre-ligne";
 import { cookies } from "next/headers";
-import { remoteLog } from "@/components/logger/remoteLog";
+import { auditLog } from "@/lib/auditLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -65,7 +65,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Parametre_Ligne created", cookieHeader, {id: data.data.id});
-      remoteLog("info", "Parametre_Ligne created", cookieHeader, {id: data.data.id});
+      await auditLog("info", "Parametre_Ligne created", {id: data.data.id});
     }
     return response;
   }
@@ -97,7 +97,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Parametre_Ligne updated", cookieHeader, {id: data.data.id});
-      remoteLog("info", "Parametre_Ligne updated", cookieHeader, {id: data.data.id});
+      await auditLog("info", "Parametre_Ligne updated", {id: data.data.id});
     }
     return response;
   }
@@ -139,7 +139,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Parametre_Ligne deleted", cookieHeader, {id});
-      remoteLog("info", "Parametre_Ligne deleted", cookieHeader, {id});
+      await auditLog("info", "Parametre_Ligne deleted", {id});
     }
     return response;
   }

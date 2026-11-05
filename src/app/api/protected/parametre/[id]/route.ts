@@ -4,7 +4,7 @@ import { create_Parametre, delete_Parametre, read_Parametre, update_Parametre } 
 import { localLog } from "@/components/logger/localLog";
 import { Parametre_Type, PARAMETRE_TABLE_NAME } from "@/types/parametre";
 import { cookies } from "next/headers";
-import { remoteLog } from "@/components/logger/remoteLog";
+import { auditLog } from "@/lib/auditLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -65,7 +65,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Parametre created", cookieHeader, {id: data.data.rubrique});
-      remoteLog("info", "Parametre created", cookieHeader, {id: data.data.rubrique});
+      await auditLog("info", "Parametre created", {id: data.data.rubrique});
     }
     return response;
   }
@@ -97,7 +97,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Parametre updated", cookieHeader, {id: data.data.rubrique});
-      remoteLog("info", "Parametre updated", cookieHeader, {id: data.data.rubrique});
+      await auditLog("info", "Parametre updated", {id: data.data.rubrique});
     }
     return response;
   }
@@ -139,7 +139,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Parametre deleted", cookieHeader, {id});
-      remoteLog("info", "Parametre deleted", cookieHeader, {id});
+      await auditLog("info", "Parametre deleted", {id});
     }
     return response;
   }

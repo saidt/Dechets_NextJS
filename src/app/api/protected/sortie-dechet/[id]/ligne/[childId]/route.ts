@@ -4,7 +4,7 @@ import { create_Sortie_Dechet_Ligne, delete_Sortie_Dechet_Ligne, read_Sortie_Dec
 import { localLog } from "@/components/logger/localLog";
 import { Sortie_Dechet_Ligne_Type, SORTIE_DECHET_LIGNE_TABLE_NAME } from "@/types/sortie-dechet-ligne";
 import { cookies } from "next/headers";
-import { remoteLog } from "@/components/logger/remoteLog";
+import { auditLog } from "@/lib/auditLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -66,7 +66,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Sortie_Dechet_Ligne created", cookieHeader, {id: data.data.id});
-      remoteLog("info", "Sortie_Dechet_Ligne created", cookieHeader, {id: data.data.id});
+      await auditLog("info", "Sortie_Dechet_Ligne created", {id: data.data.id});
     }
     return response;
   }
@@ -98,7 +98,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Sortie_Dechet_Ligne updated", cookieHeader, {id: data.data.id});
-      remoteLog("info", "Sortie_Dechet_Ligne updated", cookieHeader, {id: data.data.id});
+      await auditLog("info", "Sortie_Dechet_Ligne updated", {id: data.data.id});
     }
     return response;
   }
@@ -140,7 +140,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Sortie_Dechet_Ligne deleted", cookieHeader, {id});
-      remoteLog("info", "Sortie_Dechet_Ligne deleted", cookieHeader, {id});
+      await auditLog("info", "Sortie_Dechet_Ligne deleted", {id});
     }
     return response;
   }
