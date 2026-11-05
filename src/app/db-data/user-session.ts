@@ -1,10 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { SESSION_MAX_AGE } from "@/lib/consts";
+import { hashSessionToken } from "@/lib/crypt";
 import { User_Session_Type } from "@/types/user-session";
 import { Admin_Session_Type } from "@/types/admin-session";
 
 /** Active (not expired) sessions of a user, newest first. Never returns the session token. */
-export async function list_User_Sessions(userId: string, currentSessionToken: string): Promise<User_Session_Type[]> {
+export async function list_User_Sessions(userId: string, currentSessionId: string): Promise<User_Session_Type[]> {
+  const currentSessionToken = currentSessionId ? hashSessionToken(currentSessionId) : '';
   const rows = await prisma.session.findMany({
     where: { userId, expires: { gt: new Date() } },
     orderBy: { expires: "desc" },
@@ -31,7 +33,8 @@ export async function delete_User_Session(userId: string, sessionId: string): Pr
 }
 
 /** Active (not expired) sessions of all users, newest first (admin). Never returns the session token. */
-export async function list_All_Sessions(currentSessionToken: string): Promise<Admin_Session_Type[]> {
+export async function list_All_Sessions(currentSessionId: string): Promise<Admin_Session_Type[]> {
+  const currentSessionToken = currentSessionId ? hashSessionToken(currentSessionId) : '';
   const rows = await prisma.session.findMany({
     where: { expires: { gt: new Date() } },
     orderBy: { expires: "desc" },

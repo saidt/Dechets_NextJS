@@ -3,6 +3,7 @@ import { authOptions } from './auth';
 import { prisma } from './prisma';
 import { exists_User_Role } from '@/app/db-data/user-role';
 import { getClientInfo } from './client-info';
+import { hashSessionToken } from './crypt';
 import { createLog } from '@/app/db-data/log';
 
 /** Why a session was rejected; also used as the ?error= code of the login page. */
@@ -37,8 +38,10 @@ export async function checkSession(): Promise<SessionCheck> {
     return { session: null, error: 'SessionUiidNotFound' };
   }
 
+  // Session.sessionToken holds the SHA-256 of the session id, not the id itself
+  const sessionToken = hashSessionToken(sessionUuid);
   const dbSession = await prisma.session.findUnique({
-    where: { sessionToken: sessionUuid },
+    where: { sessionToken },
   });
   if (!dbSession || dbSession.userId.trim() !== userId.trim()) {
     return { session: null, error: 'DbSessionNotFound' };
@@ -51,7 +54,7 @@ export async function checkSession(): Promise<SessionCheck> {
   const browserChanged = (dbSession.userAgent ?? '') !== client.userAgent;
   const ipChanged = (dbSession.ipAddress ?? '') !== client.ip;
   if (browserChanged || ipChanged) {
-    await prisma.session.deleteMany({ where: { sessionToken: sessionUuid } });
+    await prisma.session.deleteMany({ where: { sessionToken } });
     // Best effort: a logging failure must not prevent the revocation
     await createLog({
       id: 0,

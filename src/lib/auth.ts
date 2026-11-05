@@ -12,6 +12,7 @@ import { ZodError } from 'zod';
 import { logError } from './serverLog';
 import { LOGIN_MAX_FAILURES, SESSION_MAX_AGE } from './consts';
 import { getClientInfo } from './client-info';
+import { hashSessionToken } from './crypt';
 import { consoleDebug, consoleError, consoleWarn } from './clientLog';
 
 export const authOptions: AuthOptions = {
@@ -121,7 +122,7 @@ export const authOptions: AuthOptions = {
           session.sessionUuid = token.sessionUuid as string;
           // Show the expiry from the Session row; fall back to the login-time value
           const dbSession = token.sessionUuid
-            ? await prisma.session.findUnique({ where: { sessionToken: token.sessionUuid as string } })
+            ? await prisma.session.findUnique({ where: { sessionToken: hashSessionToken(token.sessionUuid as string) } })
             : null;
           session.expiresAt = dbSession?.expires ?? token.expiresAt
           session.user.lastConnect = token.lastConnect
@@ -151,7 +152,8 @@ export const authOptions: AuthOptions = {
 
         const createdSession = await prisma.session.create({
           data: { 
-            sessionToken : sessionUuid,
+            // Only the hash is stored; the clear id goes into the encrypted cookie (token.sessionUuid)
+            sessionToken : hashSessionToken(sessionUuid),
             userId: user.id,
             expires: expiresAt,
             userAgent,
@@ -201,7 +203,7 @@ export const authOptions: AuthOptions = {
     async signOut({ token }) {
       //consoleInfo("User signed out:", token.userId);
       await prisma.session.deleteMany({
-        where: { sessionToken: token.sessionUuid },
+        where: { sessionToken: hashSessionToken(token.sessionUuid) },
       });
     },
     async session(message) {

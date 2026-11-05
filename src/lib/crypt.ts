@@ -45,3 +45,14 @@ export async function verifyPassword(password: string, storedHash: string | null
   }
   return bcrypt.compare(pepper(password), stored);
 }
+
+/**
+ * Value stored in Session.sessionToken for a session id: SHA-256 (64 hex characters).
+ * The clear session id only exists inside the encrypted NextAuth cookie, so reading the
+ * Session table (backup, dump) gives nothing that can be turned into a working cookie.
+ * A session id is a random UUID (122 random bits): it can't be guessed or recovered from
+ * its hash, so no salt or slow hash is needed, and lookups stay instant.
+ */
+export function hashSessionToken(sessionId: string): string {
+  return crypto.createHash('sha256').update(sessionId).digest('hex');
+}
