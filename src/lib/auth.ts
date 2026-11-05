@@ -9,6 +9,7 @@ import { updateUserLastConnected } from '@/app/db-data/user';
 import { LogType } from '@/types/log';
 import { createLog } from '@/app/db-data/log';
 import { SESSION_MAX_AGE } from './consts';
+import { getClientInfo } from './client-info';
 import { consoleDebug, consoleError, consoleWarn } from './clientLog';
 
 export const authOptions: AuthOptions = {
@@ -116,11 +117,16 @@ export const authOptions: AuthOptions = {
         const sessionUuid = uuid()
         const expiresAt = new Date(Date.now() + 1 * SESSION_MAX_AGE * 1000) // 1 day in milliseconds
 
+        // Bind the session to the browser and IP address it is created from
+        const { userAgent, ip } = await getClientInfo()
+
         const createdSession = await prisma.session.create({
           data: { 
             sessionToken : sessionUuid,
             userId: user.id,
             expires: expiresAt,
+            userAgent,
+            ipAddress: ip,
           }
         })
 

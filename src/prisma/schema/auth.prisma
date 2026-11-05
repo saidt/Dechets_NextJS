@@ -18,6 +18,8 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime @db.DateTime
+  userAgent    String?  @map("USER_AGENT") @db.NVarChar(500)
+  ipAddress    String?  @map("IP_ADDRESS") @db.NVarChar(45)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

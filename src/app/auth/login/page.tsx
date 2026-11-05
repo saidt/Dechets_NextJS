@@ -27,6 +27,8 @@ export default function Login() {
         return "Db session not found !";
       case "SessionExpired":
         return "Session expired !";
+      case "SessionClientChanged":
+        return "Session closed: used from another browser or network !";
       default:
         return null;
     }

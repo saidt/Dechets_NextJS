@@ -2,9 +2,11 @@ import { getServerSession, Session } from 'next-auth';
 import { authOptions } from './auth';
 import { prisma } from './prisma';
 import { exists_User_Role } from '@/app/db-data/user-role';
+import { getClientInfo } from './client-info';
+import { createLog } from '@/app/db-data/log';
 
 /** Why a session was rejected; also used as the ?error= code of the login page. */
-export type SessionError = 'SessionNotFound' | 'SessionUiidNotFound' | 'DbSessionNotFound' | 'SessionExpired';
+export type SessionError = 'SessionNotFound' | 'SessionUiidNotFound' | 'DbSessionNotFound' | 'SessionExpired' | 'SessionClientChanged';
 
 export type SessionCheck =
   | { session: Session; error: null }
@@ -17,6 +19,10 @@ export type SessionCheck =
  *
  * Fixed expiry: the row expires SESSION_MAX_AGE after login, whatever the
  * activity, so a stolen session cookie stops working at that time at the latest.
+ *
+ * Browser and network binding: the request's User-Agent and IP address must be
+ * the ones stored at login. Otherwise the session row is deleted (the cookie is
+ * dead everywhere, including for the real user) and the event is logged.
  * Used by proxy.ts and by API routes (so they don't rely on proxy.ts having run).
  */
 export async function checkSession(): Promise<SessionCheck> {
@@ -39,6 +45,26 @@ export async function checkSession(): Promise<SessionCheck> {
   }
   if (new Date(dbSession.expires).getTime() < Date.now()) {
     return { session: null, error: 'SessionExpired' };
+  }
+
+  const client = await getClientInfo();
+  const browserChanged = (dbSession.userAgent ?? '') !== client.userAgent;
+  const ipChanged = (dbSession.ipAddress ?? '') !== client.ip;
+  if (browserChanged || ipChanged) {
+    await prisma.session.deleteMany({ where: { sessionToken: sessionUuid } });
+    // Best effort: a logging failure must not prevent the revocation
+    await createLog({
+      id: 0,
+      date_oper: new Date(),
+      user_id: userId,
+      severite: 'warn',
+      message: `Session revoked: ${[browserChanged && 'browser', ipChanged && 'IP address'].filter(Boolean).join(' and ')} changed`,
+      contexte: JSON.stringify({
+        ip: { login: dbSession.ipAddress, now: client.ip },
+        userAgent: { login: dbSession.userAgent, now: client.userAgent },
+      }),
+    }).catch(() => undefined);
+    return { session: null, error: 'SessionClientChanged' };
   }
 
   return { session, error: null };

@@ -30,6 +30,8 @@ create table DBO.SESSION (
    SESSION_TOKEN        varchar(64)          not null,
    USER_ID              T_CODE20             not null,
    EXPIRES              T_DATE_TIME          not null,
+   USER_AGENT           nvarchar(500)        null,
+   IP_ADDRESS           nvarchar(45)         null,
    constraint PK_SESSION primary key (ID)
 )
 go
