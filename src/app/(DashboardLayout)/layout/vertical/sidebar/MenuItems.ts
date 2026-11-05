@@ -2,6 +2,7 @@ import { uniqueId } from "@/lib/lib";
 import { NavItem_Type } from "./NavGroup";
 import { USER_PROFILE_URL } from "@/types/user-profile";
 import { PASSWORD_HASH_URL } from "@/types/user";
+import { ADMIN_SESSIONS_URL } from "@/types/admin-session";
 import { UNITE_URL } from "@/types/unite";
 import { CLIENT_DECHET_URL } from "@/types/client-dechet";
 import { ARTICLE_URL } from "@/types/article";
@@ -143,10 +144,20 @@ const Menuitems: NavItem_Type[] = [
     href: USER_PROFILE_URL,
   },
   {
+    navlabel: true,
+    subheader: "Admin",
+  },
+  {
     id: uniqueId(),
     title: "Hash mot de passe",
     icon: "solar:key-linear",
     href: PASSWORD_HASH_URL,
+  },
+  {
+    id: uniqueId(),
+    title: "Sessions actives",
+    icon: "solar:monitor-smartphone-linear",
+    href: ADMIN_SESSIONS_URL,
   },
   {
     navlabel: true,
