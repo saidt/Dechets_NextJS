@@ -3,11 +3,15 @@ import { HttpStatus } from "@/types/http";
 import { delete_User_Table_Filter, update_User_Table_Filter } from "@/app/db-data/user-table-filter";
 import { logError } from "@/lib/serverLog";
 import { getErrorMessage } from "@/lib/errorMessage";
-import { checkLoggedIn } from "@/lib/auth-lib";
+import { getValidSession, isSameUser } from "@/lib/auth-lib";
 
-export async function PUT(request: Request) {
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string; childId: string }> }
+) {
   const pathname = '/user/[id]/table-filter/[childId]';
-  if (! await checkLoggedIn()) {
+  const session = await getValidSession();
+  if (!session) {
     const err = new Error('Session not found or expired !');
     logError(`${pathname} PUT route`, err);
     return NextResponse.json(
@@ -15,10 +19,20 @@ export async function PUT(request: Request) {
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
+  // Only the logged-in user's own data: the user id comes from the session
+  const userId = session.user.id;
+  const { id: urlUserId } = await params;
+  if (!isSameUser(urlUserId, userId)) {
+    const err = new Error(`Forbidden: user ${userId} cannot access user ${urlUserId}`);
+    logError(`${pathname} PUT route`, err);
+    return NextResponse.json(
+      { error: `${pathname} PUT route ${err.message}` },
+      { status: HttpStatus.FORBIDDEN }
+    );
+  }
   try {
     const req = await request.json();
     //consoleInfo('user-table-filter PUT req: ', req);
-    const userId = req.user_id;
     const tableName = req.table_name;
     const filterName = req.filter_name;
     const filter = req.filter;
@@ -45,9 +59,13 @@ export async function PUT(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string; childId: string }> }
+) {
   const pathname = '/user/[id]/table-filter/[childId]';
-  if (! await checkLoggedIn()) {
+  const session = await getValidSession();
+  if (!session) {
     const err = new Error('Session not found or expired !');
     logError(`${pathname} DELETE route`, err);
     return NextResponse.json(
@@ -55,10 +73,27 @@ export async function DELETE(request: Request) {
       { status: HttpStatus.UNAUTHORIZED }
     );
   }
+  // Only the logged-in user's own data: the user id comes from the session
+  const userId = session.user.id;
+  const { id: urlUserId } = await params;
+  if (!isSameUser(urlUserId, userId)) {
+    const err = new Error(`Forbidden: user ${userId} cannot access user ${urlUserId}`);
+    logError(`${pathname} DELETE route`, err);
+    return NextResponse.json(
+      { error: `${pathname} DELETE route ${err.message}` },
+      { status: HttpStatus.FORBIDDEN }
+    );
+  }
   try {
     const data = await request.json();
-    const id=data.id
-    const item = await delete_User_Table_Filter(id);
+    const id = Number(data.id)
+    const item = await delete_User_Table_Filter(id, userId);
+    if (!item) {
+      return NextResponse.json(
+        { error: `${pathname} DELETE route filter ${id} not found` },
+        { status: HttpStatus.NOT_FOUND }
+      );
+    }
     return NextResponse.json(item);
   } 
   catch (err: any) {

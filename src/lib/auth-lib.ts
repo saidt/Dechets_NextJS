@@ -90,3 +90,8 @@ export async function checkRole(roleId: string): Promise<boolean> {
 
   return false;
 }
+
+/** True if two user ids are the same user (USER_.ID is compared trimmed, case-insensitive). */
+export function isSameUser(a: string | null | undefined, b: string | null | undefined): boolean {
+  return !!a && !!b && a.trim().toUpperCase() === b.trim().toUpperCase();
+}

@@ -143,8 +143,16 @@ export async function update_User_Table_Filter(
   }
 }
 
-export async function delete_User_Table_Filter(id: number): Promise<User_Table_Filter_Type> {
+/** Deletes a filter only if it belongs to userId; returns null if there is no such filter. */
+export async function delete_User_Table_Filter(id: number, userId: string): Promise<User_Table_Filter_Type | null> {
   //consoleInfo('delete_User_Table_Filter id: ', id);
+
+  const existing = await prisma.user_Table_Filter.findFirst({
+    where: { id, user_id: userId }
+  })
+  if (!existing) {
+    return null
+  }
 
   const deleted = await prisma.user_Table_Filter.delete({
     where: {
