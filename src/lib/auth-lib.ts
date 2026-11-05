@@ -2,7 +2,6 @@ import { getServerSession, Session } from 'next-auth';
 import { authOptions } from './auth';
 import { prisma } from './prisma';
 import { exists_User_Role } from '@/app/db-data/user-role';
-import { SESSION_MAX_AGE, SESSION_UPDATE_AGE } from './consts';
 
 /** Why a session was rejected; also used as the ?error= code of the login page. */
 export type SessionError = 'SessionNotFound' | 'SessionUiidNotFound' | 'DbSessionNotFound' | 'SessionExpired';
@@ -16,10 +15,8 @@ export type SessionCheck =
  * the row must exist, belong to the same user and not be expired. Deleting a
  * Session row therefore logs that user out on their next request.
  *
- * Sliding expiry: each valid request pushes the row's expiry to now +
- * SESSION_MAX_AGE, so a session only expires after SESSION_MAX_AGE without
- * activity. To avoid a write on every request, the row is updated at most once
- * per SESSION_UPDATE_AGE.
+ * Fixed expiry: the row expires SESSION_MAX_AGE after login, whatever the
+ * activity, so a stolen session cookie stops working at that time at the latest.
  * Used by proxy.ts and by API routes (so they don't rely on proxy.ts having run).
  */
 export async function checkSession(): Promise<SessionCheck> {
@@ -40,18 +37,8 @@ export async function checkSession(): Promise<SessionCheck> {
   if (!dbSession || dbSession.userId.trim() !== userId.trim()) {
     return { session: null, error: 'DbSessionNotFound' };
   }
-  const now = Date.now();
-  const expires = new Date(dbSession.expires).getTime();
-  if (expires < now) {
+  if (new Date(dbSession.expires).getTime() < Date.now()) {
     return { session: null, error: 'SessionExpired' };
-  }
-
-  // expires was last set to (last extension + SESSION_MAX_AGE)
-  if (expires - now < (SESSION_MAX_AGE - SESSION_UPDATE_AGE) * 1000) {
-    await prisma.session.updateMany({
-      where: { sessionToken: sessionUuid },
-      data: { expires: new Date(now + SESSION_MAX_AGE * 1000) },
-    });
   }
 
   return { session, error: null };

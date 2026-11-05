@@ -89,7 +89,7 @@ export const authOptions: AuthOptions = {
         if (token.sub) {
           session.user.id = token.sub;
           session.sessionUuid = token.sessionUuid as string;
-          // Show the real (sliding) expiry from the Session row; fall back to the login-time value
+          // Show the expiry from the Session row; fall back to the login-time value
           const dbSession = token.sessionUuid
             ? await prisma.session.findUnique({ where: { sessionToken: token.sessionUuid as string } })
             : null;
