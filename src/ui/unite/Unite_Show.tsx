@@ -1,6 +1,6 @@
 "use client";
 
-import { Empty_Unite, UNITE_FETCH_URL, UNITE_TABLE_NAME, UNITE_URL, unite_Schema, Unite_Type, unite_Columns } from "@/types/unite";
+import { Empty_Unite, UNITE_FETCH_URL, UNITE_TABLE_NAME, unite_Schema, Unite_Type, unite_Columns } from "@/types/unite";
 import { GenericShowPage } from "@/components/form-show/GenericShowPage";
 import { Mode } from "@/lib/types";
 import { useState } from "react";

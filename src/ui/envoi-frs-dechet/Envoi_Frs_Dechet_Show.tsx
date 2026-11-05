@@ -21,7 +21,7 @@ import Envoi_Frs_Dechet_Reste, { Envoi_Frs_Dechet_Reste_Type } from "./Envoi_Frs
 import useAuth from "@/app/context/UseAuth";
 import { DevaliderMenu, ImporterMenu, ValiderMenu } from "@/components/ui/menu/Menus";
 import MuiDialog from "@/components/ui/dialog/MuiDialog";
-import { DialogProps, Divider } from "@mui/material";
+import { Divider } from "@mui/material";
 import { getResponseData } from "@/lib/html";
 import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
@@ -39,7 +39,7 @@ const Envoi_Frs_Dechet_Show = () => {
   //consoleDebug('Envoi_Frs_Dechet_Show edit: ', edit)
 
   const [envoi_Frs_Dechet, set_Envoi_Frs_Dechet] = useState<Envoi_Frs_Dechet_Type>(Empty_Envoi_Frs_Dechet);
-  const [mode, setMode] = useState<Mode>("Browse"); 
+  const [, setMode] = useState<Mode>("Browse"); 
   const [errors, setErrors] = useState<Partial<Record<keyof Envoi_Frs_Dechet_Type, string>>>({});
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);

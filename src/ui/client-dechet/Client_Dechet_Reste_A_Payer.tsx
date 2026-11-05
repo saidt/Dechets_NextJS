@@ -12,15 +12,15 @@ import { clientError } from "@/lib/error";
 import { useAppContext } from "@/app/context/AppContext";
 
 export type Reste_A_Payer_Type = {
-  ANNEE: Number;
-  MOIS: Number;
-  NUMERO: Number;
+  ANNEE: number;
+  MOIS: number;
+  NUMERO: number;
   DATE_PIECE: Date;
-  CLIENT_CODE: String;
-  CLIENT_RAISON_SOCIALE: String;
-  MONTANT: Number;
-  MONTANT_REGLE: Number;
-  RESTE_A_REGLER: Number;
+  CLIENT_CODE: string;
+  CLIENT_RAISON_SOCIALE: string;
+  MONTANT: number;
+  MONTANT_REGLE: number;
+  RESTE_A_REGLER: number;
 };
 
 export interface CdrapMemListPageProps extends GenericMemListPageProps<Reste_A_Payer_Type> {

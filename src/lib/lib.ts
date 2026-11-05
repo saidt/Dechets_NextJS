@@ -6,7 +6,7 @@ export function isObjectEmpty(obj: object): boolean {
 
 export function removeEmptyValues(obj: object): object {
   return Object.fromEntries(
-    Object.entries(obj).filter(([_, value]) => value !== "")
+    Object.entries(obj).filter(([, value]) => value !== "")
   );
 }
 

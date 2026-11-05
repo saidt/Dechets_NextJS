@@ -1,3 +1,5 @@
+// The import makes this file a module, so the declarations below augment next-auth
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import NextAuth from "next-auth";
 
 declare module "next-auth" {

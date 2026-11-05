@@ -100,10 +100,10 @@ export const retour_Dechet_Columns: Column<Retour_Dechet_Type>[] = [
 ];
 
 export type Sortie_Dechet_Dernier_Type = {
-  NUMERO: Number;
-  CLIENT_CODE: String;
+  NUMERO: number;
+  CLIENT_CODE: string;
   DATE_PIECE: Date;
-  ARTICLE_CODE: String;
-  ARTICLE_DESIGNATION: String;
-  QUANTITE: Number;
+  ARTICLE_CODE: string;
+  ARTICLE_DESIGNATION: string;
+  QUANTITE: number;
 };

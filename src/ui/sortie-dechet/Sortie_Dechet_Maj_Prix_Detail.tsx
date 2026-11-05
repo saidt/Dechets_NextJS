@@ -17,15 +17,15 @@ interface CmsDialogProps extends DialogProps {
 }
 
 type Maj_Prix_Detail_Type = {
-  SORTIE_DECHET_NUMERO: Number;
-  LIGNE_NUMERO: Number;
-  ARTICLE_CODE: String;
-  ARTICLE_DESIGNATION: String;
-  POIDS: Number;
-  KG_KM: Number;
-  ML: Number;
-  PRIX_VENTE: Number;
-  MONTANT: Number;
+  SORTIE_DECHET_NUMERO: number;
+  LIGNE_NUMERO: number;
+  ARTICLE_CODE: string;
+  ARTICLE_DESIGNATION: string;
+  POIDS: number;
+  KG_KM: number;
+  ML: number;
+  PRIX_VENTE: number;
+  MONTANT: number;
 };
 
 const columns: Column<Maj_Prix_Detail_Type>[] = [

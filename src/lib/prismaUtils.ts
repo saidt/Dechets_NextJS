@@ -131,7 +131,7 @@ export function tableStateToPrismaQuery<T extends object>(
                 clause = { [key as string]: { gte: startOfDay, lt: endOfDay } };
               }
             } 
-            catch (e) { /* Ignore invalid date strings */ }
+            catch { /* Ignore invalid date strings */ }
             break;
         case PrismaFieldType.BOOLEAN:
             const lowerVal = filterValue.toLowerCase();

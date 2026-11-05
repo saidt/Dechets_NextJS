@@ -4,7 +4,7 @@ import { Empty_Parametre_Ligne, PARAMETRE_LIGNE_CHILD_URL, PARAMETRE_LIGNE_TABLE
 import { GenericShowPage } from "@/components/form-show/GenericShowPage";
 import { Mode } from "@/lib/types";
 import { useState } from "react";
-import { MuiPKNumberField, MuiPKTextField, MuiTextField } from "@/components/form-show/Inputs";
+import { MuiPKNumberField, MuiTextField } from "@/components/form-show/Inputs";
 import { useParams, useSearchParams } from "next/navigation";
 import { PARAMETRE_FETCH_URL } from "@/types/parametre";
 

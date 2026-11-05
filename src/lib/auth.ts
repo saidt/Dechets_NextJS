@@ -212,9 +212,6 @@ export const authOptions: AuthOptions = {
         where: { sessionToken: hashSessionToken(token.sessionUuid) },
       });
     },
-    async session(message) {
-      //consoleInfo("Session active for user:", message.session.user.id);
-    },
   },
   logger: {
     error(code, metadata) {

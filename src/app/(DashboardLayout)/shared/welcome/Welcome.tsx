@@ -16,7 +16,7 @@ const Welcome = () => {
     setOpen(false);
   };
 
-  const handleAlertClose = (event: React.SyntheticEvent) => {
+  const handleAlertClose = () => {
     setOpen(false);
   };
   

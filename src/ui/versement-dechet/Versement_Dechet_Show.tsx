@@ -10,8 +10,8 @@ import {
 } from "@/types/versement-dechet";
 import { GenericShowPage } from "@/components/form-show/GenericShowPage";
 import { Mode } from "@/lib/types";
-import { useEffect, useState } from "react";
-import { MuiCheckbox, MuiDateTimePicker, MuiPKNumberField, MuiPKTextField } from "@/components/form-show/Inputs";
+import { useState } from "react";
+import { MuiCheckbox, MuiDateTimePicker, MuiPKNumberField } from "@/components/form-show/Inputs";
 import { useParams, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
 

@@ -71,15 +71,15 @@ export async function delete_Client_Dechet(code: string, ) : Promise<Client_Dech
 
 export async function client_Dechet_Reste_A_Payer(code: string) {
   const result = await prisma.$queryRaw<{
-    ANNEE: Number;
-    MOIS: Number;
-    NUMERO: Number;
+    ANNEE: number;
+    MOIS: number;
+    NUMERO: number;
     DATE_PIECE: Date;
-    CLIENT_CODE: String;
-    CLIENT_RAISON_SOCIALE: String;
-    MONTANT: Number;
-    MONTANT_REGLE: Number;
-    RESTE_A_REGLER: Number;
+    CLIENT_CODE: string;
+    CLIENT_RAISON_SOCIALE: string;
+    MONTANT: number;
+    MONTANT_REGLE: number;
+    RESTE_A_REGLER: number;
   }[]
   >`exec dbo.CLIENT_DECHET_RESTE_A_PAYER ${code}`;
 

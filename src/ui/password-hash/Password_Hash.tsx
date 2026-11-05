@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Box, IconButton, InputAdornment, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { Box, IconButton, InputAdornment, Stack, Tooltip } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -16,7 +16,7 @@ import { apiFetch } from "@/lib/apiFetch";
 import { getResponseData } from "@/lib/html";
 import { clientError, handleError } from "@/lib/error";
 import { PASSWORD_HASH_FETCH_URL, USER_UPDATE_PSWD_ROLE } from "@/types/user";
-import { BasicTextField, MuiTextField } from "@/components/form-show/Inputs";
+import { BasicTextField } from "@/components/form-show/Inputs";
 
 // Generates a USER_.PSW_HASH value for a password (display only). The bcrypt hash has
 // its own random salt, so it does not depend on the user id.

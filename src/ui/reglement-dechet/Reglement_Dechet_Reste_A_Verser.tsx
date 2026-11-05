@@ -12,15 +12,15 @@ import { clientError } from "@/lib/error";
 import { useAppContext } from "@/app/context/AppContext";
 
 export type Reste_A_Verser_Type = {
-  ANNEE: Number;
-  MOIS: Number;
-  NUMERO: Number;
+  ANNEE: number;
+  MOIS: number;
+  NUMERO: number;
   DATE_PIECE: Date;
-  CLIENT_CODE: String;
-  CLIENT_RAISON_SOCIALE: String;
-  MONTANT: Number;
-  MONTANT_VERSE: Number;
-  RESTE_A_VERSER: Number;
+  CLIENT_CODE: string;
+  CLIENT_RAISON_SOCIALE: string;
+  MONTANT: number;
+  MONTANT_VERSE: number;
+  RESTE_A_VERSER: number;
 };
 
 export interface RdravMemListPageProps extends GenericMemListPageProps<Reste_A_Verser_Type> {

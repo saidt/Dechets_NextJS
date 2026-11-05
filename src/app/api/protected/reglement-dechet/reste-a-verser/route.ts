@@ -1,14 +1,12 @@
 import { reglement_Dechet_Reste_A_Verser } from "@/app/db-data/reglement-dechet";
 import { logError } from "@/lib/serverLog";
 import { HttpStatus } from "@/types/http";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { REGLEMENT_DECHET_TABLE_NAME } from "@/types/reglement-dechet";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
 
-export async function GET(
-  request: NextRequest
-) {
+export async function GET() {
   const pathname = '/reglement-dechet/reste-a-verser';
   if (! await checkRole(REGLEMENT_DECHET_TABLE_NAME+'.LIST')) {
     const err = new Error(`Forbidden: ${REGLEMENT_DECHET_TABLE_NAME}.LIST`);

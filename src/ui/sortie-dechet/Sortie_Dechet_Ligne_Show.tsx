@@ -11,7 +11,7 @@ import {
 import { GenericShowPage } from "@/components/form-show/GenericShowPage";
 import { CmListProps, Filter, Mode } from "@/lib/types";
 import { useState } from "react";
-import { MuiNumberField, MuiPKNumberField, MuiPKTextField, MuiTextField } from "@/components/form-show/Inputs";
+import { MuiNumberField, MuiPKNumberField, MuiTextField } from "@/components/form-show/Inputs";
 import { ReferenceField } from "@/components/form-show/ReferenceField";
 import { useParams, useSearchParams } from "next/navigation";
 import { getResponseData } from "@/lib/html";

@@ -89,10 +89,10 @@ export async function sortie_Dechet_Non_Valide_Count() {
 
 export async function sortie_Dechet_Count_DataSet() {
   const result = await prisma.$queryRaw<{
-    ANNEE: Number;
-    MOIS: Number;
-    ANNEE_MOIS: String;
-    NOMBRE: Number,
+    ANNEE: number;
+    MOIS: number;
+    ANNEE_MOIS: string;
+    NOMBRE: number,
   }[]
   >`select * from dbo.d_STAT_SORTIE_DECHET_NOMBRE_MOIS() order by ANNEE, MOIS`;
 
@@ -115,10 +115,10 @@ export async function sortie_Dechet_Count_DataSet() {
 
 export async function sortie_Dechet_Poids_DataSet() {
   const result = await prisma.$queryRaw<{
-    ANNEE: Number;
-    MOIS: Number;
-    ANNEE_MOIS: String;
-    POIDS: Number,
+    ANNEE: number;
+    MOIS: number;
+    ANNEE_MOIS: string;
+    POIDS: number,
   }[]
   >`select * from dbo.d_STAT_SORTIE_DECHET_POIDS_MOIS() order by ANNEE, MOIS`;
 
@@ -149,16 +149,16 @@ export async function sortie_Dechet_Dernier() {
   return result;
 }
 
-export async function sortie_Dechet_Maj_Prix_Detail(numero: Number) {
+export async function sortie_Dechet_Maj_Prix_Detail(numero: number) {
   const result = await prisma.$queryRaw<{
-    SORTIE_DECHET_NUMERO: Number;
-    LIGNE_NUMERO: Number;
-    ARTICLE_CODE: String;
-    ARTICLE_DESIGNATION: String;
-    POIDS: Number;
-    ML: Number;
-    PRIX_VENTE: Number;
-    MONTANT: Number;
+    SORTIE_DECHET_NUMERO: number;
+    LIGNE_NUMERO: number;
+    ARTICLE_CODE: string;
+    ARTICLE_DESIGNATION: string;
+    POIDS: number;
+    ML: number;
+    PRIX_VENTE: number;
+    MONTANT: number;
   }[]
   >`exec dbo.SORTIE_DECHET_DETAIL_MAJ_PRIX_VENTE ${numero}`;
 

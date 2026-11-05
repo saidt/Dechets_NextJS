@@ -35,7 +35,7 @@ export async function user_Role_List(params: PrismaQuery): Promise<any[]> {
   return Promise.resolve(data);
 }*/
 
-export async function exists_User_Role(userId: string, roleId: string): Promise<Boolean> {
+export async function exists_User_Role(userId: string, roleId: string): Promise<boolean> {
   //consoleInfo('user_RoleId_List userId: ', userId);
   const data = await prisma.user_Role.findMany({
     where: {

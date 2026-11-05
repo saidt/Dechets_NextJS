@@ -73,15 +73,15 @@ export async function delete_Reglement_Dechet(numero: number, ) : Promise<Reglem
 
 export async function reglement_Dechet_Reste_A_Verser() {
   const result = await prisma.$queryRaw<{
-    ANNEE: Number;
-    MOIS: Number;
-    NUMERO: Number;
+    ANNEE: number;
+    MOIS: number;
+    NUMERO: number;
     DATE_PIECE: Date;
-    CLIENT_CODE: String;
-    CLIENT_RAISON_SOCIALE: String;
-    MONTANT: Number;
-    MONTANT_VERSE: Number;
-    RESTE_A_VERSER: Number;
+    CLIENT_CODE: string;
+    CLIENT_RAISON_SOCIALE: string;
+    MONTANT: number;
+    MONTANT_VERSE: number;
+    RESTE_A_VERSER: number;
   }[]
   >`exec dbo.REGLEMENT_DECHET_RESTE_A_VERSER`;
 

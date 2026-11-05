@@ -12,7 +12,7 @@ import {
 import { GenericShowPage } from "@/components/form-show/GenericShowPage";
 import { CmListProps, Filter, Mode } from "@/lib/types";
 import { useState } from "react";
-import { MuiDateTimePicker, MuiNumberField, MuiPKNumberField, MuiPKTextField, MuiSwitch, MuiTextField } from "@/components/form-show/Inputs";
+import { MuiDateTimePicker, MuiNumberField, MuiPKNumberField, MuiSwitch } from "@/components/form-show/Inputs";
 import { ReferenceField } from "@/components/form-show/ReferenceField";
 import { useParams, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";

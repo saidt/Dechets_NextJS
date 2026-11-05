@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { HttpStatus } from "@/types/http";
 import { logError } from "@/lib/serverLog";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -7,7 +7,7 @@ import { list_All_Sessions } from "@/app/db-data/user-session";
 import { SESSION_ADMIN_ROLE } from "@/types/admin-session";
 
 // Active sessions of all users (admin "Sessions actives" page)
-export async function GET(request: NextRequest) {
+export async function GET() {
   const pathname = '/session';
   if (! await checkRole(SESSION_ADMIN_ROLE)) {
     const err = new Error(`Forbidden: ${SESSION_ADMIN_ROLE}`);

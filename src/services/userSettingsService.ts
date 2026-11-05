@@ -18,7 +18,7 @@ const getSettings = <T extends Record<string, any>>(userId: string, tableName: s
     const settings = localStorage.getItem(`${userId}-${tableName}-${USER_SETTINGS_KEY}`);
     return settings ? JSON.parse(settings) : {};
   }
-  catch (error: any) {
+  catch {
     const allCookies = getAllCookies();
     localLog("error", "Parse user settings from localStorage", allCookies, {});
     return {};
@@ -33,7 +33,7 @@ const saveSettings = <T extends Record<string, any>>(userId: string, tableName: 
     }
     localStorage.setItem(`${userId}-${tableName}-${USER_SETTINGS_KEY}`, JSON.stringify(settings));
   }
-  catch (error: any) {
+  catch {
     const allCookies = getAllCookies();
     localLog("error", "Save user settings to localStorage", allCookies, {});
   }
