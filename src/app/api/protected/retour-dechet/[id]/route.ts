@@ -4,7 +4,7 @@ import { create_Retour_Dechet, delete_Retour_Dechet, read_Retour_Dechet, update_
 import { localLog } from "@/components/logger/localLog";
 import { Retour_Dechet_Type, RETOUR_DECHET_TABLE_NAME } from "@/types/retour-dechet";
 import { cookies } from "next/headers";
-import { auditLog } from "@/lib/auditLog";
+import { dbLog } from "@/lib/dbLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -66,7 +66,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Retour_Dechet created", cookieHeader, {id: data.data.numero});
-      await auditLog("info", "Retour_Dechet created", {id: data.data.numero});
+      await dbLog("info", "Retour_Dechet created", {id: data.data.numero});
     }
     return response;
   }
@@ -98,7 +98,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Retour_Dechet updated", cookieHeader, {id: data.data.numero});
-      await auditLog("info", "Retour_Dechet updated", {id: data.data.numero});
+      await dbLog("info", "Retour_Dechet updated", {id: data.data.numero});
     }
     return response;
   }
@@ -140,7 +140,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Retour_Dechet deleted", cookieHeader, {id});
-      await auditLog("info", "Retour_Dechet deleted", {id});
+      await dbLog("info", "Retour_Dechet deleted", {id});
     }
     return response;
   }

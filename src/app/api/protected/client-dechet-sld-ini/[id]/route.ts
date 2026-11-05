@@ -4,7 +4,7 @@ import { create_Client_Dechet_Sld_Ini, delete_Client_Dechet_Sld_Ini, read_Client
 import { localLog } from "@/components/logger/localLog";
 import { Client_Dechet_Sld_Ini_Type, CLIENT_DECHET_SLD_INI_TABLE_NAME } from "@/types/client-dechet-sld-ini";
 import { cookies } from "next/headers";
-import { auditLog } from "@/lib/auditLog";
+import { dbLog } from "@/lib/dbLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -68,7 +68,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Client_Dechet_Sld_Ini created", cookieHeader, {id: data.data.id});
-      await auditLog("info", "Client_Dechet_Sld_Ini created", {id: data.data.id});
+      await dbLog("info", "Client_Dechet_Sld_Ini created", {id: data.data.id});
     }
     return response;
   }
@@ -100,7 +100,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Client_Dechet_Sld_Ini updated", cookieHeader, {id: data.data.id});
-      await auditLog("info", "Client_Dechet_Sld_Ini updated", {id: data.data.id});
+      await dbLog("info", "Client_Dechet_Sld_Ini updated", {id: data.data.id});
     }
     return response;
   }
@@ -142,7 +142,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Client_Dechet_Sld_Ini deleted", cookieHeader, {id});
-      await auditLog("info", "Client_Dechet_Sld_Ini deleted", {id});
+      await dbLog("info", "Client_Dechet_Sld_Ini deleted", {id});
     }
     return response;
   }

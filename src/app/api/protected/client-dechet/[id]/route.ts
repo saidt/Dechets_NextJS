@@ -4,7 +4,7 @@ import { create_Client_Dechet, delete_Client_Dechet, read_Client_Dechet, update_
 import { localLog } from "@/components/logger/localLog";
 import { Client_Dechet_Type, CLIENT_DECHET_TABLE_NAME } from "@/types/client-dechet";
 import { cookies } from "next/headers";
-import { auditLog } from "@/lib/auditLog";
+import { dbLog } from "@/lib/dbLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -65,7 +65,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Client_Dechet created", cookieHeader, {id: data.data.code});
-      await auditLog("info", "Client_Dechet created", {id: data.data.code});
+      await dbLog("info", "Client_Dechet created", {id: data.data.code});
     }
     return response;
   }
@@ -97,7 +97,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Client_Dechet updated", cookieHeader, {id: data.data.code});
-      await auditLog("info", "Client_Dechet updated", {id: data.data.code});
+      await dbLog("info", "Client_Dechet updated", {id: data.data.code});
     }
     return response;
   }
@@ -139,7 +139,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Client_Dechet deleted", cookieHeader, {id});
-      await auditLog("info", "Client_Dechet deleted", {id});
+      await dbLog("info", "Client_Dechet deleted", {id});
     }
     return response;
   }

@@ -4,7 +4,7 @@ import { create_Article, delete_Article, read_Article, update_Article } from "@/
 import { localLog } from "@/components/logger/localLog";
 import { Article_Type, ARTICLE_TABLE_NAME } from "@/types/article";
 import { cookies } from "next/headers";
-import { auditLog } from "@/lib/auditLog";
+import { dbLog } from "@/lib/dbLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -65,7 +65,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Article created", cookieHeader, {id: data.data.code});
-      await auditLog("info", "Article created", {id: data.data.code});
+      await dbLog("info", "Article created", {id: data.data.code});
     }
     return response;
   }
@@ -97,7 +97,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Article updated", cookieHeader, {id: data.data.code});
-      await auditLog("info", "Article updated", {id: data.data.code});
+      await dbLog("info", "Article updated", {id: data.data.code});
     }
     return response;
   }
@@ -139,7 +139,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Article deleted", cookieHeader, {id});
-      await auditLog("info", "Article deleted", {id});
+      await dbLog("info", "Article deleted", {id});
     }
     return response;
   }

@@ -4,7 +4,7 @@ import { create_Reglement_Dechet, delete_Reglement_Dechet, read_Reglement_Dechet
 import { localLog } from "@/components/logger/localLog";
 import { Reglement_Dechet_Type, REGLEMENT_DECHET_TABLE_NAME } from "@/types/reglement-dechet";
 import { cookies } from "next/headers";
-import { auditLog } from "@/lib/auditLog";
+import { dbLog } from "@/lib/dbLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -66,7 +66,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Reglement_Dechet created", cookieHeader, {id: data.data.numero});
-      await auditLog("info", "Reglement_Dechet created", {id: data.data.numero});
+      await dbLog("info", "Reglement_Dechet created", {id: data.data.numero});
     }
     return response;
   }
@@ -98,7 +98,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Reglement_Dechet updated", cookieHeader, {id: data.data.numero});
-      await auditLog("info", "Reglement_Dechet updated", {id: data.data.numero});
+      await dbLog("info", "Reglement_Dechet updated", {id: data.data.numero});
     }
     return response;
   }
@@ -140,7 +140,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Reglement_Dechet deleted", cookieHeader, {id});
-      await auditLog("info", "Reglement_Dechet deleted", {id});
+      await dbLog("info", "Reglement_Dechet deleted", {id});
     }
     return response;
   }

@@ -4,7 +4,7 @@ import { create_Unite, delete_Unite, read_Unite, update_Unite } from "@/app/db-d
 import { localLog } from "@/components/logger/localLog";
 import { Unite_Type, UNITE_TABLE_NAME } from "@/types/unite";
 import { cookies } from "next/headers";
-import { auditLog } from "@/lib/auditLog";
+import { dbLog } from "@/lib/dbLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -65,7 +65,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Unite created", cookieHeader, {id: data.data.code});
-      await auditLog("info", "Unite created", {id: data.data.code});
+      await dbLog("info", "Unite created", {id: data.data.code});
     }
     return response;
   }
@@ -97,7 +97,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Unite updated", cookieHeader, {id: data.data.code});
-      await auditLog("info", "Unite updated", {id: data.data.code});
+      await dbLog("info", "Unite updated", {id: data.data.code});
     }
     return response;
   }
@@ -139,7 +139,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Unite deleted", cookieHeader, {id});
-      await auditLog("info", "Unite deleted", {id});
+      await dbLog("info", "Unite deleted", {id});
     }
     return response;
   }

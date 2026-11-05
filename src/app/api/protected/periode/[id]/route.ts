@@ -4,7 +4,7 @@ import { create_Periode, delete_Periode, read_Periode, update_Periode } from "@/
 import { localLog } from "@/components/logger/localLog";
 import { Periode_Type, PERIODE_TABLE_NAME } from "@/types/periode";
 import { cookies } from "next/headers";
-import { auditLog } from "@/lib/auditLog";
+import { dbLog } from "@/lib/dbLog";
 import { logError } from "@/lib/serverLog";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
@@ -66,7 +66,7 @@ export async function POST(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Periode created", cookieHeader, {id: data.data.code});
-      await auditLog("info", "Periode created", {id: data.data.code});
+      await dbLog("info", "Periode created", {id: data.data.code});
     }
     return response;
   }
@@ -98,7 +98,7 @@ export async function PUT(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Periode updated", cookieHeader, {id: data.data.code});
-      await auditLog("info", "Periode updated", {id: data.data.code});
+      await dbLog("info", "Periode updated", {id: data.data.code});
     }
     return response;
   }
@@ -140,7 +140,7 @@ export async function DELETE(
     if (response.ok) {
       const cookieHeader = (await cookies()).toString();
       localLog("info", "Periode deleted", cookieHeader, {id});
-      await auditLog("info", "Periode deleted", {id});
+      await dbLog("info", "Periode deleted", {id});
     }
     return response;
   }

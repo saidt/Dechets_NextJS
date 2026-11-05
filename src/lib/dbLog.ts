@@ -9,7 +9,7 @@ import { LogLevel } from '@/types/log';
  * The user id comes from the session, never from the caller. Never throws: a
  * logging failure is written to the server log and must not break the request.
  */
-export async function auditLog(level: LogLevel, message: string, context?: Record<string, unknown>): Promise<void> {
+export async function dbLog(level: LogLevel, message: string, context?: Record<string, unknown>): Promise<void> {
   try {
     const session = await getServerSession(authOptions);
     await createLog({
@@ -22,6 +22,6 @@ export async function auditLog(level: LogLevel, message: string, context?: Recor
     });
   }
   catch (err) {
-    logError(`auditLog: ${message}`, err);
+    logError(`dbLog: ${message}`, err);
   }
 }
