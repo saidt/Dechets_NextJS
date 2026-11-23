@@ -29,6 +29,7 @@ import { handleError } from "@/lib/error";
 import { useAppContext } from "@/app/context/AppContext";
 import { put_Versement_Dechet } from "@/fetch/versement-dechet";
 import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
+import { VERSEMENT_DECHET_LIGNE_TABLE_NAME } from "@/types/versement-dechet-ligne";
 
 const TAB_STORAGE_KEY = "VERSEMENT_DECHET_TAB";
 
@@ -178,6 +179,11 @@ const Versement_Dechet_Show = () => {
     (hasRole('dbo.VERSEMENT_DECHET.DEVALIDER') && <DevaliderMenu onClick={handle_Non_Valide} />),
   ]
 
+  // Child tabs are shown only with the child list role (<TABLE>.LIST)
+  const canListLignes = hasRole(VERSEMENT_DECHET_LIGNE_TABLE_NAME + '.LIST');
+  // A stored tab the user can no longer see falls back to the first one
+  const tab = ["1", canListLignes && "2"].includes(value) ? value : "1";
+
   return (
     <GenericShowPage<Versement_Dechet_Type>
       tableName={ VERSEMENT_DECHET_TABLE_NAME }
@@ -198,7 +204,7 @@ const Versement_Dechet_Show = () => {
       validate={validate}
       children={
         <>
-				  <TabContext value={value}>
+				  <TabContext value={tab}>
             <TabList
               onChange={handleTabChange} 
               sx={{
@@ -210,7 +216,7 @@ const Versement_Dechet_Show = () => {
               }}
             >
               <Tab key={"1"} label='Versement' value={"1"} />
-              <Tab key={"2"} label='Lignes' value={"2"} />
+              {canListLignes && <Tab key={"2"} label='Lignes' value={"2"} />}
             </TabList>
             <Divider />
             <TabPanel key={"1"} value={"1"}>
@@ -247,9 +253,11 @@ const Versement_Dechet_Show = () => {
                 checked={versement_Dechet.valide === "O"}
               />
             </TabPanel>
-            <TabPanel key={"2"} value={"2"}>
-              <Versement_Dechet_Ligne_Child />
-            </TabPanel>
+            {canListLignes && (
+              <TabPanel key={"2"} value={"2"}>
+                <Versement_Dechet_Ligne_Child />
+              </TabPanel>
+            )}
           </TabContext>
         </>
       }

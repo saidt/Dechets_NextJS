@@ -40,6 +40,8 @@ import { sortie_Dechet_Show_Print_Simple } from "./Sortie_Dechet_Show_Print_Simp
 import { fetch_Client_Dechet } from "@/fetch/client-dechet";
 import { put_Sortie_Dechet } from "@/fetch/sortie-dechet";
 import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
+import { SORTIE_DECHET_DETAIL_TABLE_NAME } from "@/types/sortie-dechet-detail";
+import { SORTIE_DECHET_LIGNE_TABLE_NAME } from "@/types/sortie-dechet-ligne";
 
 const TAB_STORAGE_KEY = "SORTIE_DECHET_TAB";
 
@@ -346,6 +348,12 @@ const Sortie_Dechet_Show = () => {
     await sortie_Dechet_Show_Print(data, user?.id);
   };
 
+  // Child tabs are shown only with the child list role (<TABLE>.LIST)
+  const canListLignes = hasRole(SORTIE_DECHET_LIGNE_TABLE_NAME + '.LIST');
+  const canListDetails = hasRole(SORTIE_DECHET_DETAIL_TABLE_NAME + '.LIST');
+  // A stored tab the user can no longer see falls back to the first one
+  const tab = ["1", canListLignes && "2", canListDetails && "3"].includes(value) ? value : "1";
+
   return (
     <GenericShowPage<Sortie_Dechet_Type>
       tableName={ SORTIE_DECHET_TABLE_NAME }
@@ -367,7 +375,7 @@ const Sortie_Dechet_Show = () => {
       onPrint={handlePrint}
       children={
         <>
-          <TabContext value={value}>
+          <TabContext value={tab}>
             <MuiPKNumberField
               name="numero"
               label="Numéro"
@@ -381,8 +389,8 @@ const Sortie_Dechet_Show = () => {
             />
             <TabList onChange={handleTabChange}>
               <Tab key={"1"} label='Sortie' value={"1"} />
-              <Tab key={"2"} label='Lignes' value={"2"} />
-              <Tab key={"3"} label='Détails' value={"3"} />
+              {canListLignes && <Tab key={"2"} label='Lignes' value={"2"} />}
+              {canListDetails && <Tab key={"3"} label='Détails' value={"3"} />}
             </TabList>
             <Divider />
             <TabPanel key={"1"} value={"1"}>
@@ -472,12 +480,16 @@ const Sortie_Dechet_Show = () => {
                 checked={sortie_Dechet.controle === "O"}
               />
 					  </TabPanel>
-            <TabPanel key={"2"} value={"2"}>
-              <Sortie_Dechet_Ligne_Child />
-            </TabPanel>
-            <TabPanel key={"3"} value={"3"}>
-              <Sortie_Dechet_Detail_Child />
-            </TabPanel>
+            {canListLignes && (
+              <TabPanel key={"2"} value={"2"}>
+                <Sortie_Dechet_Ligne_Child />
+              </TabPanel>
+            )}
+            {canListDetails && (
+              <TabPanel key={"3"} value={"3"}>
+                <Sortie_Dechet_Detail_Child />
+              </TabPanel>
+            )}
           </TabContext>
           <Sortie_Dechet_Maj_Prix_Detail 
             numero={sortie_Dechet.numero}

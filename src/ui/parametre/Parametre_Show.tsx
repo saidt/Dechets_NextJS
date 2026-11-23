@@ -8,6 +8,8 @@ import { MuiPKTextField, MuiTextField } from "@/components/form-show/Inputs";
 import { useParams, useSearchParams } from "next/navigation";
 import { Divider } from "@mui/material";
 import Parametre_Ligne_List from "./Parametre_Ligne_List";
+import useAuth from "@/app/context/UseAuth";
+import { PARAMETRE_LIGNE_TABLE_NAME } from "@/types/parametre-ligne";
 
 // Declared at module level (not inside Parametre_Show) so each keeps the same
 // component identity across re-renders: a component declared inside another
@@ -82,6 +84,10 @@ const Parametre_Show = () => {
   };
 	
 
+  // The lines are shown only with the child list role (<TABLE>.LIST)
+  const { hasRole } = useAuth();
+  const canListLignes = hasRole(PARAMETRE_LIGNE_TABLE_NAME + '.LIST');
+
   return (
     <GenericShowPage<Parametre_Type>
       tableName={ PARAMETRE_TABLE_NAME }
@@ -122,8 +128,12 @@ const Parametre_Show = () => {
             onChange={handleChange}
             onClear={() => setParametreValue("designation", "")}
           />
-          <Divider />
-          <Parametre_Ligne_Child />
+          {canListLignes && (
+            <>
+              <Divider />
+              <Parametre_Ligne_Child />
+            </>
+          )}
         </>
       }
     />

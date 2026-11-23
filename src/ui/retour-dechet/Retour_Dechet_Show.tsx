@@ -33,6 +33,7 @@ import useAuth from "@/app/context/UseAuth";
 import { fetch_Client_Dechet } from "@/fetch/client-dechet";
 import { put_Retour_Dechet } from "@/fetch/retour-dechet";
 import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
+import { RETOUR_DECHET_LIGNE_TABLE_NAME } from "@/types/retour-dechet-ligne";
 
 const TAB_STORAGE_KEY = "RETOUR_DECHET_TAB";
 
@@ -299,6 +300,11 @@ const Retour_Dechet_Show = () => {
     (hasRole('dbo.RETOUR_DECHET.NON_CONTROLE') && <NonControleMenu onClick={handle_Non_Controle} />),
   ]
 
+  // Child tabs are shown only with the child list role (<TABLE>.LIST)
+  const canListLignes = hasRole(RETOUR_DECHET_LIGNE_TABLE_NAME + '.LIST');
+  // A stored tab the user can no longer see falls back to the first one
+  const tab = ["1", canListLignes && "2"].includes(value) ? value : "1";
+
   return (
     <GenericShowPage<Retour_Dechet_Type>
       tableName={ RETOUR_DECHET_TABLE_NAME }
@@ -319,7 +325,7 @@ const Retour_Dechet_Show = () => {
       validate={validate}
       children={
         <>
-          <TabContext value={value}>
+          <TabContext value={tab}>
             <MuiPKNumberField
               name="numero"
               label="Numéro"
@@ -333,7 +339,7 @@ const Retour_Dechet_Show = () => {
             />
             <TabList onChange={handleTabChange}>
               <Tab key={"1"} label='Retour' value={"1"} />
-              <Tab key={"2"} label='Lignes' value={"2"} />
+              {canListLignes && <Tab key={"2"} label='Lignes' value={"2"} />}
             </TabList>
             <Divider />
             <TabPanel key={"1"} value={"1"}>
@@ -442,9 +448,11 @@ const Retour_Dechet_Show = () => {
                 checked={retour_Dechet.controle === "O"}
               />
 					  </TabPanel>
-            <TabPanel key={"2"} value={"2"}>
-              <Retour_Dechet_Ligne_Child />
-            </TabPanel>
+            {canListLignes && (
+              <TabPanel key={"2"} value={"2"}>
+                <Retour_Dechet_Ligne_Child />
+              </TabPanel>
+            )}
           </TabContext>
         </>
       }

@@ -34,6 +34,7 @@ import Reglement_Dechet_Ligne_List from "./Reglement_Dechet_Ligne_List";
 import { fetch_Client_Dechet } from "@/fetch/client-dechet";
 import { put_Reglement_Dechet } from "@/fetch/reglement-dechet";
 import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
+import { REGLEMENT_DECHET_LIGNE_TABLE_NAME } from "@/types/reglement-dechet-ligne";
 
 const TAB_STORAGE_KEY = "REGLEMENT_DECHET_TAB";
 
@@ -237,6 +238,11 @@ const Reglement_Dechet_Show = () => {
     (hasRole('dbo.REGLEMENT_DECHET.DEVALIDER') && <DevaliderMenu onClick={handle_Non_Valide} />),
   ]
 
+  // Child tabs are shown only with the child list role (<TABLE>.LIST)
+  const canListLignes = hasRole(REGLEMENT_DECHET_LIGNE_TABLE_NAME + '.LIST');
+  // A stored tab the user can no longer see falls back to the first one
+  const tab = ["1", canListLignes && "2"].includes(value) ? value : "1";
+
   return (
     <GenericShowPage<Reglement_Dechet_Type>
       tableName={ REGLEMENT_DECHET_TABLE_NAME }
@@ -268,7 +274,7 @@ const Reglement_Dechet_Show = () => {
             onChange={handleChange}
             onClear={() => set_Reglement_Dechet_Value("numero", "")} 
           />
-				  <TabContext value={value}>
+				  <TabContext value={tab}>
             <TabList
               onChange={handleTabChange} 
               sx={ {
@@ -280,7 +286,7 @@ const Reglement_Dechet_Show = () => {
               } }
             >
               <Tab key={"1"} label='Réglement' value={"1"} />
-              <Tab key={"2"} label='Sorties' value={"2"} />
+              {canListLignes && <Tab key={"2"} label='Sorties' value={"2"} />}
             </TabList>
             <Divider />
             <TabPanel key={"1"} value={"1"}>
@@ -374,9 +380,11 @@ const Reglement_Dechet_Show = () => {
                 checked={reglement_Dechet.valide === "O"}
               />
 					  </TabPanel>
-            <TabPanel key={"2"} value={"2"}>
-              <Reglement_Dechet_Ligne_Child />
-            </TabPanel>
+            {canListLignes && (
+              <TabPanel key={"2"} value={"2"}>
+                <Reglement_Dechet_Ligne_Child />
+              </TabPanel>
+            )}
           </TabContext>
         </>
       }
