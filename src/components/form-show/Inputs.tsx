@@ -21,11 +21,13 @@ import { formatNumber } from "@/lib/number-utils";
 dayjs.extend(localizedFormat);
 dayjs.locale('fr');
 
-export const BasicTextField = (props: StandardTextFieldProps) => {
+// Keeps the slotProps it is given (end adornments: lock, clear, list, show password...)
+// and only forces the label to stay shrunk.
+export const BasicTextField = ({ slotProps, ...props }: StandardTextFieldProps) => {
   return  (
     <TextField {...props} 
       variant="outlined"
-      slotProps={{ inputLabel: { shrink: true } }}
+      slotProps={{ ...slotProps, inputLabel: { ...slotProps?.inputLabel, shrink: true } }}
       sx={{ pl: 1, pr: 1, pt: 1, pb: 2 }}
     />
   )

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { IconButton, InputAdornment, Stack, TextField, TextFieldProps } from "@mui/material";
+import { IconButton, InputAdornment, Stack } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -16,17 +16,7 @@ import { apiFetch } from "@/lib/apiFetch";
 import { getResponseData } from "@/lib/html";
 import { clientError, handleError } from "@/lib/error";
 import { PASSWORD_HASH_FETCH_URL, USER_UPDATE_PSWD_ROLE } from "@/types/user";
-
-// Same look as BasicTextField, but keeps the slotProps it is given (BasicTextField
-// replaces them, so its end adornments are never shown).
-const HashTextField = ({ slotProps, ...props }: TextFieldProps) => (
-  <TextField
-    {...props}
-    variant="outlined"
-    slotProps={{ ...slotProps, inputLabel: { shrink: true } }}
-    sx={{ pl: 1, pr: 1, pt: 1, pb: 2 }}
-  />
-);
+import { BasicTextField } from "@/components/form-show/Inputs";
 
 // Generates a USER_.PSW_HASH value for a password (display only). The bcrypt hash has
 // its own random salt, so it does not depend on the user id.
@@ -90,7 +80,7 @@ const Password_Hash = () => {
     <TitleCard title="Hash mot de passe">
       <LoadingBar loading={loading} />
       <Stack spacing={2} sx={{ maxWidth: 700, pt: 2}}>
-        <HashTextField
+        <BasicTextField
           label="Mot de passe"
           type={showPassword ? "text" : "password"}
           value={password}
@@ -122,7 +112,7 @@ const Password_Hash = () => {
             Copier
           </TipButton>
         </Stack>
-        <HashTextField
+        <BasicTextField
           label="Hash"
           value={hash}
           fullWidth
