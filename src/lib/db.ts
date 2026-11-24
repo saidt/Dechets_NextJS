@@ -67,10 +67,10 @@ export async function storedProcParams(spName: string) {
   return result;
 }
 
-export async function execScalarFunction(
+export async function execScalarFunction<T>(
   fnName: string,
   params: Stored_Proc_Param_Type[] = [],
-) {
+): Promise<T | null> {
   validatName(fnName);
 
   for (const param of params) {
@@ -95,7 +95,9 @@ export async function execScalarFunction(
 
   //consoleInfo('execScalarFunction : ', Prisma.join(sqlParts, ""));
 
-  return prisma.$queryRaw(Prisma.join(sqlParts, ""));
+  const result = await prisma.$queryRaw<{ RET_VALUE: T }[]>(Prisma.join(sqlParts, ""));
+
+  return result.length ? result[0].RET_VALUE : null;
 }
 
 export async function scalarFunctionParams(sfName: string) {

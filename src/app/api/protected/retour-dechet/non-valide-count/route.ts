@@ -1,10 +1,11 @@
-import { retour_Dechet_Non_Valide_Count } from "@/app/db-data/retour-dechet";
+import { retour_Dechet_Count } from "@/app/db-data/retour-dechet";
 import { logError } from "@/lib/serverLog";
 import { HttpStatus } from "@/types/http";
 import { NextResponse } from "next/server";
 import { RETOUR_DECHET_TABLE_NAME } from "@/types/retour-dechet";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
+import { execScalarFunction } from "@/lib/db";
 
 export async function GET() {
   const pathname = '/retour-dechet/non-valide-count';
@@ -17,9 +18,11 @@ export async function GET() {
     );
   }
   try {
-    const result = await retour_Dechet_Non_Valide_Count();
+    const dateDeb = await execScalarFunction<Date>('dbo.d_DATE_DEBUT_PERIODE');
+    const dateFin = await execScalarFunction<Date>('dbo.d_DATE_FIN_PERIODE')
+    const result = await retour_Dechet_Count({ date_piece: { gte: dateDeb, lte: dateFin }, valide: 'N' });
 
-    return new Response(JSON.stringify(result), {
+    return new Response(JSON.stringify({count: result}), {
       status: HttpStatus.OK,
       headers: { 'Content-Type': 'application/json' }
     });

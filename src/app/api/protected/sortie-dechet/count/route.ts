@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { SORTIE_DECHET_TABLE_NAME } from "@/types/sortie-dechet";
 import { checkRole } from "@/lib/auth-lib";
 import { getErrorMessage } from "@/lib/errorMessage";
+import { execScalarFunction } from "@/lib/db";
 
 export async function GET() {
   const pathname = '/sortie-dechet/count';
@@ -17,7 +18,9 @@ export async function GET() {
     );
   }
   try {
-    const result = await sortie_Dechet_Count({});
+    const dateDeb = await execScalarFunction<Date>('dbo.d_DATE_DEBUT_PERIODE');
+    const dateFin = await execScalarFunction<Date>('dbo.d_DATE_FIN_PERIODE')
+    const result = await sortie_Dechet_Count({ date_piece: { gte: dateDeb, lte: dateFin } });
 
     return new Response(JSON.stringify({count: result}), {
       status: HttpStatus.OK,

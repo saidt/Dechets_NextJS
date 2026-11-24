@@ -55,7 +55,7 @@ const Sortie_Dechet_Non_Valide_CountCard = () => {
           </Box>
           <Box>
             <Typography color="white" variant="h5">
-              Nombre des sorties déchets non validées
+              Nombre des sorties déchets non validées période
             </Typography>
           </Box>
         </Stack>

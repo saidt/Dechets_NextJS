@@ -30,7 +30,7 @@ async function fetchDate(scalarFunctionName: string): Promise<DateResultType> {
     }
 
     // JSON has no date type: the function's value arrives as an ISO string
-    const value = result.data?.[0]?.RET_VALUE;
+    const value = result.data;
     const date = value ? new Date(value) : null;
     if (!date || isNaN(date.getTime())) {
       return {

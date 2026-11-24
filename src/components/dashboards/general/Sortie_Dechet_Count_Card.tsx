@@ -55,7 +55,7 @@ const Sortie_Dechet_CountCard = () => {
           </Box>
           <Box>
             <Typography color="white" variant="h5">
-              Nombre des sorties déchets
+              Nombre des sorties déchets période
             </Typography>
           </Box>
         </Stack>

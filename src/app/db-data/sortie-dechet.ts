@@ -80,13 +80,6 @@ export async function delete_Sortie_Dechet(numero: number, ) : Promise<Sortie_De
   return JSON.parse(JSON.stringify(deleted));
 }
 
-export async function sortie_Dechet_Non_Valide_Count() {
-  const data = await prisma.sortie_Dechet.count({
-    where: { valide: 'N' },
-  });
-  return { count: data };
-}
-
 export async function sortie_Dechet_Count_DataSet() {
   const result = await prisma.$queryRaw<{
     ANNEE: number;

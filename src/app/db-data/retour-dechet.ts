@@ -1,13 +1,7 @@
 import { DEFAULT_PAGE_SIZE } from "@/lib/consts";
-//import { consoleInfo } from "@/lib/clientLog";
 import { prisma } from "@/lib/prisma";
 import { PrismaQuery } from "@/lib/types";
 import { Retour_Dechet_Type } from "@/types/retour-dechet";
-
-/*export async function retourDechetCount() {
-  const data = await prisma.retour_Dechet.count();
-  return { count: data };
-}*/
 
 export async function retour_Dechet_Count(whereClause: any) : Promise<number> {
   const where: any = whereClause ? whereClause : {};
@@ -48,8 +42,6 @@ export async function read_Retour_Dechet(numero: number) : Promise<Retour_Dechet
 }
 
 export async function create_Retour_Dechet(retour_Dechet: Retour_Dechet_Type) : Promise<Retour_Dechet_Type> {
-  //consoleInfo('create_Retour_Dechet retour_Dechet', retour_Dechet)
-  
   const { numero, ...retour_Dechet_Data } : Retour_Dechet_Type = retour_Dechet;
   
   const inserted = await prisma.retour_Dechet.create({
@@ -77,11 +69,4 @@ export async function delete_Retour_Dechet(numero: number) : Promise<Retour_Dech
       },
   })
   return JSON.parse(JSON.stringify(deleted));
-}
-
-export async function retour_Dechet_Non_Valide_Count() {
-  const data = await prisma.retour_Dechet.count({
-    where: { valide: 'N' },
-  });
-  return { count: data };
 }
