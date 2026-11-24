@@ -1,8 +1,6 @@
 "use client";
 
-import { clientError } from "@/lib/error";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
-import { usePathname, useRouter } from "next/navigation";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
@@ -17,26 +15,22 @@ export default function Home() {
     wait(); 
   }, []);
 
-  const router = useRouter()
-  const pathName = usePathname()
-
-  const handleClick = () => {
-    try {
-      const error = new Error('Volontary thrown error !')
-      throw error
-    }
-    catch (error: any) {
-      clientError('Home', error, pathName,router)
-    }
-  }
-  
   return (
     <>
       {loading ? (
         <CircularProgress />
       ) : (
         <>
-          <Typography sx={{mb: 3}} >Page d'acceuil</Typography>
+          <Typography
+            variant="h4"
+            sx={{
+              mb: 3,
+              textAlign: 'center',
+              fontWeight: 'bold',
+            }}
+          >
+            Page d'accueil
+          </Typography>
           <Box sx={{ textAlign: "center" }}>
             <Image
               src="/images/cables.png"
@@ -45,9 +39,6 @@ export default function Home() {
               height={600}
             />
           </Box>
-          <Button variant="contained" onClick={handleClick} sx={{mt: 3}}>
-            Throw error
-          </Button>
         </>
       )}
     </>
