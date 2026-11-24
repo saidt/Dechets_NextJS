@@ -15,7 +15,7 @@ import { MuiDateTimePicker, MuiNumberField, MuiPKNumberField, MuiSwitch, MuiText
 import { ReferenceField } from "@/components/form-show/ReferenceField";
 import { useParams, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 import { getResponseData } from "@/lib/html";
 import { Client_Dechet_Type, CLIENT_DECHET_URL } from "@/types/client-dechet";
 import Client_Dechet_List from "../client-dechet/Client_Dechet_List";
@@ -215,7 +215,7 @@ const Sortie_Dechet_Show = () => {
       addNotification("Sortie déchets validée", "success");
     }
     catch (err: any) {
-      consoleInfo('Sortie_Dechet_Show handle_Valide err: ', err)
+      //consoleInfo('Sortie_Dechet_Show handle_Valide err: ', err)
       handleError(String(err), err, addNotification)
       return false
     }

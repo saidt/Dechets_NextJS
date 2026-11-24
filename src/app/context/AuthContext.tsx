@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { User_Type } from "@/types/user";
 import { localLog } from "@/components/logger/localLog";
 import { getUser, getUserRoles } from "@/lib/user";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 import { getAllCookies } from "@/lib/html";
 import { clientError } from "@/lib/error";
 import { usePathname, useRouter } from "next/navigation";
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const pathName = usePathname()
 
   //consoleInfo("AuthProvider session: ", session);
-  consoleInfo("AuthProvider userId: ", userId);
+  //consoleInfo("AuthProvider userId: ", userId);
 
   const refreshAuth = async() => {
     if (!userId) {
@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       fetchedUser.roles = roles
       setUser(fetchedUser)
       cacheUser(fetchedUser);
-      consoleInfo("AuthProvider fetchedUser: ", fetchedUser);
+      //consoleInfo("AuthProvider fetchedUser: ", fetchedUser);
     }
     catch (err: any) {
       const allCookies = getAllCookies()
@@ -112,7 +112,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     async function fetch_Auth() {
       if (status === "authenticated" && userId) {
-        consoleInfo("AuthProvider fetch_User");
+        //consoleInfo("AuthProvider fetch_User");
         const allCookies = getAllCookies();
         try {
           setUserError(null)

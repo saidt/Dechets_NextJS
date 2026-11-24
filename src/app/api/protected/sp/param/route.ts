@@ -1,6 +1,6 @@
 import { exists_User_Role } from "@/app/db-data/user-role";
 import { storedProcParams } from "@/lib/db";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 import { logError } from "@/lib/serverLog";
 import { HttpStatus } from "@/types/http";
 import { getValidSession } from "@/lib/auth-lib";
@@ -30,9 +30,9 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = request.nextUrl.searchParams
-    consoleInfo("sp param GET searchParams....................:", searchParams);
+    //consoleInfo("sp param GET searchParams....................:", searchParams);
     const spName = searchParams.get('spName')
-    consoleInfo("sp param GET spName....................:", spName);
+    //consoleInfo("sp param GET spName....................:", spName);
 
     if (! spName) {
       const err = new Error('spName not found !')

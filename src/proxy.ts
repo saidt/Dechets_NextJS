@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkSession } from "./lib/auth-lib";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -20,7 +20,7 @@ export async function proxy(req: NextRequest) {
     const message = error ?? '';
 
     if ( message != '') {
-      consoleInfo('proxy message : ', message)
+      //consoleInfo('proxy message : ', message)
 
       const url = req.nextUrl.clone();
       url.pathname = "/auth/login";

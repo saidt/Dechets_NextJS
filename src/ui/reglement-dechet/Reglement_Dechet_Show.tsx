@@ -26,7 +26,6 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
-import { consoleInfo } from "@/lib/clientLog";
 import useAuth from "@/app/context/UseAuth";
 import { DevaliderMenu, ValiderMenu } from "@/components/ui/menu/Menus";
 
@@ -194,7 +193,7 @@ const Reglement_Dechet_Show = () => {
       addNotification("Réglement déchets validé", "success");
     }
     catch (err: any) {
-      consoleInfo('Reglement_Dechet_Show handle_Valide err: ', err)
+      //consoleInfo('Reglement_Dechet_Show handle_Valide err: ', err)
       handleError(String(err), err, addNotification)
       return false
     }

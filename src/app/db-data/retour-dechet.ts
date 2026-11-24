@@ -1,5 +1,5 @@
 import { DEFAULT_PAGE_SIZE } from "@/lib/consts";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 import { prisma } from "@/lib/prisma";
 import { PrismaQuery } from "@/lib/types";
 import { Retour_Dechet_Type } from "@/types/retour-dechet";
@@ -48,7 +48,7 @@ export async function read_Retour_Dechet(numero: number) : Promise<Retour_Dechet
 }
 
 export async function create_Retour_Dechet(retour_Dechet: Retour_Dechet_Type) : Promise<Retour_Dechet_Type> {
-  consoleInfo('create_Retour_Dechet retour_Dechet', retour_Dechet)
+  //consoleInfo('create_Retour_Dechet retour_Dechet', retour_Dechet)
   
   const { numero, ...retour_Dechet_Data } : Retour_Dechet_Type = retour_Dechet;
   

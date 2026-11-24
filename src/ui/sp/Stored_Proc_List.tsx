@@ -18,7 +18,7 @@ import useAuth from "@/app/context/UseAuth";
 
 import { Stored_Proc_Param_Meta_Type, Stored_Proc_Param_Type } from "@/types/sp";
 import { DialogProps, ModalProps } from "@mui/material";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 
 export interface SplMemListPageProps extends DialogProps{
   spName: string;
@@ -108,7 +108,7 @@ const Stored_Proc_List = ({ spName, open, progress, params, onClose, ...restProp
         }));
 
         setLocalParams(newParams)
-        consoleInfo('Stored_Proc_List fetchParams params : ', localParams);
+        //consoleInfo('Stored_Proc_List fetchParams params : ', localParams);
       }
     } catch (err) {
       handleError("fetchParams failed", err, addNotification);

@@ -24,7 +24,7 @@ import Versement_Dechet_Ligne_List from "./Versement_Dechet_Ligne_List";
 import useAuth from "@/app/context/UseAuth";
 import { DevaliderMenu, ValiderMenu } from "@/components/ui/menu/Menus";
 import { getResponseData } from "@/lib/html";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 import { handleError } from "@/lib/error";
 import { useAppContext } from "@/app/context/AppContext";
 import { put_Versement_Dechet } from "@/fetch/versement-dechet";
@@ -135,7 +135,7 @@ const Versement_Dechet_Show = () => {
       addNotification("Versement déchets validé", "success");
     }
     catch (err: any) {
-      consoleInfo('Reglement_Dechet_Show handle_Valide err: ', err)
+      //consoleInfo('Reglement_Dechet_Show handle_Valide err: ', err)
       handleError(String(err), err, addNotification)
       return false
     }

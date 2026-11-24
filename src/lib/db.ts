@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Stored_Proc_Param_Meta_Type, Stored_Proc_Param_Type } from "@/types/sp";
 import { Prisma } from "@prisma/client";
-import { consoleInfo } from "./clientLog";
+//import { consoleInfo } from "./clientLog";
 
 function validatName(name: string): void {
   const valid = /^[a-zA-Z0-9_.]+$/.test(name);
@@ -93,7 +93,7 @@ export async function execScalarFunction(
 
   sqlParts.push(Prisma.sql`) AS RET_VALUE`);
 
-  consoleInfo('execScalarFunction : ', Prisma.join(sqlParts, ""));
+  //consoleInfo('execScalarFunction : ', Prisma.join(sqlParts, ""));
 
   return prisma.$queryRaw(Prisma.join(sqlParts, ""));
 }

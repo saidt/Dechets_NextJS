@@ -4,7 +4,7 @@ import { getResponseData } from "@/lib/html";
 import { GenericMemListPage, GenericMemListPageProps } from "@/components/datatable/GenericMemListPage";
 import { Column } from "@/lib/types";
 import { useSession } from "next-auth/react";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 import { fetch_Envoi_Frs_Dechet_Reste } from "@/fetch/envoi-frs-dechet";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -44,7 +44,7 @@ const Envoi_Frs_Dechet_Reste = (props: EfdrMemListPageProps) => {
     try {
       const response = await fetch_Envoi_Frs_Dechet_Reste()
       const data : Envoi_Frs_Dechet_Reste_Type[] = await getResponseData(response, 'Envoi_Frs_Dechet_Reste api error')
-      consoleInfo('Envoi_Frs_Dechet_Reste fetchAllData data ', data)
+      //consoleInfo('Envoi_Frs_Dechet_Reste fetchAllData data ', data)
       return data;
     }
     catch (err) {

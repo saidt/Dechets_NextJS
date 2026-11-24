@@ -1,6 +1,6 @@
 //import { exists_User_Role } from "@/app/db-data/user-role";
 import { execScalarFunction } from "@/lib/db";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 import { logError } from "@/lib/serverLog";
 import { HttpStatus } from "@/types/http";
 import { Stored_Proc_Param_Type } from "@/types/sp";
@@ -32,9 +32,9 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = request.nextUrl.searchParams
-    consoleInfo("sf exec GET searchParams....................:", searchParams);
+    //consoleInfo("sf exec GET searchParams....................:", searchParams);
     const sfName = searchParams.get('sfName')
-    consoleInfo("sf exec GET sfName....................:", sfName);
+    //consoleInfo("sf exec GET sfName....................:", sfName);
 
     if (! sfName) {
       const err = new Error('sfName not found !')
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     }*/
 
     const paramsStr = searchParams.get('params')
-    consoleInfo("sf exec GET params....................:", paramsStr);
+    //consoleInfo("sf exec GET params....................:", paramsStr);
     const params : Stored_Proc_Param_Type[] = paramsStr ? JSON.parse(paramsStr) : []
 
     const data = await execScalarFunction(sfName, params)

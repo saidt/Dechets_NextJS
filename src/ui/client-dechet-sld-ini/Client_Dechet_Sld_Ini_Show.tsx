@@ -27,7 +27,7 @@ import { DevaliderMenu, ValiderMenu } from "@/components/ui/menu/Menus";
 import { useAppContext } from "@/app/context/AppContext";
 import { put_Client_Dechet_Sld_Ini } from "@/fetch/client-dechet-sld-ini";
 import { handleError } from "@/lib/error";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 import useAuth from "@/app/context/UseAuth";
 
 // Declared at module level (not inside Client_Dechet_Sld_Ini_Show) so each keeps the same
@@ -224,7 +224,7 @@ const handle_Valide = async() => {
       addNotification("Solde initial client déchets validé", "success");
     }
     catch (err: any) {
-      consoleInfo('Client_Dechet_Sld_Ini_Show handle_Valide err: ', err)
+      //consoleInfo('Client_Dechet_Sld_Ini_Show handle_Valide err: ', err)
       handleError(String(err), err, addNotification)
       return false
     }
@@ -235,7 +235,7 @@ const handle_Valide = async() => {
 
   const handle_Non_Valide = async() => {
     if (client_Dechet_Sld_Ini.valide === 'N') {
-      consoleInfo('Client_Dechet_Sld_Ini_Show handle_Non_Valide: Solde initial client déchets déjà non validé');
+      //consoleInfo('Client_Dechet_Sld_Ini_Show handle_Non_Valide: Solde initial client déchets déjà non validé');
       addNotification("Solde initial client déchets déjà non validé", "warning");
       return
     }
@@ -251,7 +251,7 @@ const handle_Valide = async() => {
       const data : Client_Dechet_Sld_Ini_Type = await getResponseData(response, 'Client_Dechet_Sld_Ini_Show handle_Non_Valide')
       //consoleInfo('Client_Dechet_Sld_Ini_Show handle_Non_Valide data : ', data);
       set_Client_Dechet_Sld_Ini(data)
-      consoleInfo('Client_Dechet_Sld_Ini_Show handle_Non_Valide: Solde initial client déchets non validé');
+      //consoleInfo('Client_Dechet_Sld_Ini_Show handle_Non_Valide: Solde initial client déchets non validé');
       addNotification("Solde initial client déchets non validé", "success");
     }
     catch (err) {

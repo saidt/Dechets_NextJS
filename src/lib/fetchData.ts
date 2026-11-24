@@ -4,7 +4,7 @@ import { removeEmptyValues } from "./lib";
 import { PaginatedResponse, TableState } from "./types";
 import { Scalar_Function_Param_Type, Stored_Proc_Param_Type } from "@/types/sp";
 import { MAX_ALL_DATA_SIZE } from "./consts";
-import { consoleInfo } from "./clientLog";
+//import { consoleInfo } from "./clientLog";
 
 export async function fetchData<T extends Record<string, any>>(url: string, tableState: TableState<T>): Promise<NextResponse> {
   //consoleInfo('fetchData fetchData tableState: ', tableState)
@@ -20,7 +20,7 @@ export async function fetchData<T extends Record<string, any>>(url: string, tabl
     quickSearch
   });
 
-  consoleInfo('fetchData fetchData urlParams: ', urlParams)
+  //consoleInfo('fetchData fetchData urlParams: ', urlParams)
 
   const response = await apiFetch(`${url}?${urlParams.toString()}`);
   const data = await response.json();

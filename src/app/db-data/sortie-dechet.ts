@@ -1,5 +1,5 @@
 import { DEFAULT_PAGE_SIZE } from "@/lib/consts";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 import { prisma } from "@/lib/prisma";
 import { PrismaQuery } from "@/lib/types";
 import { Sortie_Dechet_Dernier_Type } from "@/types/retour-dechet";
@@ -49,7 +49,7 @@ export async function read_Sortie_Dechet(numero: number, ) : Promise<Sortie_Dech
 }
 
 export async function create_Sortie_Dechet(sortie_Dechet: Sortie_Dechet_Type) : Promise<Sortie_Dechet_Type> {
-  consoleInfo('create_Sortie_Dechet  sortie_Dechet', sortie_Dechet)
+  //consoleInfo('create_Sortie_Dechet  sortie_Dechet', sortie_Dechet)
   
   const { numero, ...sortie_Dechet_Data } : Sortie_Dechet_Type = sortie_Dechet;
   

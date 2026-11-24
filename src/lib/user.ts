@@ -5,7 +5,7 @@ import { USER_ROLE_CHILD_URL, User_Role_Type } from "@/types/user-role";
 import { TableState } from "./types";
 import { fetchAllData } from "./fetchData";
 import { fetch_User } from "@/fetch/user";
-import { consoleInfo } from "./clientLog";
+//import { consoleInfo } from "./clientLog";
 
 export const getUser = async(id: string) : Promise<User_Type> => {
   try {
@@ -41,7 +41,7 @@ export const getUserRoles = async(id: string) : Promise< string[]> => {
     
     const response = await fetchAllData<User_Role_Type>(`${USER_FETCH_URL}/${id}/${USER_ROLE_CHILD_URL}`, tableState);
     const result = await response.json();
-    consoleInfo("user getUserRoles result: ", result);
+    //consoleInfo("user getUserRoles result: ", result);
 
     if (!response.ok) {
       const allCookies = getAllCookies();
