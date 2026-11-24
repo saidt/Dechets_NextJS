@@ -11,7 +11,7 @@ import {
 import { GenericShowPage } from "@/components/form-show/GenericShowPage";
 import { CmListProps, Filter, Mode } from "@/lib/types";
 import { useState } from "react";
-import { MuiDateTimePicker, MuiNumberField, MuiPKNumberField, MuiSwitch, MuiTextField } from "@/components/form-show/Inputs";
+import { MuiNumberField, MuiPKNumberField, MuiSwitch, MuiTextField, MuiDatePicker } from "@/components/form-show/Inputs";
 import { ReferenceField } from "@/components/form-show/ReferenceField";
 import { useParams, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
@@ -42,6 +42,7 @@ import { put_Sortie_Dechet } from "@/fetch/sortie-dechet";
 import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
 import { SORTIE_DECHET_DETAIL_TABLE_NAME } from "@/types/sortie-dechet-detail";
 import { SORTIE_DECHET_LIGNE_TABLE_NAME } from "@/types/sortie-dechet-ligne";
+import { todayUtc } from "@/lib/date-utils";
 
 const TAB_STORAGE_KEY = "SORTIE_DECHET_TAB";
 
@@ -101,7 +102,7 @@ const Sortie_Dechet_Show = () => {
   }
 
   const get_New_Sortie_Dechet = () => {
-    const newEntity : Sortie_Dechet_Type = Empty_Sortie_Dechet
+    const newEntity : Sortie_Dechet_Type = { ...Empty_Sortie_Dechet, date_piece: todayUtc() }
     return newEntity
   }
 
@@ -426,7 +427,7 @@ const Sortie_Dechet_Show = () => {
                 onChange={handleChange}
                 onClear={() => set_Sortie_Dechet_Value("client_raison_sociale", "")}
               />
-              <MuiDateTimePicker
+              <MuiDatePicker
                 name="date_piece"
                 label='Date sortie'
                 value={dayjs(sortie_Dechet.date_piece)}

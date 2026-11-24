@@ -11,7 +11,7 @@ import {
 import { GenericShowPage } from "@/components/form-show/GenericShowPage";
 import { CmListProps, Filter, Mode } from "@/lib/types";
 import { useState } from "react";
-import { MuiDateTimePicker, MuiNumberField, MuiPKNumberField, MuiSwitch, MuiTextField } from "@/components/form-show/Inputs";
+import { MuiNumberField, MuiPKNumberField, MuiSwitch, MuiTextField, MuiDatePicker } from "@/components/form-show/Inputs";
 import { ReferenceField } from "@/components/form-show/ReferenceField";
 import { useParams, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
@@ -34,6 +34,7 @@ import { fetch_Client_Dechet } from "@/fetch/client-dechet";
 import { put_Retour_Dechet } from "@/fetch/retour-dechet";
 import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
 import { RETOUR_DECHET_LIGNE_TABLE_NAME } from "@/types/retour-dechet-ligne";
+import { todayUtc } from "@/lib/date-utils";
 
 const TAB_STORAGE_KEY = "RETOUR_DECHET_TAB";
 
@@ -84,7 +85,7 @@ const Retour_Dechet_Show = () => {
   }
 
   const get_New_Retour_Dechet = () => {
-    const newEntity : Retour_Dechet_Type = Empty_Retour_Dechet
+    const newEntity : Retour_Dechet_Type = { ...Empty_Retour_Dechet, date_piece: todayUtc(), date_sortie: todayUtc() }
     return newEntity
   }
 
@@ -375,7 +376,7 @@ const Retour_Dechet_Show = () => {
                 onChange={handleChange}
                 onClear={() => set_Retour_Dechet_Value("client_raison_sociale", "")}
               />
-              <MuiDateTimePicker
+              <MuiDatePicker
                 name="date_piece"
                 label='Date retour'
                 value={dayjs(retour_Dechet.date_piece)}
@@ -411,7 +412,7 @@ const Retour_Dechet_Show = () => {
                 helperText={errors.montant_regle }
                 mode="Browse"
               />
-              <MuiDateTimePicker
+              <MuiDatePicker
                 name="date_sortie"
                 label='Date sortie'
                 value={dayjs(retour_Dechet.date_sortie)}

@@ -11,7 +11,7 @@ import {
 import { GenericShowPage } from "@/components/form-show/GenericShowPage";
 import { CmListProps, Filter, Mode } from "@/lib/types";
 import { useState } from "react";
-import { MuiDateTimePicker, MuiNumberField, MuiPKNumberField, MuiSwitch, MuiTextField } from "@/components/form-show/Inputs";
+import { MuiNumberField, MuiPKNumberField, MuiSwitch, MuiTextField, MuiDatePicker } from "@/components/form-show/Inputs";
 import { ReferenceField } from "@/components/form-show/ReferenceField";
 import { useParams, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
@@ -34,6 +34,7 @@ import { fetch_Client_Dechet } from "@/fetch/client-dechet";
 import { put_Reglement_Dechet } from "@/fetch/reglement-dechet";
 import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
 import { REGLEMENT_DECHET_LIGNE_TABLE_NAME } from "@/types/reglement-dechet-ligne";
+import { todayUtc } from "@/lib/date-utils";
 
 const TAB_STORAGE_KEY = "REGLEMENT_DECHET_TAB";
 
@@ -85,7 +86,7 @@ const Reglement_Dechet_Show = () => {
   }
 
   const get_New_Reglement_Dechet = () => {
-    const newEntity : Reglement_Dechet_Type = Empty_Reglement_Dechet
+    const newEntity : Reglement_Dechet_Type = { ...Empty_Reglement_Dechet, date_piece: todayUtc() }
     return newEntity
   }
 
@@ -310,7 +311,7 @@ const Reglement_Dechet_Show = () => {
                 followUrl={`${ CLIENT_DECHET_URL}/${ reglement_Dechet.client_code }`}
                 forceOpen={ client_code_forceOpen }
               />
-              <MuiDateTimePicker
+              <MuiDatePicker
                 name="date_piece"
                 label='Date'
                 value={dayjs(reglement_Dechet.date_piece)}

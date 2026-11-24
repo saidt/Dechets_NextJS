@@ -14,7 +14,7 @@ import {
 import { GenericShowPage } from "@/components/form-show/GenericShowPage";
 import { Mode } from "@/lib/types";
 import { useState } from "react";
-import { MuiDateTimePicker, MuiNumberField, MuiPKNumberField, MuiSwitch, MuiTextField } from "@/components/form-show/Inputs";
+import { MuiNumberField, MuiPKNumberField, MuiSwitch, MuiTextField, MuiDatePicker } from "@/components/form-show/Inputs";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
 import Envoi_Frs_Dechet_Reste, { Envoi_Frs_Dechet_Reste_Type } from "./Envoi_Frs_Dechet_Reste";
@@ -26,6 +26,7 @@ import { getResponseData } from "@/lib/html";
 import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
 import { put_Envoi_Frs_Dechet } from "@/fetch/envoi-frs-dechet";
+import { todayUtc } from "@/lib/date-utils";
 //import { consoleDebug, consoleInfo } from "@/lib/clientLog";
 
 const Envoi_Frs_Dechet_Show = () => {
@@ -62,7 +63,7 @@ const Envoi_Frs_Dechet_Show = () => {
   }
 
   const get_New_Envoi_Frs_Dechet = () => {
-    const newEntity : Envoi_Frs_Dechet_Type = Empty_Envoi_Frs_Dechet
+    const newEntity : Envoi_Frs_Dechet_Type = { ...Empty_Envoi_Frs_Dechet, date_cmd: todayUtc() }
     return newEntity
   }
 
@@ -279,7 +280,7 @@ const Envoi_Frs_Dechet_Show = () => {
             mode={'Browse'}
             onClear={() => set_Envoi_Frs_Dechet_Value('no_cmd_exp', '')}
           />
-          <MuiDateTimePicker
+          <MuiDatePicker
             name="date_cmd"
             label='Date Cmd'
             value={dayjs(envoi_Frs_Dechet.date_cmd)}

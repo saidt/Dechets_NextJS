@@ -60,3 +60,8 @@ export function DateStrToDate(value: string): Date {
   const dateValue = new Date(year, month-1, day);
   return dateValue
 }
+/** Today's date (local day) at 00:00 UTC: the value MuiDatePicker stores for a day, with no time. */
+export function todayUtc(): Date {
+  const now = new Date();
+  return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+}

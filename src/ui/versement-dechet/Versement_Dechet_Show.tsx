@@ -11,7 +11,7 @@ import {
 import { GenericShowPage } from "@/components/form-show/GenericShowPage";
 import { Mode } from "@/lib/types";
 import { useState } from "react";
-import { MuiCheckbox, MuiDateTimePicker, MuiPKNumberField } from "@/components/form-show/Inputs";
+import { MuiCheckbox, MuiPKNumberField, MuiDatePicker } from "@/components/form-show/Inputs";
 import { useParams, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
 
@@ -30,6 +30,7 @@ import { useAppContext } from "@/app/context/AppContext";
 import { put_Versement_Dechet } from "@/fetch/versement-dechet";
 import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
 import { VERSEMENT_DECHET_LIGNE_TABLE_NAME } from "@/types/versement-dechet-ligne";
+import { todayUtc } from "@/lib/date-utils";
 
 const TAB_STORAGE_KEY = "VERSEMENT_DECHET_TAB";
 
@@ -76,7 +77,7 @@ const Versement_Dechet_Show = () => {
   }
 
   const get_New_Versement_Dechet = () => {
-    const newEntity : Versement_Dechet_Type = Empty_Versement_Dechet
+    const newEntity : Versement_Dechet_Type = { ...Empty_Versement_Dechet, date_piece: todayUtc() }
     return newEntity
   }
 
@@ -231,7 +232,7 @@ const Versement_Dechet_Show = () => {
                 onChange={handleChange}
                 onClear={() => set_Versement_Dechet_Value("numero", "")} 
               />
-              <MuiDateTimePicker
+              <MuiDatePicker
                 name="date_piece"
                 label='Date'
                 value={dayjs(versement_Dechet.date_piece)}

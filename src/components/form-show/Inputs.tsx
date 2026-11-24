@@ -11,6 +11,7 @@ import utc from 'dayjs/plugin/utc';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { MobileDateTimePicker, MobileDateTimePickerProps } from '@mui/x-date-pickers/MobileDateTimePicker';
+import { MobileDatePicker, MobileDatePickerProps } from '@mui/x-date-pickers/MobileDatePicker';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { useState } from "react";
 import { PickerValue } from "@mui/x-date-pickers/internals";
@@ -267,6 +268,63 @@ export const MuiDateTimePicker = ({ name, label, value, mode, error, helperText,
                     {renderLockEndAdornment(mode, ["Browse"])}
                     {renderClearEndAdornment(mode, ["Create", "Edit"], onClear)}
                     {renderCalendarEndAdornment(mode, ["Create", "Edit"], handleOpen)}
+                  </>
+                ),
+              },
+            },
+          },
+        }}
+        sx={{ pl: 1, pr: 1, pt: 1, pb: 2 }}
+        value={value ? dayjs.utc(value) : null}
+      />
+    </LocalizationProvider>
+  )
+}
+
+interface MuiDateOnlyPickerProps extends MobileDatePickerProps {
+  value: PickerValue | null;
+  mode: Mode;
+  error?: boolean;
+  helperText?: React.ReactNode;
+  onChange: (date: PickerValue | null) => void;
+  onClear: () => void;
+}
+
+// Date only (no time). Works in UTC, like MuiDateTimePicker shows its values, so a
+// picked day is stored as that day at 00:00 UTC and shown as the same day again.
+export const MuiDatePicker = ({ name, label, value, mode, error, helperText, onClear, onChange, format = "DD/MM/YYYY", ...restProps }: MuiDateOnlyPickerProps) => {
+  const isDisabled = mode==="Browse"
+  const [isOpen, setIsOpen] = useState(false);
+
+  dayjs.extend(utc);
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <MobileDatePicker {...restProps}
+        name={name}
+        label={label}
+        format={format}
+        timezone="UTC"
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        onChange={(newValue) =>
+          onChange(newValue ? dayjs.utc(newValue).startOf("day") : null)
+        }
+        slotProps={{
+          textField: {
+            fullWidth: true,
+            variant: 'outlined',
+            size: 'small',
+            disabled: isDisabled,
+            error,
+            helperText,
+            slotProps: {
+              input: {
+                endAdornment: (
+                  <>
+                    {renderLockEndAdornment(mode, ["Browse"])}
+                    {renderClearEndAdornment(mode, ["Create", "Edit"], onClear)}
+                    {renderCalendarEndAdornment(mode, ["Create", "Edit"], () => setIsOpen(true))}
                   </>
                 ),
               },

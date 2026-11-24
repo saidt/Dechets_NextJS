@@ -12,7 +12,7 @@ import {
 import { GenericShowPage } from "@/components/form-show/GenericShowPage";
 import { CmListProps, Filter, Mode } from "@/lib/types";
 import { useState } from "react";
-import { MuiDateTimePicker, MuiNumberField, MuiPKNumberField, MuiSwitch } from "@/components/form-show/Inputs";
+import { MuiNumberField, MuiPKNumberField, MuiSwitch, MuiDatePicker } from "@/components/form-show/Inputs";
 import { ReferenceField } from "@/components/form-show/ReferenceField";
 import { useParams, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
@@ -29,6 +29,7 @@ import { put_Client_Dechet_Sld_Ini } from "@/fetch/client-dechet-sld-ini";
 import { handleError } from "@/lib/error";
 //import { consoleInfo } from "@/lib/clientLog";
 import useAuth from "@/app/context/UseAuth";
+import { todayUtc } from "@/lib/date-utils";
 
 // Declared at module level (not inside Client_Dechet_Sld_Ini_Show) so each keeps the same
 // component identity across re-renders: a component declared inside another
@@ -78,7 +79,7 @@ const Client_Dechet_Sld_Ini_Show = () => {
   }
 
   const get_New_Client_Dechet_Sld_Ini = () => {
-    const newEntity : Client_Dechet_Sld_Ini_Type = Empty_Client_Dechet_Sld_Ini
+    const newEntity : Client_Dechet_Sld_Ini_Type = { ...Empty_Client_Dechet_Sld_Ini, date_debut: todayUtc() }
     return newEntity
   }
 
@@ -343,7 +344,7 @@ const handle_Valide = async() => {
             followUrl={`${ CLIENT_DECHET_URL}/${ client_Dechet_Sld_Ini.client_code }`}
             forceOpen={ client_code_forceOpen }
           />
-          <MuiDateTimePicker
+          <MuiDatePicker
             name="date_debut"
             label='Date début'
             value={dayjs(client_Dechet_Sld_Ini.date_debut)}

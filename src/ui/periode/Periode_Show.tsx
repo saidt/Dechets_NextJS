@@ -11,9 +11,10 @@ import {
 import { GenericShowPage } from "@/components/form-show/GenericShowPage";
 import { Mode } from "@/lib/types";
 import { useState } from "react";
-import { MuiDateTimePicker, MuiPKTextField } from "@/components/form-show/Inputs";
+import { MuiPKTextField, MuiDatePicker } from "@/components/form-show/Inputs";
 import { useParams, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
+import { todayUtc } from "@/lib/date-utils";
 
 
 const Periode_Show = () => {
@@ -48,7 +49,7 @@ const Periode_Show = () => {
   }
 
   const getNewPeriode = () => {
-    const newEntity : Periode_Type = Empty_Periode
+    const newEntity : Periode_Type = { ...Empty_Periode, date_deb: todayUtc(), date_fin: todayUtc() }
     return newEntity
   }
 
@@ -109,7 +110,7 @@ const Periode_Show = () => {
             onChange={handleChange}
             onClear={() => setPeriodeValue("code", "")} 
           />
-          <MuiDateTimePicker
+          <MuiDatePicker
             name="date_deb"
             label='Date début'
             value={dayjs(periode.date_deb)}
@@ -120,7 +121,7 @@ const Periode_Show = () => {
             mode={mode}
             format="DD/MM/YYYY"
           />
-          <MuiDateTimePicker
+          <MuiDatePicker
             name="date_fin"
             label='Date fin'
             value={dayjs(periode.date_fin)}

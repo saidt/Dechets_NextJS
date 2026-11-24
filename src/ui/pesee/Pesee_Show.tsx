@@ -12,9 +12,10 @@ import {
 import { GenericShowPage } from "@/components/form-show/GenericShowPage";
 import { Mode } from "@/lib/types";
 import { useState } from "react";
-import { MuiDateTimePicker, MuiNumberField, MuiPKTextField, MuiTextField } from "@/components/form-show/Inputs";
+import { MuiNumberField, MuiPKTextField, MuiTextField, MuiDatePicker } from "@/components/form-show/Inputs";
 import { useParams, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
+import { todayUtc } from "@/lib/date-utils";
 //import { consoleDebug } from "@/lib/clientLog";
 
 const Pesee_Show = () => {
@@ -50,7 +51,7 @@ const Pesee_Show = () => {
   }
 
   const get_New_Pesee = () => {
-    const newEntity : Pesee_Type = Empty_Pesee
+    const newEntity : Pesee_Type = { ...Empty_Pesee, date_1: todayUtc(), date_2: todayUtc() }
     return newEntity
   }
 
@@ -110,7 +111,7 @@ const Pesee_Show = () => {
             onChange={handleChange}
             onClear={() => set_Pesee_Value("numero_1", "")} 
           />
-          <MuiDateTimePicker
+          <MuiDatePicker
             name="date_1"
             label='Date 1'
             value={dayjs(pesee.date_1)}
@@ -143,7 +144,7 @@ const Pesee_Show = () => {
             onChange={handleChange}
             onClear={() => set_Pesee_Value("numero_2", "")}
           />
-          <MuiDateTimePicker
+          <MuiDatePicker
             name="date_2"
             label='Date 2'
             value={dayjs(pesee.date_2)}
