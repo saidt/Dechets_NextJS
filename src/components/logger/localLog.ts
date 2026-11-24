@@ -9,7 +9,7 @@ export async function localLog(
 ) {
 
   try {
-    await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/protected/log`, {
+    await fetch('/api/protected/log', {
       method: "POST",
       headers: {
         cookie: cookieHeader,
