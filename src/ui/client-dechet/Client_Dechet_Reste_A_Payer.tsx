@@ -4,7 +4,7 @@ import { getResponseData } from "@/lib/html";
 import { GenericMemListPage, GenericMemListPageProps } from "@/components/datatable/GenericMemListPage";
 import { Column } from "@/lib/types";
 import { useSession } from "next-auth/react";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 import { fetch_Client_Dechet_Reste_A_Payer } from "@/fetch/client-dechet";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -44,7 +44,7 @@ const Client_Dechet_Reste_A_Payer = ({code, ...restProps}: CdrapMemListPageProps
     try {
       const response = await fetch_Client_Dechet_Reste_A_Payer(code)
       const data : Reste_A_Payer_Type[] = await getResponseData(response, 'Client_Dechet_Reste_A_Payer api error')
-      consoleInfo('Client_Dechet_Reste_A_Payer fetchAllData data ', data)
+      //consoleInfo('Client_Dechet_Reste_A_Payer fetchAllData data ', data)
       return data;
     }
     catch (err) {

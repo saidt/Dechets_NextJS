@@ -18,7 +18,7 @@ import { getResponseData } from "@/lib/html";
 import { Empty_Sortie_Dechet, Sortie_Dechet_Type, SORTIE_DECHET_URL } from "@/types/sortie-dechet";
 import { Empty_Reglement_Dechet, REGLEMENT_DECHET_FETCH_URL, Reglement_Dechet_Type } from "@/types/reglement-dechet";
 import Client_Dechet_Reste_A_Payer, { CdrapMemListPageProps } from "../client-dechet/Client_Dechet_Reste_A_Payer";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 import { fetch_Sortie_Dechet } from "@/fetch/sortie-dechet";
 import { fetch_Reglement_Dechet } from "@/fetch/reglement-dechet";
 import { useAppContext } from "@/app/context/AppContext";
@@ -156,7 +156,7 @@ const Reglement_Dechet_Ligne_Show = () => {
         setLoading(true)
         const response = await fetch_Reglement_Dechet(reglement_Dechet_Ligne.reglement_dechet_numero)
         const data : Reglement_Dechet_Type = await getResponseData(response, 'Reglement_Dechet_Ligne_Show load_Reglement_Dechet api error')
-        consoleInfo('Reglement_Dechet_Ligne_Show load_Reglement_Dechet data ', data)
+        //consoleInfo('Reglement_Dechet_Ligne_Show load_Reglement_Dechet data ', data)
         set_Reglement_Dechet(data);
       }
       catch (err) {
@@ -176,7 +176,7 @@ const Reglement_Dechet_Ligne_Show = () => {
         setLoading(true)
         const response = await fetch_Sortie_Dechet(reglement_Dechet_Ligne.sortie_dechet_numero)
         const data : Sortie_Dechet_Type = await getResponseData(response, 'Reglement_Dechet_Ligne_Show load_Sortie_Dechet api error')
-        consoleInfo('Reglement_Dechet_Ligne_Show load_Sortie_Dechet data ', data)
+        //consoleInfo('Reglement_Dechet_Ligne_Show load_Sortie_Dechet data ', data)
         if (data === null) {
           set_Sortie_Dechet(Empty_Sortie_Dechet);
         }

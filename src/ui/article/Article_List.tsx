@@ -19,7 +19,7 @@ import { formatDateTime } from "@/lib/date-utils";
 import { Stored_Proc_Param_Type } from "@/types/sp";
 import { fetch_All_Article_List, fetch_Article_List } from "@/fetch/article";
 import DateDialog from "@/components/ui/dialog/DateDialog";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 import { DateResultType, fetchDateDeb, fetchPeriode, PeriodeResultType } from "@/lib/periode";
 import { useAppContext } from "@/app/context/AppContext";
 import { handleError } from "@/lib/error";
@@ -107,7 +107,7 @@ const Article_List = (props: CmListProps<Article_Type>) => {
       setTitle(
         `Solde ${typeMetal} au ${date ? formatDateTime(date) : ''}`
       );
-      consoleInfo(`DateFin ${date} `)
+      //consoleInfo(`DateFin ${date} `)
       setParams([
         {name: "DateFin", value: date},
         {name: "TypeMetal", value: typeMetal}

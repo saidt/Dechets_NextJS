@@ -4,7 +4,7 @@ import { getResponseData } from "@/lib/html";
 import { GenericMemListPage, GenericMemListPageProps } from "@/components/datatable/GenericMemListPage";
 import { Column } from "@/lib/types";
 import { useSession } from "next-auth/react";
-import { consoleInfo } from "@/lib/clientLog";
+//import { consoleInfo } from "@/lib/clientLog";
 import { fetch_Reglement_Dechet_Reste_A_Verser } from "@/fetch/reglement-dechet";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -43,7 +43,7 @@ const Reglement_Dechet_Reste_A_Verser = (props: RdravMemListPageProps) => {
     try {
       const response = await fetch_Reglement_Dechet_Reste_A_Verser()
       const data : Reste_A_Verser_Type[] = await getResponseData(response, 'Reglement_Dechet_Reste_A_Verser api error')
-      consoleInfo('Reglement_Dechet_Reste_A_Verser fetchAllData data ', data)
+      //consoleInfo('Reglement_Dechet_Reste_A_Verser fetchAllData data ', data)
       return data;
     }
     catch (err) {
