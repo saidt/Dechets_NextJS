@@ -112,6 +112,7 @@ export function ReferenceField<T extends Record<string, any>>({
 
       <MuiDialog
         open={open}
+        onClose={() => setOpen(false)}
         title="Choisir une valeur référence"
         children={<DataTableComponent {...dataTableProps} onRowClick={handleRowClick} />}
       />
