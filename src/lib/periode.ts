@@ -29,8 +29,18 @@ async function fetchDate(scalarFunctionName: string): Promise<DateResultType> {
       };
     }
 
+    // JSON has no date type: the function's value arrives as an ISO string
+    const value = result.data?.[0]?.RET_VALUE;
+    const date = value ? new Date(value) : null;
+    if (!date || isNaN(date.getTime())) {
+      return {
+        date: new Date(),
+        error: `${scalarFunctionName}: date invalide (${value ?? 'vide'})`,
+      };
+    }
+
     return {
-      date: result.data[0].RET_VALUE,
+      date,
       error: null,
     };
   } 
