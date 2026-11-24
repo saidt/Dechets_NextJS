@@ -10,6 +10,7 @@ import {
 } from "./Inputs";
 import { useRouter } from "next/navigation";
 import MuiDialog from "../ui/dialog/MuiDialog";
+import { Mode } from "@/lib/types";
 
 interface ReferenceFieldProps extends MuiTextFieldProps {
   fieldName: string;
@@ -63,10 +64,20 @@ export function ReferenceField<T extends Record<string, any>>({
     setOpen(true);
   };
 
+  // Double click opens the list too, in the modes where the list button is shown
+  const listModes: Mode[] = ["Create", "Edit"];
+  const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    restProps.onDoubleClick?.(event);
+    if (listModes.includes(restProps.mode)) {
+      handleListClick();
+    }
+  };
+
   return (
     <>
       <BasicTextField
         {...restProps}
+        onDoubleClick={handleDoubleClick}
         disabled={
           isPK
             ? restProps.mode === "Browse" || restProps.mode === "Edit"
@@ -90,7 +101,7 @@ export function ReferenceField<T extends Record<string, any>>({
                   )}
                 {renderListEndAdornment(
                   restProps.mode,
-                  ["Create", "Edit"],
+                  listModes,
                   handleListClick,
                 )}
               </>
