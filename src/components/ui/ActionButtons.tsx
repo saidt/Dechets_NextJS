@@ -17,16 +17,19 @@ export interface TipButtonProps extends ButtonProps {
   tip: string;
 }
 
-export const TipButton: React.FC<TipButtonProps> = (props)  => {
+export const TipButton: React.FC<TipButtonProps> = ({ tip, children, ...props })  => {
   return (
-    <Tooltip title={props.tip}>
-      <Button {...props}
-        variant="outlined"
-        size="large"
-        sx={{ pr: 1 }}
-      >
-        {props.children}
-      </Button>
+    <Tooltip title={tip}>
+      {/* A disabled button fires no events, so the Tooltip listens on this wrapper */}
+      <span style={{ display: "inline-flex" }}>
+        <Button {...props}
+          variant="outlined"
+          size="large"
+          sx={{ pr: 1 }}
+        >
+          {children}
+        </Button>
+      </span>
     </Tooltip>
   );
 }
