@@ -147,7 +147,7 @@ const Article_List = (props: CmListProps<Article_Type>) => {
       setLoading(true);
       try {
         const result : PeriodeResultType = await fetchPeriode();
-        // On error the dates are today to today, so the problem shows in the period too
+        // On error the dates are the current month (the error is shown below)
         setDateDeb(result.dateDeb);
         setDateFin(result.dateFin);
         if (result.error) {
@@ -170,7 +170,7 @@ const Article_List = (props: CmListProps<Article_Type>) => {
       setLoading(true);
       try {
         const dateDebResult : DateResultType = await fetchDateDeb();
-        setDate(dateDebResult.date); // today on error
+        setDate(dateDebResult.date); // 1st of the month on error
         if (dateDebResult.error) {
           addNotification(dateDebResult.error, "error");
         }

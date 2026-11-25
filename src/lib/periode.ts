@@ -13,11 +13,12 @@ export type PeriodeResultType = {
   error: string | null;
 };
 
-// Fallback when the period can't be read: today to today, so the user sees at
-// once that something is wrong with the period. Computed at each call (not at
-// module load, which would keep the day the page was first opened).
-const startOfToday = (): Date => dayjs().startOf('day').toDate();
-const endOfToday = (): Date => dayjs().endOf('day').toDate();
+// Fallback when the period can't be read: the current month (1st 00:00:00 to
+// last day 23:59:59); the error is still returned so the screen shows it.
+// Computed at each call (not at module load, which would keep the month the
+// page was first opened in).
+const startOfMonth = (): Date => dayjs().startOf('month').toDate();
+const endOfMonth = (): Date => dayjs().endOf('month').toDate();
 
 async function fetchDate(scalarFunctionName: string): Promise<DateResultType> {
   try {
@@ -59,7 +60,7 @@ export async function fetchDateDeb(): Promise<DateResultType> {
   const result : DateResultType= await fetchDate('dbo.d_DATE_DEBUT_PERIODE');
   if (result.error) {
     return {
-      date: startOfToday(),
+      date: startOfMonth(),
       error: result.error,
     };
   }
@@ -70,14 +71,14 @@ export async function fetchDateFin(): Promise<DateResultType> {
   const result : DateResultType= await fetchDate('dbo.d_DATE_FIN_PERIODE');
   if (result.error) {
     return {
-      date: endOfToday(),
+      date: endOfMonth(),
       error: result.error,
     };
   }
   return result
 }
 
-/** The period's start and end dates. On error: today to today, with the error message. */
+/** The period's start and end dates. On error: the current month, with the error message. */
 export async function fetchPeriode(): Promise<PeriodeResultType> {
   try {
     const [resultDeb, resultFin] = await Promise.all([
@@ -87,16 +88,16 @@ export async function fetchPeriode(): Promise<PeriodeResultType> {
 
     if (resultDeb.error) {
       return {
-        dateDeb: startOfToday(),
-        dateFin: endOfToday(),
+        dateDeb: startOfMonth(),
+        dateFin: endOfMonth(),
         error: resultDeb.error,
       };
     }
 
     if (resultFin.error) {
       return {
-        dateDeb: startOfToday(),
-        dateFin: endOfToday(),
+        dateDeb: startOfMonth(),
+        dateFin: endOfMonth(),
         error: resultFin.error,
       };
     }
@@ -109,8 +110,8 @@ export async function fetchPeriode(): Promise<PeriodeResultType> {
   } 
   catch (err) {
     return {
-      dateDeb: startOfToday(),
-      dateFin: endOfToday(),
+      dateDeb: startOfMonth(),
+      dateFin: endOfMonth(),
       error: err instanceof Error ? err.message : 'fetchPeriode error',
     };
   }
