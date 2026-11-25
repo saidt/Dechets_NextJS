@@ -8,6 +8,8 @@ import {
   REGLEMENT_DECHET_DEFAULT_SORT,
 } from "@/types/reglement-dechet";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
+import { useDateFromFilter } from "@/components/datatable/DateFromFilterBar";
+import Loading from "@/components/ui/Loading";
 import { CmListProps, TableState } from "@/lib/types";
 import TitleCard from "@/components/shared/TitleCard";
 import { NextResponse } from "next/server";
@@ -71,6 +73,11 @@ const Reglement_Dechet_List = (props: CmListProps<Reglement_Dechet_Type>) => {
 
 
 
+  // "Date pièce" bar: from the period start minus one month (not in pick-lists)
+  const { ready, initialFilter, filterBar } = useDateFromFilter<Reglement_Dechet_Type>("date_piece", "Date pièce", !props.isModalList);
+
+  if (!ready) return <TitleCard title={ REGLEMENT_DECHET_LIST_TITLE }><Loading /></TitleCard>;
+
   return (
     <TitleCard title={ REGLEMENT_DECHET_LIST_TITLE }>
       <GenericListPage<Reglement_Dechet_Type> {...props}
@@ -78,6 +85,8 @@ const Reglement_Dechet_List = (props: CmListProps<Reglement_Dechet_Type>) => {
         title={ REGLEMENT_DECHET_LIST_TITLE }
         columns={reglement_Dechet_Columns}
         initialSort={REGLEMENT_DECHET_DEFAULT_SORT}
+        initialFilter={initialFilter ?? props.initialFilter}
+        filterBar={filterBar}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(reglement_Dechet: Reglement_Dechet_Type) => reglement_Dechet.numero }

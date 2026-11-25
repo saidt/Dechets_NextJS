@@ -11,8 +11,10 @@ export interface Sort<T extends Record<string, any>> {
  * A filter value: a plain string is a 'contains' search (what users type in column
  * filters; exactFilter defaults to false). The object form with exactFilter: true is an
  * exact match, for masterFilter (parent of a child list) and permanentFilter only.
+ * fromFilter: true on a date column means "from that day on" (>=), value as DD/MM/YYYY;
+ * used by server lists (e.g. the "Date pièce" filter bar).
  */
-export type FilterValue = string | { value: string; exactFilter?: boolean };
+export type FilterValue = string | { value: string; exactFilter?: boolean; fromFilter?: boolean };
 
 export type Filter<T> = Partial<Record<keyof T, FilterValue>>;
 
@@ -24,6 +26,11 @@ export function filterValueText(v: FilterValue | null | undefined): string {
 /** True for an exact-match filter value ({ value, exactFilter: true }). */
 export function isExactFilter(v: FilterValue | null | undefined): boolean {
   return typeof v === 'object' && v !== null && v.exactFilter === true;
+}
+
+/** True for a "from that day on" date filter ({ value, fromFilter: true }). */
+export function isFromFilter(v: FilterValue | null | undefined): boolean {
+  return typeof v === 'object' && v !== null && v.fromFilter === true;
 }
 
 export interface TableState<T extends Record<string, any>> {

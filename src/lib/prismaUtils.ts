@@ -1,6 +1,6 @@
 import { consoleWarn } from "./clientLog";
 import { DateStrToDate } from "./date-utils";
-import { filterValueText, isExactFilter, OrderBy, PrismaQuery, SortDirection, TableState } from "./types";
+import { filterValueText, isExactFilter, isFromFilter, OrderBy, PrismaQuery, SortDirection, TableState } from "./types";
 
 export enum PrismaFieldType {
   STRING,
@@ -128,7 +128,10 @@ export function tableStateToPrismaQuery<T extends object>(
                 ));
                 //consoleInfo(`tableStateToPrismaQuery endOfDay: ${endOfDay}`);
 
-                clause = { [key as string]: { gte: startOfDay, lt: endOfDay } };
+                // fromFilter: from that day on; otherwise that day only
+                clause = isFromFilter(filter[key])
+                  ? { [key as string]: { gte: startOfDay } }
+                  : { [key as string]: { gte: startOfDay, lt: endOfDay } };
               }
             } 
             catch { /* Ignore invalid date strings */ }

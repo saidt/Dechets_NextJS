@@ -8,6 +8,8 @@ import {
   Sortie_Dechet_Type,
 } from "@/types/sortie-dechet";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
+import { useDateFromFilter } from "@/components/datatable/DateFromFilterBar";
+import Loading from "@/components/ui/Loading";
 import { CmListProps, TableState } from "@/lib/types";
 import TitleCard from "@/components/shared/TitleCard";
 import { NextResponse } from "next/server";
@@ -82,6 +84,11 @@ const Sortie_Dechet_List = (props: CmListProps<Sortie_Dechet_Type>) => {
   };
 
 
+  // "Date pièce" bar: from the period start minus one month (not in pick-lists)
+  const { ready, initialFilter, filterBar } = useDateFromFilter<Sortie_Dechet_Type>("date_piece", "Date pièce", !props.isModalList);
+
+  if (!ready) return <TitleCard title={ SORTIE_DECHET_LIST_TITLE }><Loading /></TitleCard>;
+
   return (
     <TitleCard title={ SORTIE_DECHET_LIST_TITLE }>
       <GenericListPage<Sortie_Dechet_Type> {...props}
@@ -89,6 +96,8 @@ const Sortie_Dechet_List = (props: CmListProps<Sortie_Dechet_Type>) => {
         title={ SORTIE_DECHET_LIST_TITLE }
         columns={sortie_Dechet_Columns}
         initialSort={SORTIE_DECHET_DEFAULT_SORT}
+        initialFilter={initialFilter ?? props.initialFilter}
+        filterBar={filterBar}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(sortie_Dechet: Sortie_Dechet_Type) => sortie_Dechet.numero }

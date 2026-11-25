@@ -8,6 +8,8 @@ import {
   VERSEMENT_DECHET_DEFAULT_SORT,
 } from "@/types/versement-dechet";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
+import { useDateFromFilter } from "@/components/datatable/DateFromFilterBar";
+import Loading from "@/components/ui/Loading";
 import { CmListProps, TableState } from "@/lib/types";
 import TitleCard from "@/components/shared/TitleCard";
 import { NextResponse } from "next/server";
@@ -54,6 +56,11 @@ const Versement_Dechet_List = (props: CmListProps<Versement_Dechet_Type>) => {
   };
 
 
+  // "Date pièce" bar: from the period start minus one month (not in pick-lists)
+  const { ready, initialFilter, filterBar } = useDateFromFilter<Versement_Dechet_Type>("date_piece", "Date pièce", !props.isModalList);
+
+  if (!ready) return <TitleCard title={ VERSEMENT_DECHET_LIST_TITLE }><Loading /></TitleCard>;
+
   return (
     <TitleCard title={ VERSEMENT_DECHET_LIST_TITLE }>
       <GenericListPage<Versement_Dechet_Type> {...props}
@@ -61,6 +68,8 @@ const Versement_Dechet_List = (props: CmListProps<Versement_Dechet_Type>) => {
         title={ VERSEMENT_DECHET_LIST_TITLE }
         columns={versement_Dechet_Columns}
         initialSort={VERSEMENT_DECHET_DEFAULT_SORT}
+        initialFilter={initialFilter ?? props.initialFilter}
+        filterBar={filterBar}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(versement_Dechet: Versement_Dechet_Type) => versement_Dechet.numero }

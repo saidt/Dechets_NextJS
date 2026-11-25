@@ -37,6 +37,9 @@ export interface GenericListPageProps<T extends Record<string, any>> {
   loading?: boolean;
   childUrl?: string;
   optionsMenu?: React.ReactNode[];
+  // Optional controls shown below the toolbar (e.g. DateFromFilterBar). When they
+  // change initialFilter, the list applies the new values.
+  filterBar?: React.ReactNode;
   fetchData: (state: TableState<T>) => Promise<NextResponse>;
   fetchAllData: (state: TableState<T>) => Promise<NextResponse>;
   getId: (item: T) => string | number;
@@ -56,6 +59,7 @@ export function GenericListPage<T extends Record<string, any>>({
   loading,
   childUrl,
   optionsMenu,
+  filterBar,
   fetchData,
   fetchAllData,
   getId,
@@ -113,6 +117,19 @@ export function GenericListPage<T extends Record<string, any>>({
       quickSearch: "",
     };
   });
+
+  // initialFilter can change after mount (filter bar): apply its values, back to page 1.
+  // Also applied over a saved context, so the list matches what the bar shows.
+  const initialFilterKey = JSON.stringify(initialFilter ?? {});
+  useEffect(() => {
+    if (!initialFilter) return;
+    setTableState((prev) => {
+      const merged = { ...prev.filter, ...initialFilter };
+      if (JSON.stringify(merged) === JSON.stringify(prev.filter)) return prev;
+      return { ...prev, page: 0, filter: merged };
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialFilterKey]);
 
   useEffect(() => {
     if (status !== "loading" && !session) {
@@ -384,6 +401,7 @@ export function GenericListPage<T extends Record<string, any>>({
         onSaveFilter={handleSaveFilter}
         onLoadFilter={handleLoadFilter}
       />
+      {filterBar}
       <ReactTable<T>
         columns={columns}
         rows={data}
