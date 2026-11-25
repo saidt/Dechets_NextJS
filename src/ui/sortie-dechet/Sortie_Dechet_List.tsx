@@ -2,6 +2,7 @@
 
 import {
   sortie_Dechet_Columns,
+  SORTIE_DECHET_DEFAULT_SORT,
   SORTIE_DECHET_LIST_TITLE,
   SORTIE_DECHET_TABLE_NAME,
   Sortie_Dechet_Type,
@@ -87,6 +88,7 @@ const Sortie_Dechet_List = (props: CmListProps<Sortie_Dechet_Type>) => {
         tableName={ SORTIE_DECHET_TABLE_NAME }
         title={ SORTIE_DECHET_LIST_TITLE }
         columns={sortie_Dechet_Columns}
+        initialSort={SORTIE_DECHET_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(sortie_Dechet: Sortie_Dechet_Type) => sortie_Dechet.numero }

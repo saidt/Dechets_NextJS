@@ -7,5 +7,6 @@
 - Ajouter un état de pointage des sorties déchets pour KarimJ
 - Add double click on empty reference fields to show list
 - Add primary key default sort
+- Add initial filter to list
 
 Last commit to imacab: 3533ee2

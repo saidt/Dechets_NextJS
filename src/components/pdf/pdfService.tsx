@@ -1,6 +1,6 @@
 import React from 'react';
 import { DocumentProps, pdf } from '@react-pdf/renderer';
-import { consoleError } from '@/lib/clientLog';
+//import { consoleError } from '@/lib/clientLog';
 
 export const downloadPdf = async (reportElement: React.ReactElement<DocumentProps>, fileName: string) => {
   try {
@@ -12,7 +12,7 @@ export const downloadPdf = async (reportElement: React.ReactElement<DocumentProp
     link.click();
     URL.revokeObjectURL(url);
   } catch (error) {
-    consoleError('Error generating PDF:', error);
+    //consoleError('Error generating PDF:', error);
     throw error;
   }
 };

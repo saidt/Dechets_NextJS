@@ -187,8 +187,6 @@ const Article_List = (props: CmListProps<Article_Type>) => {
     fetch_Date_Deb();
   }, []);
 
-
-
   return (
     <TitleCard title={ ARTICLE_LIST_TITLE }>
       <GenericListPage<Article_Type> {...props}

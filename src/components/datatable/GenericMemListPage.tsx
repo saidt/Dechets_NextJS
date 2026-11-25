@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { Column, Filter, TableState } from "@/lib/types";
+import { Column, Filter, Sort, TableState } from "@/lib/types";
 import { useAppContext } from "@/app/context/AppContext";
 import { ReactMemTable } from "./ReactMemTable";
 import ToolbarMemList from "./ToolBarMemList";
@@ -15,12 +15,13 @@ import { useSession } from "next-auth/react";
 import Loading from "../ui/Loading";
 import { exportToExcel } from "@/lib/excel";
 import useAuth from "@/app/context/UseAuth";
-import { consoleError } from "@/lib/clientLog";
+//import { consoleError } from "@/lib/clientLog";
 
 export interface GenericMemListPageProps<T extends Record<string, any>> {
   title: string;
   columns: Column<T>[];
   isModalList : boolean;
+  initialSort?: Sort<T>,
   permanentFilter? : Filter<T>;
   initialPageSize?: number;
   loading?: boolean;
@@ -37,6 +38,7 @@ export function GenericMemListPage<T extends Record<string, any>>({
   title,
   columns,
   isModalList,
+  initialSort,
   permanentFilter,
   initialPageSize,
   loading,
@@ -52,7 +54,7 @@ export function GenericMemListPage<T extends Record<string, any>>({
   const [localAllData, setLocalAllData] = useState<T[]>([]);
   const [localLoading, setLocalLoading] = useState(false);
 
-  function createInitialTableState<T extends Record<string, any>>(
+  function createInitialTableState(
     columns: Column<T>[],
     initialPageSize?: number
   ): TableState<T> {
@@ -64,7 +66,7 @@ export function GenericMemListPage<T extends Record<string, any>>({
     return {
       page: 0,
       pageSize: initialPageSize ?? 8,
-      sort: null,
+      sort: initialSort ?? null,
       filter: initialFilter,
       quickSearch: "",
     };
@@ -137,7 +139,7 @@ export function GenericMemListPage<T extends Record<string, any>>({
       await downloadPdf(doc, `${title}.pdf`);
     } 
     catch (err: any) {
-      consoleError(`Failed to print ${title}`, { error: String(err) });
+      //consoleError(`Failed to print ${title}`, { error: String(err) });
       addNotification(err instanceof Error ? err.message : String(err), "error");
     }
   };
@@ -159,7 +161,7 @@ export function GenericMemListPage<T extends Record<string, any>>({
         }
       }
       catch (err: any) {
-        consoleError("GenericMemListPage fetchAllDataCallback api error: ", err);
+        //consoleError("GenericMemListPage fetchAllDataCallback api error: ", err);
         setLocalAllData([]);
         handleError('fetchAllDataCallback api error', err, addNotification)
       }

@@ -18,7 +18,7 @@ import { TableStatusBar } from "./TableStatusBar";
 import { removeEmptyValues } from "@/lib/lib";
 import { LoadingBar } from "../ui/LoadingBar";
 import { applyFilter, applyPagination, applySort } from "@/lib/localData";
-import { consoleError } from "@/lib/clientLog";
+//import { consoleError } from "@/lib/clientLog";
 import { formatValue } from "@/lib/number-utils";
 import { FILTER_DEBOUCE_TIME } from "@/lib/consts";
 
@@ -80,7 +80,7 @@ export function ReactMemTable<T extends Record<string, any>>({
       setFilteredData(data);
     }
     catch (error: any) {
-      consoleError("ReactMemTable filterDataCallback error: ", error);
+      //consoleError("ReactMemTable filterDataCallback error: ", error);
       setFilteredData([]);
     }
     finally {
@@ -97,7 +97,7 @@ export function ReactMemTable<T extends Record<string, any>>({
       setSortedData(data);
     }
     catch (error: any) {
-      consoleError("ReactMemTable sortDataCallback error: ", error);
+      //consoleError("ReactMemTable sortDataCallback error: ", error);
       setSortedData([]);
     }
     finally {
@@ -114,7 +114,7 @@ export function ReactMemTable<T extends Record<string, any>>({
       setPaginatedData(data);
     }
     catch (error: any) {
-      consoleError("ReactMemTable paginateDataCallback error: ", error);
+      //consoleError("ReactMemTable paginateDataCallback error: ", error);
       setPaginatedData([]);
     }
     finally {

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { apiFetch } from "@/lib/apiFetch";
 import { Box, IconButton } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
-import { Column, Filter, TableState } from "@/lib/types";
+import { Column, Filter, Sort, TableState } from "@/lib/types";
 import ToolbarList from "./ToolBarList";
 import { useAppContext } from "@/app/context/AppContext";
 import { loadLastViewedId, loadTableState, saveTableState } from "@/services/userSettingsService";
@@ -23,13 +23,14 @@ import { exportToExcel } from "@/lib/excel";
 import { useSession } from "next-auth/react";
 import Loading from "../ui/Loading";
 import { USER_FETCH_URL } from "@/types/user";
-import { consoleError } from "@/lib/clientLog";
+//import { consoleError } from "@/lib/clientLog";
 
 export interface GenericListPageProps<T extends Record<string, any>> {
   tableName: string;
   title: string;
   columns: Column<T>[];
   isModalList : boolean;
+  initialSort?: Sort<T>,
   initialFilter?: Filter<T>;
   permanentFilter? : Filter<T>;
   initialPageSize?: number;
@@ -48,6 +49,7 @@ export function GenericListPage<T extends Record<string, any>>({
   title,
   columns,
   isModalList,
+  initialSort,
   initialFilter,
   permanentFilter,
   initialPageSize,
@@ -81,20 +83,19 @@ export function GenericListPage<T extends Record<string, any>>({
     const initialTableState : TableState<T> = {
       page: 0,
       pageSize: initialPageSize ?? 8,
-      sort: null,
+      sort: initialSort ?? null,
       filter: {},
       quickSearch: "",
     };
 
-    if (initialFilter) {
-      //consoleInfo("GenericListPage initialFilter: ", initialFilter);
-      initialTableState.filter = initialFilter 
-      return initialTableState;
-    }
-
     if (user) {
       const savedState = loadTableState<T>(user.id, tableName);
       if (savedState) return savedState;
+    }
+
+    if (initialFilter) {
+      initialTableState.filter = initialFilter 
+      return initialTableState;
     }
 
     const emptyFilter = columns.reduce(
@@ -107,7 +108,7 @@ export function GenericListPage<T extends Record<string, any>>({
     return {
       page: 0,
       pageSize: initialPageSize ?? 8,
-      sort: null,
+      sort: initialSort ?? null,
       filter: emptyFilter,
       quickSearch: "",
     };
@@ -275,7 +276,7 @@ export function GenericListPage<T extends Record<string, any>>({
       const result = await response.json();
       //consoleInfo('GenericListPage fetchData result: ', result)
       if (result.error) {
-        consoleError("GenericListPage fetchDataCallback api error: ", result.error);
+        //consoleError("GenericListPage fetchDataCallback api error: ", result.error);
         addNotification(result.error, "error");
         setData([]);
         setTotalRows(0);

@@ -11,7 +11,7 @@ import { credentials_Schema, Credentials_Form_Data, Credentials } from '../../ty
 import { signIn } from 'next-auth/react';
 import LoginIcon from '@mui/icons-material/Login';
 import ErrorMsg from '@/components/ErrorMsg';
-import { consoleError, consoleInfo } from '@/lib/clientLog';
+//import { consoleError, consoleInfo } from '@/lib/clientLog';
 
 export default function LoginForm({ 
   credentials, errorMsg }: {credentials: Credentials, errorMsg: string | null}) {
@@ -31,7 +31,7 @@ export default function LoginForm({
   const [error, setError] = useState(errorMsg)
   const [showPassword, setShowPassword] = useState(false)
 
-  consoleInfo('LoginForm callbackUrl: ', callbackUrl)
+  //consoleInfo('LoginForm callbackUrl: ', callbackUrl)
 
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function LoginForm({
       }
     } 
     catch (err) {
-      consoleError('Login error:', err)
+      //consoleError('Login error:', err)
       setError('An unexpected error occurred')
     } 
     finally {
