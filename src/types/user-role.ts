@@ -5,7 +5,7 @@ export const USER_ROLE_TABLE_NAME: string = 'dbo.USER_ROLE'
 export const USER_ROLE_CHILD_URL: string = "role"
 export const USER_ROLE_URL: string = "/protected/user-role"
 export const USER_ROLE_LIST_TITLE: string = "Rôles d'utilisateur"
-export const USER_ROLE_DEFAULT_SORT : Sort<User_Role_Type> =  {field: 'id', direction: 'asc'}
+export const USER_ROLE_DEFAULT_SORT : Sort<User_Role_Type> =  {field: 'role_id', direction: 'asc'}
 
 export type User_Role_Type = {
   id: number;
