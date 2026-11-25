@@ -130,12 +130,11 @@ const Article_Show = () => {
       setLoading(true);
       try {
         const result : PeriodeResultType = await fetchPeriode();
+        // On error the dates are today to today, so the problem shows in the period too
+        setDateDeb(result.dateDeb);
+        setDateFin(result.dateFin);
         if (result.error) {
           addNotification(result.error, "error");
-        }
-        else {
-          setDateDeb(result.dateDeb);
-          setDateFin(result.dateFin);
         }
       }
       catch (err) {

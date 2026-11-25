@@ -126,12 +126,11 @@ const Client_Dechet_List = (props: CmListProps<Client_Dechet_Type>) => {
       setLoading(true);
       try {
         const result : PeriodeResultType = await fetchPeriode();
+        // On error the dates are today to today, so the problem shows in the period too
+        setDateDeb(result.dateDeb);
+        setDateFin(result.dateFin);
         if (result.error) {
           addNotification(result.error, "error");
-        }
-        else {
-          setDateDeb(result.dateDeb);
-          setDateFin(result.dateFin);
         }
       }
       catch (err) {

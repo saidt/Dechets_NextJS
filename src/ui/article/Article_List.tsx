@@ -147,12 +147,11 @@ const Article_List = (props: CmListProps<Article_Type>) => {
       setLoading(true);
       try {
         const result : PeriodeResultType = await fetchPeriode();
+        // On error the dates are today to today, so the problem shows in the period too
+        setDateDeb(result.dateDeb);
+        setDateFin(result.dateFin);
         if (result.error) {
           addNotification(result.error, "error");
-        }
-        else {
-          setDateDeb(result.dateDeb);
-          setDateFin(result.dateFin);
         }
       }
       catch (err) {
@@ -171,11 +170,9 @@ const Article_List = (props: CmListProps<Article_Type>) => {
       setLoading(true);
       try {
         const dateDebResult : DateResultType = await fetchDateDeb();
+        setDate(dateDebResult.date); // today on error
         if (dateDebResult.error) {
           addNotification(dateDebResult.error, "error");
-        }
-        else {
-          setDate(dateDebResult.date);
         }
       }
       catch (err) {

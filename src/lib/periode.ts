@@ -13,8 +13,11 @@ export type PeriodeResultType = {
   error: string | null;
 };
 
-const firstDayOfMonth = dayjs().startOf('month');
-const lastDayOfMonth = dayjs().endOf('month');
+// Fallback when the period can't be read: today to today, so the user sees at
+// once that something is wrong with the period. Computed at each call (not at
+// module load, which would keep the day the page was first opened).
+const startOfToday = (): Date => dayjs().startOf('day').toDate();
+const endOfToday = (): Date => dayjs().endOf('day').toDate();
 
 async function fetchDate(scalarFunctionName: string): Promise<DateResultType> {
   try {
@@ -56,7 +59,7 @@ export async function fetchDateDeb(): Promise<DateResultType> {
   const result : DateResultType= await fetchDate('dbo.d_DATE_DEBUT_PERIODE');
   if (result.error) {
     return {
-      date: firstDayOfMonth.toDate(),
+      date: startOfToday(),
       error: result.error,
     };
   }
@@ -67,13 +70,14 @@ export async function fetchDateFin(): Promise<DateResultType> {
   const result : DateResultType= await fetchDate('dbo.d_DATE_FIN_PERIODE');
   if (result.error) {
     return {
-      date: lastDayOfMonth.toDate(),
+      date: endOfToday(),
       error: result.error,
     };
   }
   return result
 }
 
+/** The period's start and end dates. On error: today to today, with the error message. */
 export async function fetchPeriode(): Promise<PeriodeResultType> {
   try {
     const [resultDeb, resultFin] = await Promise.all([
@@ -83,16 +87,16 @@ export async function fetchPeriode(): Promise<PeriodeResultType> {
 
     if (resultDeb.error) {
       return {
-        dateDeb: lastDayOfMonth.toDate(),
-        dateFin: lastDayOfMonth.toDate(),
+        dateDeb: startOfToday(),
+        dateFin: endOfToday(),
         error: resultDeb.error,
       };
     }
 
     if (resultFin.error) {
       return {
-        dateDeb: lastDayOfMonth.toDate(),
-        dateFin: lastDayOfMonth.toDate(),
+        dateDeb: startOfToday(),
+        dateFin: endOfToday(),
         error: resultFin.error,
       };
     }
@@ -105,8 +109,8 @@ export async function fetchPeriode(): Promise<PeriodeResultType> {
   } 
   catch (err) {
     return {
-      dateDeb: lastDayOfMonth.toDate(),
-      dateFin: lastDayOfMonth.toDate(),
+      dateDeb: startOfToday(),
+      dateFin: endOfToday(),
       error: err instanceof Error ? err.message : 'fetchPeriode error',
     };
   }
