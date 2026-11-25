@@ -88,6 +88,14 @@ export async function DELETE(
     const data = await request.json();
     const id = Number(data.id)
     const item = await delete_User_Table_Filter(id, userId);
+    if (item === 'GLOBAL') {
+      const err = new Error(`GLOBAL filter ${id} cannot be deleted`);
+      logError(`${pathname} DELETE route`, err);
+      return NextResponse.json(
+        { error: err.message },
+        { status: HttpStatus.FORBIDDEN }
+      );
+    }
     if (!item) {
       return NextResponse.json(
         { error: `${pathname} DELETE route filter ${id} not found` },

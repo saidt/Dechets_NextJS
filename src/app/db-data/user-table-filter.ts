@@ -108,9 +108,24 @@ export async function update_User_Table_Filter(
     }
   }
 
-  const exists = await exists_User_Table_Filter(userId, tableName, filterName)
-  //consoleInfo("update_User_Table_Filter exists_User_Table_Filter :", exists)
-  if (!exists) {
+  const existing = await prisma.user_Table_Filter.findUnique({
+    where: {
+      user_id_table_name_filter_name: {
+        user_id: userId,
+        table_name: tableName,
+        filter_name: filterName
+      }
+    },
+    select: { type: true }
+  })
+  // GLOBAL filters are set by admins (in SQL) for all users: never changed from the app
+  if (existing?.type?.trim().toUpperCase() === 'GLOBAL') {
+    return {
+      success: false,
+      error: `GLOBAL filter "${filterName}" cannot be changed: choose another name !`
+    }
+  }
+  if (!existing) {
     const inserted = await create_User_Table_Filter({
       id: 0,
       user_id: userId,
@@ -143,8 +158,11 @@ export async function update_User_Table_Filter(
   }
 }
 
-/** Deletes a filter only if it belongs to userId; returns null if there is no such filter. */
-export async function delete_User_Table_Filter(id: number, userId: string): Promise<User_Table_Filter_Type | null> {
+/**
+ * Deletes a USER filter only if it belongs to userId. Returns null if there is no
+ * such filter, 'GLOBAL' if it is a GLOBAL filter (set by admins, never deleted from the app).
+ */
+export async function delete_User_Table_Filter(id: number, userId: string): Promise<User_Table_Filter_Type | null | 'GLOBAL'> {
   //consoleInfo('delete_User_Table_Filter id: ', id);
 
   const existing = await prisma.user_Table_Filter.findFirst({
@@ -152,6 +170,9 @@ export async function delete_User_Table_Filter(id: number, userId: string): Prom
   })
   if (!existing) {
     return null
+  }
+  if (existing.type?.trim().toUpperCase() === 'GLOBAL') {
+    return 'GLOBAL'
   }
 
   const deleted = await prisma.user_Table_Filter.delete({
