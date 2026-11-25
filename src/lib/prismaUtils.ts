@@ -1,5 +1,6 @@
 import { consoleWarn } from "./clientLog";
 import { DateStrToDate } from "./date-utils";
+import { FilterOperator, ParsedFilter, parseFilterOperator } from "./filterOperator";
 import { filterValueText, isExactFilter, OrderBy, PrismaQuery, SortDirection, TableState } from "./types";
 
 export enum PrismaFieldType {
@@ -37,26 +38,6 @@ function inferSchema<T extends object>(typeSource: T): PrismaSchema<T> {
         }
     });
     return schema;
-}
-
-/** Comparison operators a column filter value can start with. */
-export type FilterOperator = '>=' | '<=' | '<>' | '>' | '<' | '=';
-
-type ParsedFilter = { op: FilterOperator | null; value: string };
-
-/**
- * Splits a column filter value into its operator and value:
- * ">=01/10/2026" → { op: '>=', value: '01/10/2026' }; "ABC" → { op: null, value: 'ABC' }.
- * Two-character operators are checked first, so ">=" is not read as ">".
- */
-export function parseFilterOperator(text: string): ParsedFilter {
-  const trimmed = text.trim();
-  for (const op of ['>=', '<=', '<>', '>', '<', '='] as FilterOperator[]) {
-    if (trimmed.startsWith(op)) {
-      return { op, value: trimmed.slice(op.length).trim() };
-    }
-  }
-  return { op: null, value: trimmed };
 }
 
 const PRISMA_OPERATOR: Record<Exclude<FilterOperator, '='>, string> = {

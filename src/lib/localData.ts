@@ -1,5 +1,7 @@
 import { Column, Filter, FilterValue, filterValueText, isExactFilter, Sort } from "./types";
 import { formatValue } from "./number-utils";
+import { DateStrToDate } from "./date-utils";
+import { FilterOperator, likeToRegExp, ParsedFilter, parseFilterOperator } from "./filterOperator";
 
 // Safely get a (possibly nested, "a.b") property value
 const resolvePath = (obj: any, path: string): any =>
@@ -12,11 +14,61 @@ export function displayedValue<T extends Record<string, any>>(row: T, col: Colum
   return formatted === null || formatted === undefined ? '' : String(formatted);
 }
 
+// A date's day as YYYYMMDD, in local time like the displayed dates; null if not a date
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}/;
+function dayNumber(raw: unknown): number | null {
+  const date = raw instanceof Date ? raw : typeof raw === 'string' && ISO_DATE.test(raw) ? new Date(raw) : null;
+  if (!date || isNaN(date.getTime())) return null;
+  return date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
+}
+
+function compare(a: number | string, b: number | string, op: FilterOperator): boolean {
+  switch (op) {
+  case '=':  return a === b;
+  case '<>': return a !== b;
+  case '>=': return a >= b;
+  case '>':  return a > b;
+  case '<=': return a <= b;
+  case '<':  return a < b;
+  }
+}
+
+/**
+ * One column filter on one row, with the operators of server lists (filterOperator.ts):
+ * - no operator: the displayed text contains the value (or matches it as "like" with %);
+ * - with an operator: dates (DD/MM/YYYY) are compared by day, numbers as numbers, other
+ *   values on the displayed text (case-insensitive). Empty values never match an
+ *   operator, as in SQL.
+ */
+function matchesFilter(raw: unknown, shown: string, { op, value }: ParsedFilter): boolean {
+  const text = shown.toLowerCase();
+  if (op === null) {
+    return value.includes('%') ? likeToRegExp(value).test(shown.trim()) : text.includes(value.toLowerCase());
+  }
+  if (raw === null || raw === undefined || raw === '') return false;
+
+  const rowDay = dayNumber(raw);
+  if (rowDay !== null) {
+    const wanted = DateStrToDate(value);
+    if (isNaN(wanted.getTime())) return false;
+    return compare(rowDay, wanted.getFullYear() * 10000 + (wanted.getMonth() + 1) * 100 + wanted.getDate(), op);
+  }
+
+  // Numbers, also as text (stored procedures send decimals as strings, e.g. "12.50")
+  const num = typeof raw === 'number' ? raw : typeof raw === 'string' && /^-?\d+(\.\d+)?$/.test(raw.trim()) ? Number(raw) : NaN;
+  const wantedNum = parseFloat(value);
+  if (!isNaN(num) && !isNaN(wantedNum)) {
+    return compare(num, wantedNum, op);
+  }
+
+  return compare(text.trim(), value.toLowerCase(), op);
+}
+
 /**
  * In-memory filtering. With columns, column filters and the quick search compare with
  * what the table displays (accessorFn, date and number formatting), so what the user
- * types matches what they see. Exact filters (permanentFilter) and filters without a
- * matching column compare with the raw value.
+ * types matches what they see. Column filters accept the server lists' operators
+ * (matchesFilter). Exact filters (permanentFilter) compare with the raw value.
  */
 export const applyFilter = <T extends Record<string, any>>(
   data: T[],
@@ -42,22 +94,22 @@ export const applyFilter = <T extends Record<string, any>>(
   }
 
   // Column filters
-  
   Object.entries(filter).forEach(([key, value]) => {
     const text = filterValueText(value as FilterValue);
-    if (text) {
-      // Plain string: 'contains' search; { value, exactFilter: true }: exact match
-      // (trimmed, case-insensitive, like SQL Server equality)
-      const exact = isExactFilter(value as FilterValue);
-      const filterValue = exact ? text.trim().toLowerCase() : text.toLowerCase();
+    if (!text || !text.trim()) return;
 
-      const col = exact ? undefined : columns?.find(c => String(c.accessor) === key);
-
-      filteredData = filteredData.filter(item => {
-        const fieldValue = (col ? displayedValue(item, col) : String(resolve(item, key) ?? "")).toLowerCase();
-        return exact ? fieldValue.trim() === filterValue : fieldValue.includes(filterValue);
-      });
+    // { value, exactFilter: true } (permanentFilter): exact match on the raw value
+    // (trimmed, case-insensitive, like SQL Server equality); operators not read
+    if (isExactFilter(value as FilterValue)) {
+      const wanted = text.trim().toLowerCase();
+      filteredData = filteredData.filter(item => String(resolve(item, key) ?? "").trim().toLowerCase() === wanted);
+      return;
     }
+
+    const parsed = parseFilterOperator(text);
+    if (parsed.value === '') return;
+    const col = columns?.find(c => String(c.accessor) === key);
+    filteredData = filteredData.filter(item => matchesFilter(resolve(item, key), col ? displayedValue(item, col) : String(resolve(item, key) ?? ""), parsed));
   });
 
   return filteredData
