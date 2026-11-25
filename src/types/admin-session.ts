@@ -1,4 +1,4 @@
-import { Column } from "@/lib/types";
+import { Column, Sort } from "@/lib/types";
 import { User_Session_Type, user_Session_Columns } from "./user-session";
 
 export const SESSION_ADMIN_ROLE : string = "dbo.SESSION.ADMIN"
@@ -10,6 +10,9 @@ export type Admin_Session_Type = User_Session_Type & {
   userId: string;
   userName: string | null;
 };
+
+// Newest first, like the database query
+export const ADMIN_SESSION_DEFAULT_SORT : Sort<Admin_Session_Type> = { field: "expires", direction: "desc" }
 
 export const admin_Session_Columns: Column<Admin_Session_Type>[] = [
   {

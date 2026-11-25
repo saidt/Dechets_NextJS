@@ -2,7 +2,7 @@
 
 import { getResponseData } from "@/lib/html";
 import { GenericMemListPage, GenericMemListPageProps } from "@/components/datatable/GenericMemListPage";
-import { Column } from "@/lib/types";
+import { Column, Sort } from "@/lib/types";
 import { useSession } from "next-auth/react";
 //import { consoleInfo } from "@/lib/clientLog";
 import { fetch_Client_Dechet_Reste_A_Payer } from "@/fetch/client-dechet";
@@ -26,6 +26,8 @@ export type Reste_A_Payer_Type = {
 export interface CdrapMemListPageProps extends GenericMemListPageProps<Reste_A_Payer_Type> {
   code: string
 }
+
+const RESTE_A_PAYER_DEFAULT_SORT : Sort<Reste_A_Payer_Type> = { field: "NUMERO", direction: "asc" }
 
 const Client_Dechet_Reste_A_Payer = ({code, ...restProps}: CdrapMemListPageProps) => {
 
@@ -108,6 +110,7 @@ const Client_Dechet_Reste_A_Payer = ({code, ...restProps}: CdrapMemListPageProps
     <GenericMemListPage<Reste_A_Payer_Type> {...restProps}
       title={`Reste à payer des sortie déchets du client ${code}`}
       columns={columns}
+      initialSort={RESTE_A_PAYER_DEFAULT_SORT}
       isModalList={false}
       fetchAllData={fetchAllData}
     />

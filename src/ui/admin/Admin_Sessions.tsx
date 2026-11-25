@@ -2,7 +2,7 @@
 
 import BlankCard from "../../components/shared/BlankCard";
 import { GenericMemListPage } from "@/components/datatable/GenericMemListPage";
-import { admin_Session_Columns, Admin_Session_Type, ADMIN_SESSIONS_FETCH_URL, SESSION_ADMIN_ROLE } from "@/types/admin-session";
+import { admin_Session_Columns, Admin_Session_Type, ADMIN_SESSIONS_FETCH_URL, SESSION_ADMIN_ROLE, ADMIN_SESSION_DEFAULT_SORT } from "@/types/admin-session";
 import { signOut, useSession } from "next-auth/react";
 import { apiFetch } from "@/lib/apiFetch";
 import { getResponseData } from "@/lib/html";
@@ -96,6 +96,7 @@ const Admin_Sessions = () => {
         key={reloadKey}
         title="Sessions actives"
         columns={admin_Session_Columns}
+        initialSort={ADMIN_SESSION_DEFAULT_SORT}
         isModalList={false}
         fetchAllData={fetchAllRows}
         renderRowActions={renderRowActions}

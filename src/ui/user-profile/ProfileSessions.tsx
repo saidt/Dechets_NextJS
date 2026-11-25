@@ -2,7 +2,7 @@
 
 import BlankCard from "../../components/shared/BlankCard";
 import { GenericMemListPage } from "@/components/datatable/GenericMemListPage";
-import { USER_SESSION_CHILD_URL, user_Session_Columns, User_Session_Type } from "@/types/user-session";
+import { USER_SESSION_CHILD_URL, user_Session_Columns, User_Session_Type, USER_SESSION_DEFAULT_SORT } from "@/types/user-session";
 import { signOut, useSession } from "next-auth/react";
 import { USER_FETCH_URL } from "@/types/user";
 import { apiFetch } from "@/lib/apiFetch";
@@ -123,6 +123,7 @@ const ProfileSessions = () => {
         key={reloadKey}
         title="Sessions de l'utilisateur"
         columns={user_Session_Columns}
+        initialSort={USER_SESSION_DEFAULT_SORT}
         isModalList={false}
         fetchAllData={fetchAllRows}
         renderRowActions={renderRowActions}

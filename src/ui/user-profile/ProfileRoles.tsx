@@ -4,7 +4,7 @@ import BlankCard from "../../components/shared/BlankCard";
 import { getAllCookies } from "@/lib/html";
 import { GenericMemListPage } from "@/components/datatable/GenericMemListPage";
 import { TableState } from "@/lib/types";
-import { USER_ROLE_CHILD_URL, user_Role_Columns, User_Role_Type } from "@/types/user-role";
+import { USER_ROLE_CHILD_URL, user_Role_Columns, User_Role_Type, USER_ROLE_DEFAULT_SORT } from "@/types/user-role";
 import { useSession } from "next-auth/react";
 import { USER_FETCH_URL } from "@/types/user";
 import { fetchAllData } from "@/lib/fetchData";
@@ -80,6 +80,7 @@ const ProfileRoles = () => {
       <GenericMemListPage<User_Role_Type>
         title="Rôles d'un utilisateur"
         columns={user_Role_Columns}
+        initialSort={USER_ROLE_DEFAULT_SORT}
         isModalList={false}
         fetchAllData={fetchAllRows}
         //getId={(user_Role_Type: User_Role_Type) => user_Role_Type.id}

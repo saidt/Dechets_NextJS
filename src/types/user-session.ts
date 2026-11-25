@@ -1,4 +1,4 @@
-import { Column } from "@/lib/types";
+import { Column, Sort } from "@/lib/types";
 import { formatDateTime } from "@/lib/date-utils";
 import { describeBrowser } from "@/lib/user-agent";
 
@@ -13,6 +13,9 @@ export type User_Session_Type = {
   ipAddress: string | null;
   current: boolean;      // the session making this request
 };
+
+// Newest first, like the database query
+export const USER_SESSION_DEFAULT_SORT : Sort<User_Session_Type> = { field: "expires", direction: "desc" }
 
 export const user_Session_Columns: Column<User_Session_Type>[] = [
   {
