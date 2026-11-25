@@ -8,9 +8,12 @@ import {
   VERSEMENT_DECHET_DEFAULT_SORT,
 } from "@/types/versement-dechet";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
-import { useDateFromFilter } from "@/components/datatable/DateFromFilterBar";
-import Loading from "@/components/ui/Loading";
-import { CmListProps, TableState } from "@/lib/types";
+import { CmListProps, Filter, TableState } from "@/lib/types";
+import { Box } from "@mui/material";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import { MuiDatePicker } from "@/components/form-show/Inputs";
+import { firstDayOfMonthOffset } from "@/lib/date-utils";
 import TitleCard from "@/components/shared/TitleCard";
 import { NextResponse } from "next/server";
 import { useState } from "react";
@@ -19,7 +22,16 @@ import { VerifierMenu } from "@/components/ui/menu/Menus";
 import Stored_Proc_Manager from "../sp/Stored_Proc_Manager";
 import { fetch_All_Versement_Dechet_List, fetch_Versement_Dechet_List } from "@/fetch/versement-dechet";
 
+dayjs.extend(utc);
+
 const Versement_Dechet_List = (props: CmListProps<Versement_Dechet_Type>) => {
+
+  // Date pièce control above the list (not in pick-lists): starts at the 1st of last
+  // month; its value is the list's initialFilter. Cleared = no date filter.
+  const [datePiece, setDatePiece] = useState<Date | null>(() => firstDayOfMonthOffset(-1));
+  const initialFilter: Filter<Versement_Dechet_Type> | undefined = props.isModalList
+    ? props.initialFilter
+    : { date_piece: datePiece ? dayjs.utc(datePiece).format("DD/MM/YYYY") : "" };
 
   const [spManagerOpen, setSpManagerOpen] = useState(false);
   
@@ -56,20 +68,26 @@ const Versement_Dechet_List = (props: CmListProps<Versement_Dechet_Type>) => {
   };
 
 
-  // "Date pièce" bar: from the period start minus one month (not in pick-lists)
-  const { ready, initialFilter, filterBar } = useDateFromFilter<Versement_Dechet_Type>("date_piece", "Date pièce", !props.isModalList);
-
-  if (!ready) return <TitleCard title={ VERSEMENT_DECHET_LIST_TITLE }><Loading /></TitleCard>;
-
   return (
     <TitleCard title={ VERSEMENT_DECHET_LIST_TITLE }>
+      {!props.isModalList && (
+        <Box sx={{ width: 250, pt: 1 }}>
+          <MuiDatePicker
+            name="date_piece_filter"
+            label="Date pièce"
+            mode="Edit"
+            value={datePiece ? dayjs.utc(datePiece) : null}
+            onChange={(d) => setDatePiece(d ? dayjs.utc(d).startOf("day").toDate() : null)}
+            onClear={() => setDatePiece(null)}
+          />
+        </Box>
+      )}
       <GenericListPage<Versement_Dechet_Type> {...props}
         tableName={ VERSEMENT_DECHET_TABLE_NAME }
         title={ VERSEMENT_DECHET_LIST_TITLE }
         columns={versement_Dechet_Columns}
         initialSort={VERSEMENT_DECHET_DEFAULT_SORT}
-        initialFilter={initialFilter ?? props.initialFilter}
-        filterBar={filterBar}
+        initialFilter={initialFilter}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(versement_Dechet: Versement_Dechet_Type) => versement_Dechet.numero }

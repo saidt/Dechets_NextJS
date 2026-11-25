@@ -8,9 +8,12 @@ import {
   REGLEMENT_DECHET_DEFAULT_SORT,
 } from "@/types/reglement-dechet";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
-import { useDateFromFilter } from "@/components/datatable/DateFromFilterBar";
-import Loading from "@/components/ui/Loading";
-import { CmListProps, TableState } from "@/lib/types";
+import { CmListProps, Filter, TableState } from "@/lib/types";
+import { Box } from "@mui/material";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import { MuiDatePicker } from "@/components/form-show/Inputs";
+import { firstDayOfMonthOffset } from "@/lib/date-utils";
 import TitleCard from "@/components/shared/TitleCard";
 import { NextResponse } from "next/server";
 import { useState } from "react";
@@ -21,7 +24,16 @@ import { fetch_All_Reglement_Dechet_List, fetch_Reglement_Dechet_List } from "@/
 import { Stored_Proc_Param_Type } from "@/types/sp";
 import Stored_Proc_List from "../sp/Stored_Proc_List";
 
+dayjs.extend(utc);
+
 const Reglement_Dechet_List = (props: CmListProps<Reglement_Dechet_Type>) => {
+
+  // Date pièce control above the list (not in pick-lists): starts at the 1st of last
+  // month; its value is the list's initialFilter. Cleared = no date filter.
+  const [datePiece, setDatePiece] = useState<Date | null>(() => firstDayOfMonthOffset(-1));
+  const initialFilter: Filter<Reglement_Dechet_Type> | undefined = props.isModalList
+    ? props.initialFilter
+    : { date_piece: datePiece ? dayjs.utc(datePiece).format("DD/MM/YYYY") : "" };
 
   const [spManagerOpen, setSpManagerOpen] = useState(false);
   const [spName, setSpName] = useState<string>('');
@@ -73,20 +85,26 @@ const Reglement_Dechet_List = (props: CmListProps<Reglement_Dechet_Type>) => {
 
 
 
-  // "Date pièce" bar: from the period start minus one month (not in pick-lists)
-  const { ready, initialFilter, filterBar } = useDateFromFilter<Reglement_Dechet_Type>("date_piece", "Date pièce", !props.isModalList);
-
-  if (!ready) return <TitleCard title={ REGLEMENT_DECHET_LIST_TITLE }><Loading /></TitleCard>;
-
   return (
     <TitleCard title={ REGLEMENT_DECHET_LIST_TITLE }>
+      {!props.isModalList && (
+        <Box sx={{ width: 250, pt: 1 }}>
+          <MuiDatePicker
+            name="date_piece_filter"
+            label="Date pièce"
+            mode="Edit"
+            value={datePiece ? dayjs.utc(datePiece) : null}
+            onChange={(d) => setDatePiece(d ? dayjs.utc(d).startOf("day").toDate() : null)}
+            onClear={() => setDatePiece(null)}
+          />
+        </Box>
+      )}
       <GenericListPage<Reglement_Dechet_Type> {...props}
         tableName={ REGLEMENT_DECHET_TABLE_NAME }
         title={ REGLEMENT_DECHET_LIST_TITLE }
         columns={reglement_Dechet_Columns}
         initialSort={REGLEMENT_DECHET_DEFAULT_SORT}
-        initialFilter={initialFilter ?? props.initialFilter}
-        filterBar={filterBar}
+        initialFilter={initialFilter}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(reglement_Dechet: Reglement_Dechet_Type) => reglement_Dechet.numero }

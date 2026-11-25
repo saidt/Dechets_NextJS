@@ -65,3 +65,12 @@ export function todayUtc(): Date {
   const now = new Date();
   return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
 }
+
+/**
+ * The 1st of a month relative to the current month, at 00:00 UTC (like MuiDatePicker):
+ * 0 = 1st of this month, -1 = 1st of last month, -2 = 1st of two months ago...
+ */
+export function firstDayOfMonthOffset(offset: number): Date {
+  const now = new Date();
+  return new Date(Date.UTC(now.getFullYear(), now.getMonth() + offset, 1));
+}

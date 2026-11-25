@@ -37,9 +37,6 @@ export interface GenericListPageProps<T extends Record<string, any>> {
   loading?: boolean;
   childUrl?: string;
   optionsMenu?: React.ReactNode[];
-  // Optional controls shown below the toolbar (e.g. DateFromFilterBar). When they
-  // change initialFilter, the list applies the new values.
-  filterBar?: React.ReactNode;
   fetchData: (state: TableState<T>) => Promise<NextResponse>;
   fetchAllData: (state: TableState<T>) => Promise<NextResponse>;
   getId: (item: T) => string | number;
@@ -59,7 +56,6 @@ export function GenericListPage<T extends Record<string, any>>({
   loading,
   childUrl,
   optionsMenu,
-  filterBar,
   fetchData,
   fetchAllData,
   getId,
@@ -118,8 +114,9 @@ export function GenericListPage<T extends Record<string, any>>({
     };
   });
 
-  // initialFilter can change after mount (filter bar): apply its values, back to page 1.
-  // Also applied over a saved context, so the list matches what the bar shows.
+  // initialFilter can change after mount (e.g. a date control above the list): apply
+  // its values, back to page 1. Also applied over a saved context, so the list matches
+  // the control. An empty value ('') removes that column's filter.
   const initialFilterKey = JSON.stringify(initialFilter ?? {});
   useEffect(() => {
     if (!initialFilter) return;
@@ -401,7 +398,6 @@ export function GenericListPage<T extends Record<string, any>>({
         onSaveFilter={handleSaveFilter}
         onLoadFilter={handleLoadFilter}
       />
-      {filterBar}
       <ReactTable<T>
         columns={columns}
         rows={data}

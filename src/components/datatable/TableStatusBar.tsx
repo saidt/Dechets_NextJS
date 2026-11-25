@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { Column, Filter, filterValueText, isExactFilter, isFromFilter, TableState } from "@/lib/types";
+import { Column, Filter, filterValueText, isExactFilter, TableState } from "@/lib/types";
 
 export interface TableStatusBarProps<T extends Record<string, any>> {
   columns: Column<T>[];
@@ -35,11 +35,11 @@ export function TableStatusBar<T extends Record<string, any>>({
   const header = (field: keyof T) =>
     columns.find((c) => c.accessor === field)?.header ?? String(field);
 
-  // "Column : « text »", "Column = « text »" for an exact filter, "Column ≥ « date »" for a from filter
+  // "Column : « text »", or "Column = « text »" for an exact filter
   const describe = (f: Filter<T> | undefined): string[] =>
     (Object.keys(f ?? {}) as (keyof T)[])
       .filter((field) => filterValueText(f?.[field]).trim() !== "")
-      .map((field) => `${header(field)} ${isFromFilter(f?.[field]) ? "≥" : isExactFilter(f?.[field]) ? "=" : ":"} « ${filterValueText(f?.[field])} »`);
+      .map((field) => `${header(field)} ${isExactFilter(f?.[field]) ? "=" : ":"} « ${filterValueText(f?.[field])} »`);
 
   const filters = describe(filter);
   const fixedFilters = describe(permanentFilter);
