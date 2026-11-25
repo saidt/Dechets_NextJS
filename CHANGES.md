@@ -53,6 +53,36 @@
 - **`npm audit fix`:** Next 16.4.5, next-auth 4.24.15, Prisma 7.10.1. Vulnerabilities went from 39 to 16, with no critical ones left (`xlsx` remains: no fix on npm).
 - **Packages:** `bcryptjs` added, `@next-auth/prisma-adapter` removed.
 
+## 8. Since the first summary (2026-11-23 → 2026-11-25)
+23 commits, 85 files changed.
+
+### Authorisation
+- **Super user:** `USER_.SUPER_USER = 'O'` passes every role check without `USER_ROLE` rows, on the server (`has_User_Role`, used by `checkRole`, `sp/exec`, `sp/param`) and in the screens (`hasRole` / `hasAnyRole`). Session checks and the own-data checks of `user/*` still apply. Only settable in SQL (see the checklist).
+- **Child tabs** (sortie lignes / détails, retour, règlement, versement lignes, paramètre lignes) are shown only with the child table's `.LIST` role, instead of sending the user to the error page.
+
+### Lists
+- **Status bar** above the pagination: current sort, column filters (`=` for exact ones), quick search and the screen's fixed filter ("Filtre fixe"). Display only, bold.
+- **Default sort:** `initialSort` on `GenericListPage` / `GenericMemListPage`, set on every server list from its `*_DEFAULT_SORT`, and on the profile and admin session lists (newest first) and profile roles (`role_id`). Lists filled by stored procedures keep the procedure's order.
+
+### Forms
+- **`BasicTextField` kept the `slotProps` it was given:** the lock, clear, pick-list and follow icons were never shown in forms; now they are.
+- **`MuiDatePicker`** (date only, stored at 00:00 UTC) replaces `MuiDateTimePicker` on the DD/MM/YYYY fields. New records start with today's date (`todayUtc()`) instead of the time the page was loaded.
+- **Reference fields:** double-click opens the pick-list (create and edit modes); the dialog's close icon now closes it.
+- **Hash page:** show/hide password icon, "Copier" button next to "Générer".
+- **Tooltips** show on disabled toolbar buttons (`TipButton` wraps the button in a `span`), with no MUI warning.
+
+### Période
+- **Statistics crash fixed** (`date.getDate is not a function`): the period's dates arrive from JSON as strings and are now converted to `Date`.
+- **When the period can't be read**, it defaults to the current month and the error is shown; the screens now apply those dates.
+
+### Other (SaidT)
+- Dashboard counts of sorties and retours (all and non validés) moved to Prisma queries; period start/end dates corrected.
+- `localLog` calls the API with a relative URL (no server address).
+- "Throw error" test button removed from the home page; `consoleInfo` calls removed.
+
+### Documentation
+- **`RAPPORT_TECHNIQUE.docx`:** technical report (packages, structure, features, authentication, security, lists, forms, master/detail, reports, database and logging, known limits), updated with the changes above.
+
 ---
 
 ## Production checklist
