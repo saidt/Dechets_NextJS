@@ -54,8 +54,8 @@ export default function UserTableFilterLoadDialog<T extends Record<string, any>>
     onLoadFilter(filter);
   };
 
+  // No user_id here: the API route returns the user's own filters and the GLOBAL ones
   const permanentFilter: Filter<User_Table_Filter_Type> = {
-    user_id: { value: user?.id ?? '', exactFilter: true },
     table_name: { value: props.tableName, exactFilter: true },
   };
 

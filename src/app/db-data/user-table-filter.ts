@@ -111,7 +111,7 @@ export async function update_User_Table_Filter(
   const exists = await exists_User_Table_Filter(userId, tableName, filterName)
   //consoleInfo("update_User_Table_Filter exists_User_Table_Filter :", exists)
   if (!exists) {
-    const inserted = create_User_Table_Filter({
+    const inserted = await create_User_Table_Filter({
       id: 0,
       user_id: userId,
       table_name: tableName,

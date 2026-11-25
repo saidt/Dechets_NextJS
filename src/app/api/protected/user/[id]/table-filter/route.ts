@@ -38,14 +38,17 @@ export async function  GET(
     const searchParams = request.nextUrl.searchParams
     //consoleInfo("user-table-filter GET searchParams....................:", searchParams);
     const params : TableState<User_Table_Filter_Type> = httpListParams<User_Table_Filter_Type>(searchParams, USER_TABLE_FILTER_DEFAULT_SORT)
-    // user_id is not taken from the column filters: it is forced to the session user below
+    // user_id is not taken from the column filters: the rows are limited below
     const columnFilter = { ...params.filter }
     delete columnFilter.user_id
     const mergedParams = addTableStateFilter({ ...params, filter: columnFilter }, {})
     const quickSearchColumns :  (keyof User_Table_Filter_Type)[] = ['id','user_id','table_name','filter_name','type', 'filter']
     const prismaParams : PrismaQuery = tableStateToPrismaQuery<User_Table_Filter_Type>(mergedParams, Empty_User_Table_Filter, quickSearchColumns);
-    // Exact match (column filters use 'contains', which would also match e.g. ALI2 for ALI)
-    prismaParams.where = prismaParams.where ? { AND: [prismaParams.where, { user_id: userId }] } : { user_id: userId };
+    // The session user's own filters (exact match: 'contains' would also match e.g. ALI2
+    // for ALI), plus every GLOBAL filter, whoever saved it. Only own rows can be
+    // changed or deleted: the PUT and DELETE routes use the session user.
+    const visible = { OR: [{ user_id: userId }, { type: 'GLOBAL' }] };
+    prismaParams.where = prismaParams.where ? { AND: [prismaParams.where, visible] } : visible;
     //consoleInfo("user-table-filter GET prismaParams================:", JSON.stringify(prismaParams));
 
     return httpList<any>(() => user_Table_Filter_List(prismaParams), () => user_Table_Filter_Count(prismaParams.where) )
