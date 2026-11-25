@@ -91,18 +91,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  // A super user passes every role check (the API routes check it again on the server)
+  const isSuperUser = (): boolean => user?.super_user?.trim().toUpperCase() === 'O'
+
   const hasRole = (role: string) : boolean => {
     if (! user) { 
       return false;
     }
-    return user.roles.includes(role.trim().toUpperCase())
+    return isSuperUser() || user.roles.includes(role.trim().toUpperCase())
   }
 
   function hasAnyRole(requiredRoles: string[]): boolean {
     if (! user) { 
       return false;
     }
-    return requiredRoles.some(role =>
+    return isSuperUser() || requiredRoles.some(role =>
       user.roles.includes(role.trim().toUpperCase())
     );
   }

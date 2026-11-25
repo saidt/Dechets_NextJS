@@ -5,6 +5,7 @@ export type User_Type = {
   name: string;
   email: string;
   last_connect?: Date;
+  super_user?: string; // 'O': passes every role check
   roles: string[]
 };
 
@@ -13,6 +14,7 @@ export const Empty_User : User_Type = {
   name: '',
   email: '',
   last_connect: new Date(0),
+  super_user: 'N',
   roles: []
 };
 export const USER_UPDATE_PSWD_ROLE : string = "dbo.USER.UPDATE_PSWD"

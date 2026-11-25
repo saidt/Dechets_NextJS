@@ -72,9 +72,14 @@
    DELETE FROM dbo.SESSION;   -- old rows hold clear session ids
    ```
    Check them against what was actually run in dev: `src/prisma/schema/auth.prisma` must match the real column names (see `sql/Tables.sql`).
-3. Add the new roles and assign them in `User_Role`: `DBO.USER_.UPDATE_PSWD`, `DBO.SESSION.ADMIN`.
-4. **Check that every user has the `.LIST`, `.SHOW`, `.ADD`, `.UPDATE`, `.DELETE` (and `.EXEC`) roles they need.** Without them they get 401s and their menus disappear.
-5. **Regenerate every user's `PSW_HASH` with bcrypt**, using the production `NEXTAUTH_SECRET`.
+3. Add the super user flag (`'O'` = passes every role check, `'N'` = normal user):
+   ```sql
+   ALTER TABLE dbo.USER_ ADD SUPER_USER char(1) NOT NULL DEFAULT 'N';
+   UPDATE dbo.USER_ SET SUPER_USER = 'O' WHERE ID = 'XXX';   -- the super users
+   ```
+4. Add the new roles and assign them in `User_Role`: `DBO.USER_.UPDATE_PSWD`, `DBO.SESSION.ADMIN`.
+5. **Check that every user has the `.LIST`, `.SHOW`, `.ADD`, `.UPDATE`, `.DELETE` (and `.EXEC`) roles they need.** Without them they get 401s and their menus disappear.
+6. **Regenerate every user's `PSW_HASH` with bcrypt**, using the production `NEXTAUTH_SECRET`.
 
 ### Configuration
 - **`NEXTAUTH_SECRET`** must be the same as the one used for the hashes. Changing it invalidates every password.

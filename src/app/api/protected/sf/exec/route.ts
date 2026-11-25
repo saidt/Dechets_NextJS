@@ -1,4 +1,4 @@
-//import { exists_User_Role } from "@/app/db-data/user-role";
+//import { has_User_Role } from "@/app/db-data/user-role";
 import { execScalarFunction } from "@/lib/db";
 //import { consoleInfo } from "@/lib/clientLog";
 import { logError } from "@/lib/serverLog";
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
     /*const userId = session.user.id
     const roleId = sfName+'.EXEC'
 
-    if (! await exists_User_Role(userId, roleId)) {
+    if (! await has_User_Role(userId, roleId)) {
       const err = new Error(`User ${userId} does not have ${roleId} role  !`)
       logError(`${pathname} GET route`, err);
       return NextResponse.json(

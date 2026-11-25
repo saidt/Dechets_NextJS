@@ -1,7 +1,7 @@
 import { getServerSession, Session } from 'next-auth';
 import { authOptions } from './auth';
 import { prisma } from './prisma';
-import { exists_User_Role } from '@/app/db-data/user-role';
+import { has_User_Role } from '@/app/db-data/user-role';
 import { getClientInfo } from './client-info';
 import { hashSessionToken } from './crypt';
 import { createLog } from '@/app/db-data/log';
@@ -87,7 +87,7 @@ export async function checkRole(roleId: string): Promise<boolean> {
   const userId = session?.user?.id;
   const role = roleId.trim().toUpperCase();
 
-  if (userId && (await exists_User_Role(userId, role))) {
+  if (userId && (await has_User_Role(userId, role))) {
     return true;
   }
 

@@ -7,6 +7,7 @@ create table USER_ (
    EMAIL                T_DESIGNATION        not null,
    PSW_HASH             nvarchar(255)        null,
    LAST_CONNECT         T_DATE_TIME          null,
+   SUPER_USER           char(1)              not null default 'N',
    constraint PK_UER_ primary key nonclustered (ID)
 )
 go

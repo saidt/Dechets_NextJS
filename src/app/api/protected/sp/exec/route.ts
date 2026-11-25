@@ -1,4 +1,4 @@
-import { exists_User_Role } from "@/app/db-data/user-role";
+import { has_User_Role } from "@/app/db-data/user-role";
 import { execStoredProc } from "@/lib/db";
 //import { consoleInfo } from "@/lib/log";
 import { logError } from "@/lib/serverLog";
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     const userId = session.user.id
     const roleId = spName+'.EXEC'
 
-    if (! await exists_User_Role(userId, roleId)) {
+    if (! await has_User_Role(userId, roleId)) {
       const err = new Error(`User ${userId} does not have ${roleId} role  !`)
       logError(`${pathname} POST route`, err);
       return NextResponse.json(

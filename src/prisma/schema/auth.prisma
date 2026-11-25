@@ -4,6 +4,8 @@ model User {
   email        String?    @unique
   psw_hash     String?    @db.NVarChar(255)
   last_connect DateTime?  @db.DateTime
+  // 'O': super user, passes every role check (USER_ROLE is not read). 'N' otherwise.
+  super_user   String     @default("N") @map("SUPER_USER") @db.Char(1)
 
   sessions           Session[]
   user_roles         User_Role[]

@@ -35,6 +35,23 @@ export async function user_Role_List(params: PrismaQuery): Promise<any[]> {
   return Promise.resolve(data);
 }*/
 
+/** True if the user is a super user (USER_.SUPER_USER = 'O'). */
+export async function is_Super_User(userId: string): Promise<boolean> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { super_user: true },
+  });
+  return user?.super_user?.trim().toUpperCase() === 'O';
+}
+
+/**
+ * True if the user may use the role: a super user passes every role check,
+ * otherwise the role must be granted in USER_ROLE. Use this for all role checks.
+ */
+export async function has_User_Role(userId: string, roleId: string): Promise<boolean> {
+  return (await is_Super_User(userId)) || (await exists_User_Role(userId, roleId));
+}
+
 export async function exists_User_Role(userId: string, roleId: string): Promise<boolean> {
   //consoleInfo('user_RoleId_List userId: ', userId);
   const data = await prisma.user_Role.findMany({
