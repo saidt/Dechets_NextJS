@@ -114,20 +114,6 @@ export function GenericListPage<T extends Record<string, any>>({
     };
   });
 
-  // initialFilter can change after mount (e.g. a date control above the list): apply
-  // its values, back to page 1. Also applied over a saved context, so the list matches
-  // the control. An empty value ('') removes that column's filter.
-  const initialFilterKey = JSON.stringify(initialFilter ?? {});
-  useEffect(() => {
-    if (!initialFilter) return;
-    setTableState((prev) => {
-      const merged = { ...prev.filter, ...initialFilter };
-      if (JSON.stringify(merged) === JSON.stringify(prev.filter)) return prev;
-      return { ...prev, page: 0, filter: merged };
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialFilterKey]);
-
   useEffect(() => {
     if (status !== "loading" && !session) {
       clientError("GenericListPage: session introuvable", null, curUrl, router);
