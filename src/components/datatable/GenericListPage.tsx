@@ -390,6 +390,7 @@ export function GenericListPage<T extends Record<string, any>>({
         tableState={tableState}
         loading={localLoading || (loading ?? false)}
         onTableStateChange={setTableState}
+        permanentFilter={permanentFilter}
         renderRowActions={isModalList ? undefined : renderActions}
         onRowClick={onRowClick}
       />

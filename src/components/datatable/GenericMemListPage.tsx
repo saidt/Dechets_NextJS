@@ -212,6 +212,7 @@ export function GenericMemListPage<T extends Record<string, any>>({
         tableState={tableState}
         loading={localLoading || (loading ?? false)}
         onTableStateChange={setTableState}
+        permanentFilter={permanentFilter}
         renderRowActions={renderRowActions}
         onRowClick={onRowClick}
       />

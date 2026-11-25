@@ -43,6 +43,8 @@ export interface ReactMemTableProps<T extends Record<string, any>> {
   renderRowActions?: (row: T) => React.ReactNode;
   onRowClick?: (row: T) => void;
   onTableStateChange: React.Dispatch<React.SetStateAction<TableState<T>>>;
+  // Shown in the status bar only (the page applies it)
+  permanentFilter?: Filter<T>;
 }
 
 export function ReactMemTable<T extends Record<string, any>>({
@@ -53,6 +55,7 @@ export function ReactMemTable<T extends Record<string, any>>({
   renderRowActions,
   onRowClick,
   onTableStateChange,
+  permanentFilter,
 }: ReactMemTableProps<T>) {
   const [filteredData, setFilteredData] = useState<T[]>([]);
   const [sortedData, setSortedData] = useState<T[]>([]);
@@ -312,7 +315,7 @@ export function ReactMemTable<T extends Record<string, any>>({
         </TableContainer>
       </Container>
       <Divider />
-      <TableStatusBar<T> columns={columns} tableState={tableState} />
+      <TableStatusBar<T> columns={columns} tableState={tableState} permanentFilter={permanentFilter} />
       <TablePagination
         currentPage={page}
         totalCount={filteredData.length}
