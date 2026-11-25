@@ -39,6 +39,94 @@ function inferSchema<T extends object>(typeSource: T): PrismaSchema<T> {
     return schema;
 }
 
+/** Comparison operators a column filter value can start with. */
+export type FilterOperator = '>=' | '<=' | '<>' | '>' | '<' | '=';
+
+type ParsedFilter = { op: FilterOperator | null; value: string };
+
+/**
+ * Splits a column filter value into its operator and value:
+ * ">=01/10/2026" → { op: '>=', value: '01/10/2026' }; "ABC" → { op: null, value: 'ABC' }.
+ * Two-character operators are checked first, so ">=" is not read as ">".
+ */
+export function parseFilterOperator(text: string): ParsedFilter {
+  const trimmed = text.trim();
+  for (const op of ['>=', '<=', '<>', '>', '<', '='] as FilterOperator[]) {
+    if (trimmed.startsWith(op)) {
+      return { op, value: trimmed.slice(op.length).trim() };
+    }
+  }
+  return { op: null, value: trimmed };
+}
+
+const PRISMA_OPERATOR: Record<Exclude<FilterOperator, '='>, string> = {
+  '>=': 'gte', '<=': 'lte', '>': 'gt', '<': 'lt', '<>': 'not',
+};
+
+/**
+ * Text "like": % is a wildcard. "AB%" starts with, "%AB" ends with, "%AB%" contains;
+ * with % inside ("A%B%C"), the start, end and middle parts are each required
+ * (their order in the middle is not checked).
+ */
+function likeClause(key: string, pattern: string): object | null {
+  const parts = pattern.split('%');
+  const conditions: object[] = [];
+  const first = parts[0];
+  const last = parts[parts.length - 1];
+  if (first) conditions.push({ [key]: { startsWith: first } });
+  if (last && parts.length > 1) conditions.push({ [key]: { endsWith: last } });
+  parts.slice(1, -1).filter(Boolean).forEach(middle => conditions.push({ [key]: { contains: middle } }));
+  if (conditions.length === 0) return null; // only % : no filter
+  return conditions.length === 1 ? conditions[0] : { AND: conditions };
+}
+
+/**
+ * The Prisma where clause for one column filter.
+ * - No operator: text contains (or like when it has %), number equals, date = that day.
+ * - "=X", "<>X", ">=X", "<=X", ">X", "<X": compared with X. Dates are compared by day
+ *   (DD/MM/YYYY): ">=01/10/2026" from that day on, "<01/10/2026" before it, "<>" not that day.
+ * Returns null when the value can't be read for the column's type (no filter).
+ */
+function columnFilterClause(key: string, fieldType: PrismaFieldType | undefined, { op, value }: ParsedFilter): object | null {
+  if (value === '') return null;
+
+  switch (fieldType) {
+  case PrismaFieldType.NUMBER: {
+    const num = parseFloat(value);
+    if (isNaN(num)) return null;
+    if (op === null || op === '=') return { [key]: { equals: num } };
+    return { [key]: { [PRISMA_OPERATOR[op]]: num } };
+  }
+
+  case PrismaFieldType.DATE: {
+    const date = DateStrToDate(value);
+    if (isNaN(date.getTime())) return null;
+    const dayStart = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const nextDay = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() + 1));
+    switch (op) {
+    case '>=': return { [key]: { gte: dayStart } };
+    case '>':  return { [key]: { gte: nextDay } };
+    case '<=': return { [key]: { lt: nextDay } };
+    case '<':  return { [key]: { lt: dayStart } };
+    case '<>': return { OR: [{ [key]: { lt: dayStart } }, { [key]: { gte: nextDay } }] };
+    default:   return { [key]: { gte: dayStart, lt: nextDay } }; // that day
+    }
+  }
+
+  case PrismaFieldType.BOOLEAN: {
+    const lower = value.toLowerCase();
+    if (!['true', 'false', '1', '0', 'yes', 'no'].includes(lower)) return null;
+    const bool = ['true', '1', 'yes'].includes(lower);
+    return op === '<>' ? { [key]: { not: bool } } : { [key]: { equals: bool } };
+  }
+
+  default: // STRING and unknown types
+    if (op === null) return value.includes('%') ? likeClause(key, value) : { [key]: { contains: value } };
+    if (op === '=') return { [key]: { equals: value } };
+    return { [key]: { [PRISMA_OPERATOR[op]]: value } };
+  }
+}
+
 export function tableStateToPrismaQuery<T extends object>(
   state: TableState<T>,
   typeSource: T,
@@ -82,78 +170,21 @@ export function tableStateToPrismaQuery<T extends object>(
   // 4. Filtering
   const allWhereClauses: any[] = [];
 
-  // 4a. Column-specific filter
+  // 4a. Column-specific filter (operators: see parseFilterOperator / columnFilterClause)
   const columnFilterClauses = (Object.keys(filter) as Array<keyof T>)
     .map(key => {
-        // Plain string: 'contains' search; { value, exactFilter: true }: exact match
-        const exact = isExactFilter(filter[key]);
         const filterValue = filterValueText(filter[key]);
-        //consoleInfo(`tableStateToPrismaQuery key/filterValue: ${String(key)}/${filterValue}`)
-
-        if (filterValue === null || filterValue === undefined || filterValue === '') {
+        if (filterValue === null || filterValue === undefined || filterValue.trim() === '') {
             return null;
         }
-
-        const fieldType = schema[key];
-        //consoleInfo(`tableStateToPrismaQuery key/fieldType: ${String(key)}/${fieldType}`);
-        let clause = {};
-
-        switch (fieldType) {
-        case PrismaFieldType.STRING:
-            clause = { [key as string]: exact ? { equals: filterValue } : { contains: filterValue } };
-            break;
-        case PrismaFieldType.NUMBER:
-            const numValue = parseFloat(filterValue);
-            if (!isNaN(numValue)) {
-            clause = { [key as string]: { equals: numValue } };
-            }
-            break;
-        case PrismaFieldType.DATE:
-            try {
-              // "DD/MM/YYYY": that day only; ">=DD/MM/YYYY": from that day on
-              const fromDay = filterValue.trim().startsWith('>=');
-              const dateValue = DateStrToDate(fromDay ? filterValue.trim().slice(2).trim() : filterValue);
-              //consoleInfo(`tableStateToPrismaQuery filterValue/dateValue: ${filterValue}/${dateValue}`);
-              if (!isNaN(dateValue.getTime())) {
-
-                const startOfDay = new Date(Date.UTC(
-                  dateValue.getFullYear(),
-                  dateValue.getMonth(),
-                  dateValue.getDate()
-                ));
-                //consoleInfo(`tableStateToPrismaQuery startOfDay: ${startOfDay}`);
-
-                const endOfDay = new Date(Date.UTC(
-                    dateValue.getFullYear(),
-                    dateValue.getMonth(),
-                    dateValue.getDate() + 1
-                ));
-                //consoleInfo(`tableStateToPrismaQuery endOfDay: ${endOfDay}`);
-
-                clause = fromDay
-                  ? { [key as string]: { gte: startOfDay } }
-                  : { [key as string]: { gte: startOfDay, lt: endOfDay } };
-              }
-            } 
-            catch { /* Ignore invalid date strings */ }
-            break;
-        case PrismaFieldType.BOOLEAN:
-            const lowerVal = filterValue.toLowerCase();
-            if (['true', 'false', '1', '0', 'yes', 'no'].includes(lowerVal)) {
-                const boolValue = ['true', '1', 'yes'].includes(lowerVal);
-                clause = { [key as string]: { equals: boolValue } };
-            }
-            break;
-        default:
-            // Fallback for unknown types
-            clause = { [key as string]: exact ? { equals: filterValue } : { contains: filterValue } };
-            break;
-        }
-        
-        return Object.keys(clause).length > 0 ? clause : null;
+        // { value, exactFilter: true }: exact match, operators not read
+        const parsed: ParsedFilter = isExactFilter(filter[key])
+          ? { op: '=', value: filterValue }
+          : parseFilterOperator(filterValue);
+        return columnFilterClause(String(key), schema[key], parsed);
     })
     .filter(c => c !== null);
-  
+
   if (columnFilterClauses.length > 0) {
       allWhereClauses.push({ AND: columnFilterClauses });
   }
