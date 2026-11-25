@@ -109,8 +109,10 @@ export function tableStateToPrismaQuery<T extends object>(
             }
             break;
         case PrismaFieldType.DATE:
-            try {                
-              const dateValue = DateStrToDate(filterValue);
+            try {
+              // "DD/MM/YYYY": that day only; ">=DD/MM/YYYY": from that day on
+              const fromDay = filterValue.trim().startsWith('>=');
+              const dateValue = DateStrToDate(fromDay ? filterValue.trim().slice(2).trim() : filterValue);
               //consoleInfo(`tableStateToPrismaQuery filterValue/dateValue: ${filterValue}/${dateValue}`);
               if (!isNaN(dateValue.getTime())) {
 
@@ -128,7 +130,9 @@ export function tableStateToPrismaQuery<T extends object>(
                 ));
                 //consoleInfo(`tableStateToPrismaQuery endOfDay: ${endOfDay}`);
 
-                clause = { [key as string]: { gte: startOfDay, lt: endOfDay } };
+                clause = fromDay
+                  ? { [key as string]: { gte: startOfDay } }
+                  : { [key as string]: { gte: startOfDay, lt: endOfDay } };
               }
             } 
             catch { /* Ignore invalid date strings */ }

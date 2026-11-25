@@ -31,11 +31,11 @@ dayjs.extend(utc);
 const Sortie_Dechet_List = (props: CmListProps<Sortie_Dechet_Type>) => {
 
   // Date pièce control above the list (not in pick-lists): starts at the 1st of last
-  // month; its value is the list's initialFilter. Cleared = no date filter.
+  // month; its value is the list's initialFilter (">=": from that day on). Cleared = no date filter.
   const [datePiece, setDatePiece] = useState<Date | null>(() => firstDayOfMonthOffset(-1));
   const initialFilter: Filter<Sortie_Dechet_Type> | undefined = props.isModalList
     ? props.initialFilter
-    : { date_piece: datePiece ? dayjs.utc(datePiece).format("DD/MM/YYYY") : "" };
+    : { date_piece: datePiece ? `>=${dayjs.utc(datePiece).format("DD/MM/YYYY")}` : "" };
 
   const { data: session } = useSession()
   const user = session?.user
