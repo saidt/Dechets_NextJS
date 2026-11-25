@@ -9,10 +9,8 @@ import {
 } from "@/types/sortie-dechet";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, Filter, TableState } from "@/lib/types";
-import { Box } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { MuiDatePicker } from "@/components/form-show/Inputs";
 import { firstDayOfMonthOffset } from "@/lib/date-utils";
 import TitleCard from "@/components/shared/TitleCard";
 import { NextResponse } from "next/server";
@@ -30,12 +28,8 @@ dayjs.extend(utc);
 
 const Sortie_Dechet_List = (props: CmListProps<Sortie_Dechet_Type>) => {
 
-  // Date pièce control above the list (not in pick-lists): starts at the 1st of last
-  // month; its value is the list's initialFilter (">=": from that day on). Cleared = no date filter.
-  const [datePiece, setDatePiece] = useState<Date | null>(() => firstDayOfMonthOffset(-1));
-  const initialFilter: Filter<Sortie_Dechet_Type> | undefined = props.isModalList
-    ? props.initialFilter
-    : { date_piece: datePiece ? `>=${dayjs.utc(datePiece).format("DD/MM/YYYY")}` : "" };
+  const initialFilter: Filter<Sortie_Dechet_Type> = 
+    props.initialFilter ?? { date_piece: `>=${dayjs.utc(firstDayOfMonthOffset(-1)).format("DD/MM/YYYY")}` };
 
   const { data: session } = useSession()
   const user = session?.user
@@ -90,26 +84,12 @@ const Sortie_Dechet_List = (props: CmListProps<Sortie_Dechet_Type>) => {
     setSpManagerOpen(false);
   };
 
-
   const handlePrint = async(data: Sortie_Dechet_Type[]) : Promise<void> => {
     await sortie_Dechet_List_Print(data, user?.id);
   };
 
-
   return (
     <TitleCard title={ SORTIE_DECHET_LIST_TITLE }>
-      {!props.isModalList && (
-        <Box sx={{ width: 250, pt: 1 }}>
-          <MuiDatePicker
-            name="date_piece_filter"
-            label="Date pièce"
-            mode="Edit"
-            value={datePiece ? dayjs.utc(datePiece) : null}
-            onChange={(d) => setDatePiece(d ? dayjs.utc(d).startOf("day").toDate() : null)}
-            onClear={() => setDatePiece(null)}
-          />
-        </Box>
-      )}
       <GenericListPage<Sortie_Dechet_Type> {...props}
         tableName={ SORTIE_DECHET_TABLE_NAME }
         title={ SORTIE_DECHET_LIST_TITLE }
