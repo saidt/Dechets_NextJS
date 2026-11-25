@@ -15,6 +15,7 @@ import {
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Column, Filter, filterValueText, TableState } from "@/lib/types";
 import Pagination, { PaginationProps } from "./Pagination";
+import { TableStatusBar } from "./TableStatusBar";
 import { LoadingBar } from "../ui/LoadingBar";
 import { formatValue } from "@/lib/number-utils";
 import { FILTER_DEBOUCE_TIME } from "@/lib/consts";
@@ -259,6 +260,7 @@ export function ReactTable<T extends Record<string, any>>({
         </TableContainer>
       </Container>
       <Divider />
+      <TableStatusBar<T> columns={columns} tableState={tableState} />
       <TablePagination
         currentPage={page}
         totalCount={total}

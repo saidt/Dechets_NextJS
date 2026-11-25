@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { Column, Filter, filterValueText, TableState } from "@/lib/types";
 import Pagination, { PaginationProps } from "./Pagination";
+import { TableStatusBar } from "./TableStatusBar";
 import { removeEmptyValues } from "@/lib/lib";
 import { LoadingBar } from "../ui/LoadingBar";
 import { applyFilter, applyPagination, applySort } from "@/lib/localData";
@@ -311,6 +312,7 @@ export function ReactMemTable<T extends Record<string, any>>({
         </TableContainer>
       </Container>
       <Divider />
+      <TableStatusBar<T> columns={columns} tableState={tableState} />
       <TablePagination
         currentPage={page}
         totalCount={filteredData.length}
