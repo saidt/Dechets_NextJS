@@ -2,7 +2,7 @@
 
 import { getResponseData } from "@/lib/html";
 import { GenericMemListPage, GenericMemListPageProps } from "@/components/datatable/GenericMemListPage";
-import { Column, Sort } from "@/lib/types";
+import { Column } from "@/lib/types";
 import { useSession } from "next-auth/react";
 //import { consoleInfo } from "@/lib/clientLog";
 import { fetch_Envoi_Frs_Dechet_Reste } from "@/fetch/envoi-frs-dechet";
@@ -26,8 +26,6 @@ export interface EfdrMemListPageProps
     "title" | "columns" 
   > {
 }
-
-const ENVOI_FRS_DECHET_RESTE_DEFAULT_SORT : Sort<Envoi_Frs_Dechet_Reste_Type> = { field: "DATE_CMD", direction: "asc" }
 
 const Envoi_Frs_Dechet_Reste = (props: EfdrMemListPageProps) => {
 
@@ -94,7 +92,6 @@ const Envoi_Frs_Dechet_Reste = (props: EfdrMemListPageProps) => {
     <GenericMemListPage<Envoi_Frs_Dechet_Reste_Type> {...props}
       title={`Reste des envois au fournisseur déchets`}
       columns={columns}
-      initialSort={ENVOI_FRS_DECHET_RESTE_DEFAULT_SORT}
       isModalList={false}
       fetchAllData={fetchAllData}
     />

@@ -2,7 +2,7 @@
 
 import { getResponseData } from "@/lib/html";
 import { GenericMemListPage, GenericMemListPageProps } from "@/components/datatable/GenericMemListPage";
-import { Column, Sort } from "@/lib/types";
+import { Column } from "@/lib/types";
 import { useSession } from "next-auth/react";
 //import { consoleInfo } from "@/lib/clientLog";
 import { fetch_Reglement_Dechet_Reste_A_Verser } from "@/fetch/reglement-dechet";
@@ -25,8 +25,6 @@ export type Reste_A_Verser_Type = {
 
 export interface RdravMemListPageProps extends GenericMemListPageProps<Reste_A_Verser_Type> {
 }
-
-const RESTE_A_VERSER_DEFAULT_SORT : Sort<Reste_A_Verser_Type> = { field: "NUMERO", direction: "asc" }
 
 const Reglement_Dechet_Reste_A_Verser = (props: RdravMemListPageProps) => {
 
@@ -109,7 +107,6 @@ const Reglement_Dechet_Reste_A_Verser = (props: RdravMemListPageProps) => {
     <GenericMemListPage<Reste_A_Verser_Type> {...props}
       title={`Reste à verser des réglements déchets`}
       columns={columns}
-      initialSort={RESTE_A_VERSER_DEFAULT_SORT}
       isModalList={false}
       fetchAllData={fetchAllData}
     />

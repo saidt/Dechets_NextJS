@@ -2,7 +2,7 @@
 
 import { getResponseData } from "@/lib/html";
 import { GenericMemListPage } from "@/components/datatable/GenericMemListPage";
-import { Column, Sort } from "@/lib/types";
+import { Column } from "@/lib/types";
 import { useSession } from "next-auth/react";
 import MuiDialog from "@/components/ui/dialog/MuiDialog";
 import { DialogProps } from "@mui/material";
@@ -80,8 +80,6 @@ const columns: Column<Maj_Prix_Detail_Type>[] = [
   },
 ];
 
-const MAJ_PRIX_DETAIL_DEFAULT_SORT : Sort<Maj_Prix_Detail_Type> = { field: "LIGNE_NUMERO", direction: "asc" }
-
 type Maj_Prix_Detail_List_Props = {
   numero: number;
   fetchAllData: () => Promise<Maj_Prix_Detail_Type[]>;
@@ -95,7 +93,6 @@ const Maj_Prix_Detail_List = ({ numero, fetchAllData }: Maj_Prix_Detail_List_Pro
   <GenericMemListPage<Maj_Prix_Detail_Type>
     title={`Màj prix détail sortie déchets ${numero}`}
     columns={columns}
-    initialSort={MAJ_PRIX_DETAIL_DEFAULT_SORT}
     isModalList={false}
     fetchAllData={fetchAllData}
   />
