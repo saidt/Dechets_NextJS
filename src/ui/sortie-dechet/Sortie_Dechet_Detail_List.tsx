@@ -5,6 +5,7 @@ import {
   SORTIE_DECHET_DETAIL_LIST_TITLE,
   SORTIE_DECHET_DETAIL_TABLE_NAME,
   Sortie_Dechet_Detail_Type,
+  SORTIE_DECHET_DETAIL_DEFAULT_SORT,
 } from "@/types/sortie-dechet-detail";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -33,6 +34,7 @@ const Sortie_Dechet_Detail_List = (props: CmListProps<Sortie_Dechet_Detail_Type>
       tableName={ SORTIE_DECHET_DETAIL_TABLE_NAME }
       title={ SORTIE_DECHET_DETAIL_LIST_TITLE }
       columns={sortie_Dechet_Detail_Columns}
+      initialSort={SORTIE_DECHET_DETAIL_DEFAULT_SORT}
       fetchData={fetchRows}
       fetchAllData={fetchAllRows}
       getId={(sortie_Dechet_Detail: Sortie_Dechet_Detail_Type) => sortie_Dechet_Detail.id }

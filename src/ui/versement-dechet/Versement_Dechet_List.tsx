@@ -5,6 +5,7 @@ import {
   VERSEMENT_DECHET_LIST_TITLE,
   VERSEMENT_DECHET_TABLE_NAME,
   Versement_Dechet_Type,
+  VERSEMENT_DECHET_DEFAULT_SORT,
 } from "@/types/versement-dechet";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -59,6 +60,7 @@ const Versement_Dechet_List = (props: CmListProps<Versement_Dechet_Type>) => {
         tableName={ VERSEMENT_DECHET_TABLE_NAME }
         title={ VERSEMENT_DECHET_LIST_TITLE }
         columns={versement_Dechet_Columns}
+        initialSort={VERSEMENT_DECHET_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(versement_Dechet: Versement_Dechet_Type) => versement_Dechet.numero }

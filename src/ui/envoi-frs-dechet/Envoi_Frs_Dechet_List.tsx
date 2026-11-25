@@ -5,6 +5,7 @@ import {
   ENVOI_FRS_DECHET_LIST_TITLE,
   ENVOI_FRS_DECHET_TABLE_NAME,
   Envoi_Frs_Dechet_Type,
+  ENVOI_FRS_DECHET_DEFAULT_SORT,
 } from "@/types/envoi-frs-dechet";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -31,6 +32,7 @@ const Envoi_Frs_Dechet_List = (props: CmListProps<Envoi_Frs_Dechet_Type>) => {
         tableName={ ENVOI_FRS_DECHET_TABLE_NAME }
         title={ ENVOI_FRS_DECHET_LIST_TITLE }
         columns={ envoi_Frs_Dechet_Columns }
+        initialSort={ENVOI_FRS_DECHET_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(envoi_Frs_Dechet: Envoi_Frs_Dechet_Type) => envoi_Frs_Dechet.id}

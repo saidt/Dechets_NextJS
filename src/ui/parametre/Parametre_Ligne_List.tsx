@@ -5,6 +5,7 @@ import {
   PARAMETRE_LIGNE_LIST_TITLE,
   PARAMETRE_LIGNE_TABLE_NAME,
   Parametre_Ligne_Type,
+  PARAMETRE_LIGNE_DEFAULT_SORT,
 } from "@/types/parametre-ligne";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -33,6 +34,7 @@ const Parametre_Ligne_List = (props: CmListProps<Parametre_Ligne_Type>) => {
       tableName={ PARAMETRE_LIGNE_TABLE_NAME }
       title={ PARAMETRE_LIGNE_LIST_TITLE }
       columns={parametre_Ligne_Columns}
+      initialSort={PARAMETRE_LIGNE_DEFAULT_SORT}
       fetchData={fetchRows}
       fetchAllData={fetchAllRows}
       getId={(parametre_Ligne: Parametre_Ligne_Type) => parametre_Ligne.id }

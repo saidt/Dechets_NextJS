@@ -5,6 +5,7 @@ import {
   REGLEMENT_DECHET_LIST_TITLE,
   REGLEMENT_DECHET_TABLE_NAME,
   Reglement_Dechet_Type,
+  REGLEMENT_DECHET_DEFAULT_SORT,
 } from "@/types/reglement-dechet";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -76,6 +77,7 @@ const Reglement_Dechet_List = (props: CmListProps<Reglement_Dechet_Type>) => {
         tableName={ REGLEMENT_DECHET_TABLE_NAME }
         title={ REGLEMENT_DECHET_LIST_TITLE }
         columns={reglement_Dechet_Columns}
+        initialSort={REGLEMENT_DECHET_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(reglement_Dechet: Reglement_Dechet_Type) => reglement_Dechet.numero }

@@ -5,6 +5,7 @@ import {
   PARAMETRE_LIST_TITLE,
   PARAMETRE_TABLE_NAME,
   Parametre_Type,
+  PARAMETRE_DEFAULT_SORT,
 } from "@/types/parametre";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -31,6 +32,7 @@ const Parametre_List = (props: CmListProps<Parametre_Type>) => {
         tableName={ PARAMETRE_TABLE_NAME }
         title={ PARAMETRE_LIST_TITLE }
         columns={parametre_Columns}
+        initialSort={PARAMETRE_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(parametre: Parametre_Type) => parametre.rubrique }

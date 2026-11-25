@@ -4,6 +4,7 @@ import {
   USER_TABLE_FILTER_LIST_TITLE,
   USER_TABLE_FILTER_TABLE_NAME,
   User_Table_Filter_Type,
+  USER_TABLE_FILTER_DEFAULT_SORT,
 } from "@/types/user-table-filter";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, Column, TableState } from "@/lib/types";
@@ -82,6 +83,7 @@ const User_Table_Filter_List = (props: CmListProps<User_Table_Filter_Type>) => {
         tableName={USER_TABLE_FILTER_TABLE_NAME}
         title={USER_TABLE_FILTER_LIST_TITLE}
         columns={props.isModalList ? referenceColumns : columns}
+        initialSort={USER_TABLE_FILTER_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(item: User_Table_Filter_Type) => item.id}

@@ -5,6 +5,7 @@ import {
   CLIENT_DECHET_SLD_INI_LIST_TITLE,
   CLIENT_DECHET_SLD_INI_TABLE_NAME,
   Client_Dechet_Sld_Ini_Type,
+  CLIENT_DECHET_SLD_INI_DEFAULT_SORT,
 } from "@/types/client-dechet-sld-ini";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -31,6 +32,7 @@ const Client_Dechet_Sld_Ini_List = (props: CmListProps<Client_Dechet_Sld_Ini_Typ
         tableName={ CLIENT_DECHET_SLD_INI_TABLE_NAME }
         title={ CLIENT_DECHET_SLD_INI_LIST_TITLE }
         columns={ client_Dechet_Sld_Ini_Columns }
+        initialSort={CLIENT_DECHET_SLD_INI_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(client_Dechet_Sld_Ini: Client_Dechet_Sld_Ini_Type) => client_Dechet_Sld_Ini.id }

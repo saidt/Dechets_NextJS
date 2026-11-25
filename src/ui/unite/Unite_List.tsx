@@ -5,6 +5,7 @@ import {
   UNITE_LIST_TITLE,
   UNITE_TABLE_NAME,
   Unite_Type,
+  UNITE_DEFAULT_SORT,
 } from "@/types/unite";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -31,6 +32,7 @@ const Unite_List = (props: CmListProps<Unite_Type>) => {
         tableName={UNITE_TABLE_NAME}
         title={UNITE_LIST_TITLE}
         columns={unite_Columns}
+        initialSort={UNITE_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(unite: Unite_Type) => unite.code}

@@ -5,6 +5,7 @@ import {
   RETOUR_DECHET_LIST_TITLE,
   RETOUR_DECHET_TABLE_NAME,
   Retour_Dechet_Type,
+  RETOUR_DECHET_DEFAULT_SORT,
 } from "@/types/retour-dechet";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -61,6 +62,7 @@ const Retour_Dechet_List = (props: CmListProps<Retour_Dechet_Type>) => {
         tableName={ RETOUR_DECHET_TABLE_NAME }
         title={ RETOUR_DECHET_LIST_TITLE }
         columns={retour_Dechet_Columns}
+        initialSort={RETOUR_DECHET_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(retour_Dechet: Retour_Dechet_Type) => retour_Dechet.numero }

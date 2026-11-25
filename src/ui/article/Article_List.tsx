@@ -5,6 +5,7 @@ import {
   ARTICLE_LIST_TITLE,
   ARTICLE_TABLE_NAME,
   Article_Type,
+  ARTICLE_DEFAULT_SORT,
 } from "@/types/article";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -193,6 +194,7 @@ const Article_List = (props: CmListProps<Article_Type>) => {
         tableName={ ARTICLE_TABLE_NAME }
         title={ ARTICLE_LIST_TITLE }
         columns={article_Columns}
+        initialSort={ARTICLE_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(article: Article_Type) => article.code }

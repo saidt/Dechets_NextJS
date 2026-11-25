@@ -5,6 +5,7 @@ import {
   CLIENT_DECHET_LIST_TITLE,
   CLIENT_DECHET_TABLE_NAME,
   Client_Dechet_Type,
+  CLIENT_DECHET_DEFAULT_SORT,
 } from "@/types/client-dechet";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -151,6 +152,7 @@ const Client_Dechet_List = (props: CmListProps<Client_Dechet_Type>) => {
         tableName={ CLIENT_DECHET_TABLE_NAME }
         title={ CLIENT_DECHET_LIST_TITLE }
         columns={client_Dechet_Columns}
+        initialSort={CLIENT_DECHET_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         loading={loading}

@@ -5,6 +5,7 @@ import {
   PESEE_LIST_TITLE,
   PESEE_TABLE_NAME,
   Pesee_Type,
+  PESEE_DEFAULT_SORT,
 } from "@/types/pesee";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -31,6 +32,7 @@ const Pesee_List = (props: CmListProps<Pesee_Type>) => {
         tableName={ PESEE_TABLE_NAME }
         title={ PESEE_LIST_TITLE }
         columns={ pesee_Columns }
+        initialSort={PESEE_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(pesee: Pesee_Type) => pesee.numero_1 }

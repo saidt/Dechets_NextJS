@@ -5,6 +5,7 @@ import {
   PERIODE_LIST_TITLE,
   PERIODE_TABLE_NAME,
   Periode_Type,
+  PERIODE_DEFAULT_SORT,
 } from "@/types/periode";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -31,6 +32,7 @@ const Periode_List = (props: CmListProps<Periode_Type>) => {
         tableName={ PERIODE_TABLE_NAME }
         title={ PERIODE_LIST_TITLE }
         columns={periode_Columns}
+        initialSort={PERIODE_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(periode: Periode_Type) => periode.code }

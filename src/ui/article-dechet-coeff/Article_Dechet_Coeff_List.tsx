@@ -5,6 +5,7 @@ import {
   ARTICLE_DECHET_COEFF_LIST_TITLE,
   ARTICLE_DECHET_COEFF_TABLE_NAME,
   Article_Dechet_Coeff_Type,
+  ARTICLE_DECHET_COEFF_DEFAULT_SORT,
 } from "@/types/article-dechet-coeff";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -31,6 +32,7 @@ const Article_Dechet_Coeff_List = (props: CmListProps<Article_Dechet_Coeff_Type>
         tableName={ ARTICLE_DECHET_COEFF_TABLE_NAME }
         title={ ARTICLE_DECHET_COEFF_LIST_TITLE }
         columns={article_Dechet_Coeff_Columns}
+        initialSort={ARTICLE_DECHET_COEFF_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(article_Dechet_Coeff: Article_Dechet_Coeff_Type) => article_Dechet_Coeff.article_code }

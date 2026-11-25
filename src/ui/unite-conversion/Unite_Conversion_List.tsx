@@ -5,6 +5,7 @@ import {
   UNITE_CONVERSION_LIST_TITLE,
   UNITE_CONVERSION_TABLE_NAME,
   Unite_Conversion_Type,
+  UNITE_CONVERSION_DEFAULT_SORT,
 } from "@/types/unite-conversion";
 import { GenericListPage } from "@/components/datatable/GenericListPage";
 import { CmListProps, TableState } from "@/lib/types";
@@ -57,6 +58,7 @@ const Unite_Conversion_List = (props: CmListProps<Unite_Conversion_Type>) => {
         tableName={ UNITE_CONVERSION_TABLE_NAME }
         title={ UNITE_CONVERSION_LIST_TITLE }
         columns={unite_Conversion_Columns}
+        initialSort={UNITE_CONVERSION_DEFAULT_SORT}
         fetchData={fetchRows}
         fetchAllData={fetchAllRows}
         getId={(unite_Conversion: Unite_Conversion_Type) => unite_Conversion.id }
