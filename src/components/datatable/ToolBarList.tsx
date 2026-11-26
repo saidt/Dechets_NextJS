@@ -26,6 +26,7 @@ interface ToolbarListProps<T extends Record<string, any>> {
   onNew?: () => void;
   onSaveContext: () => void;
   onReadContext: () => void;
+  onDeleteContext: () => void;
   onSaveFilter: (filterName: string) => void;
   onLoadFilter: (filter: Filter<T>) => void;
 }
@@ -45,6 +46,7 @@ function ToolbarList<T extends Record<string, any>>({
   onNew,
   onSaveContext,
   onReadContext,
+  onDeleteContext,
   onSaveFilter,
   onLoadFilter,
 } : ToolbarListProps<T>) {
@@ -81,6 +83,7 @@ function ToolbarList<T extends Record<string, any>>({
           isModalList={isModalList}
           onSaveContext={onSaveContext}
           onReadContext={onReadContext}
+          onDeleteContext={onDeleteContext}
           onSaveFilter={onSaveFilter}
           onLoadFilter={onLoadFilter}
           tableName={tableName}

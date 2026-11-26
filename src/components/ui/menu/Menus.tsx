@@ -12,6 +12,7 @@ import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import LogoutIcon from '@mui/icons-material/Logout';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface LastAccessedMenuProps extends MenuItemProps {
   lastAccessed: number | string | null;
@@ -46,6 +47,17 @@ export const ReadContextMenu = (props : MenuItemProps) => {
         <SettingsBackupRestoreIcon color="secondary"/>
       </ListItemIcon>
       Charger contexte
+    </MenuItem>
+  );
+};
+
+export const DeleteContextMenu = (props : MenuItemProps) => {
+  return (
+    <MenuItem {...props}>
+      <ListItemIcon>
+        <DeleteIcon color="error"/>
+      </ListItemIcon>
+      Supprimer contexte
     </MenuItem>
   );
 };

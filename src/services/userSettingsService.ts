@@ -39,6 +39,16 @@ const saveSettings = <T extends Record<string, any>>(userId: string, tableName: 
   }
 };
 
+const deleteSettings = (userId: string, tableName: string): void => {
+  try {
+    localStorage.removeItem(`${userId}-${tableName}-${USER_SETTINGS_KEY}`);
+  }
+  catch {
+    const allCookies = getAllCookies();
+    localLog("error", "Delete user settings to localStorage", allCookies, {});
+  }
+};
+
 export const saveTableState = <T extends Record<string, any>>(
   userId: string,
   tableName: string,
@@ -69,6 +79,12 @@ export const loadTableState = <T extends Record<string, any>>(
   const settings : UserSettings<T> = getSettings(userId, tableName);
   return settings?.state || null;
 };
+
+export const deleteTableState = (
+  userId: string,
+  tableName: string ): void => {
+    deleteSettings(userId, tableName);
+}
 
 export const saveLastViewedId = (
   userId: string,

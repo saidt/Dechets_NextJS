@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Column, Filter, Sort, TableState } from "@/lib/types";
 import ToolbarList from "./ToolBarList";
 import { useAppContext } from "@/app/context/AppContext";
-import { loadLastViewedId, loadTableState, saveTableState } from "@/services/userSettingsService";
+import { deleteTableState, loadLastViewedId, loadTableState, saveTableState } from "@/services/userSettingsService";
 import { ReactTable } from "./ReactTable";
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -156,6 +156,13 @@ export function GenericListPage<T extends Record<string, any>>({
       }
     }
   };
+
+  const handleDeleteContext = () => {
+    if (user) {
+      deleteTableState(user.id, tableName);
+      addNotification("Contexte supprimé", "success");
+    }
+  };  
 
   const handleLoadFilter = (filter: Filter<T>) => {
     //consoleInfo('GenericListPage handleLoadFilter filter: ', filter)
@@ -381,6 +388,7 @@ export function GenericListPage<T extends Record<string, any>>({
         optionsMenu={optionsMenu}
         onSaveContext={handleSaveContext}
         onReadContext={handleReadContext}
+        onDeleteContext={handleDeleteContext}
         onSaveFilter={handleSaveFilter}
         onLoadFilter={handleLoadFilter}
       />

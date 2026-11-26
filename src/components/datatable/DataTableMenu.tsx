@@ -14,7 +14,7 @@ import { clientError } from "@/lib/error";
 import { useSession } from "next-auth/react";
 import Loading from "../ui/Loading";
 import { OptionsButton } from "../ui/ActionButtons";
-import { LastAccessedMenu, ReadContextMenu, ReadFilterMenu, SaveContextMenu, SaveFilterMenu } from "../ui/menu/Menus";
+import { DeleteContextMenu, LastAccessedMenu, ReadContextMenu, ReadFilterMenu, SaveContextMenu, SaveFilterMenu } from "../ui/menu/Menus";
 import React from "react";
 import useAuth from "@/app/context/UseAuth";
 import { useAppContext } from "@/app/context/AppContext";
@@ -28,6 +28,7 @@ interface DataTableMenuProps<T extends Record<string, any>> extends IconButtonPr
   optionsMenu?: React.ReactNode[];
   onSaveContext: () => void;
   onReadContext: () => void;
+  onDeleteContext: () => void;
   onSaveFilter: (filterName: string) => void;
   onLoadFilter: (filter: Filter<T>) => void;
 }
@@ -81,6 +82,11 @@ export default function DataTableMenu<T extends Record<string, any>>(props: Data
     props.onReadContext()
   };
 
+  const handleDeleteContext = () => {
+    handleCloseMenu();
+    props.onDeleteContext()
+  }
+
   const handleSaveFilter = () => {
     handleCloseMenu();
     setOpenSaveDialog(true)
@@ -109,6 +115,7 @@ export default function DataTableMenu<T extends Record<string, any>>(props: Data
         <Divider />
         <SaveContextMenu onClick={handleSaveContext} />
         <ReadContextMenu onClick={handleReadContext} />
+        <DeleteContextMenu onClick={handleDeleteContext} />
         <Divider />
         <SaveFilterMenu onClick={handleSaveFilter} />
         <ReadFilterMenu onClick={handleLoadFilter} />

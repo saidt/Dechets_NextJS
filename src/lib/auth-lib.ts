@@ -5,6 +5,7 @@ import { has_User_Role } from '@/app/db-data/user-role';
 import { getClientInfo } from './client-info';
 import { hashSessionToken } from './crypt';
 import { createLog } from '@/app/db-data/log';
+import { setUserId } from './telemetry/user';
 
 /** Why a session was rejected; also used as the ?error= code of the login page. */
 export type SessionError = 'SessionNotFound' | 'SessionUiidNotFound' | 'DbSessionNotFound' | 'SessionExpired' | 'SessionClientChanged';
@@ -70,6 +71,7 @@ export async function checkSession(): Promise<SessionCheck> {
     return { session: null, error: 'SessionClientChanged' };
   }
 
+  setUserId(userId);
   return { session, error: null };
 }
 

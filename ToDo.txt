@@ -5,7 +5,6 @@
 *- Afficher le menu seulement si session active
 *- Filtre on dates bug (sorties déchets par ex)
 - Ajouter un état de pointage des sorties déchets pour KarimJ
-- Add double click on empty reference fields to show list
 - Add "Supprimer contexte'
 
-Last commit to imacab: 3533ee2
+Last commit to imacab: 019a1b4 (019a1b4bd5e4b542bb0d3f1da9f02d8f22b417b0)
