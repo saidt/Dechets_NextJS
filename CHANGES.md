@@ -53,8 +53,8 @@
 - **`npm audit fix`:** Next 16.4.5, next-auth 4.24.15, Prisma 7.10.1. Vulnerabilities went from 39 to 16, with no critical ones left (`xlsx` remains: no fix on npm).
 - **Packages:** `bcryptjs` added, `@next-auth/prisma-adapter` removed.
 
-## 8. Since the first summary (2026-11-23 → 2026-11-25)
-23 commits, 85 files changed.
+## 8. Since the first summary (2026-11-23 → 2026-11-26)
+About 40 commits, 105 files changed.
 
 ### Authorisation
 - **Super user:** `USER_.SUPER_USER = 'O'` passes every role check without `USER_ROLE` rows, on the server (`has_User_Role`, used by `checkRole`, `sp/exec`, `sp/param`) and in the screens (`hasRole` / `hasAnyRole`). Session checks and the own-data checks of `user/*` still apply. Only settable in SQL (see the checklist).
@@ -63,6 +63,9 @@
 ### Lists
 - **Status bar** above the pagination: current sort, column filters (`=` for exact ones), quick search and the screen's fixed filter ("Filtre fixe"). Display only, bold.
 - **Default sort:** `initialSort` on `GenericListPage` / `GenericMemListPage`, set on every server list from its `*_DEFAULT_SORT`, and on the profile and admin session lists (newest first) and profile roles (`role_id`). Lists filled by stored procedures keep the procedure's order.
+- **Date pièce initial filter:** sorties, retours, règlements and versements start with `date_piece >=` the 1st of last month (`firstDayOfMonthOffset(-1)` in `date-utils`), as `initialFilter` unless the caller passes one. The date column's filter shows it and the user can change or clear it there.
+- **Filter operators** in every list, server and in-memory: `=`, `<>`, `>=`, `<=`, `>`, `<` for dates (by day, DD/MM/YYYY), numbers and text; no operator keeps the default (text contains, number equals, date that day). In text, `%` is a wildcard: `AB%` starts with, `%AB` ends with, `%AB%` contains. `exactFilter` values are matched as they are. Shared parser: `src/lib/filterOperator.ts`.
+- **Saved filters:** GLOBAL filters (set by admins in SQL, or saved from the app then changed to `TYPE = 'GLOBAL'`) are now loaded for every user; they never loaded before. They can't be overwritten or deleted from the app (save refused, `DELETE` answers 403). Saving a new filter now returns it (the insert was not awaited).
 
 ### Forms
 - **`BasicTextField` kept the `slotProps` it was given:** the lock, clear, pick-list and follow icons were never shown in forms; now they are.
@@ -75,13 +78,18 @@
 - **Statistics crash fixed** (`date.getDate is not a function`): the period's dates arrive from JSON as strings and are now converted to `Date`.
 - **When the period can't be read**, it defaults to the current month and the error is shown; the screens now apply those dates.
 
+### Reports
+- **Master/detail prints** for règlements, retours and paramètres (SaidT).
+- **`accessorFn` columns** are formatted in PDFs like on screen (dates as DD/MM/YYYY, numbers with their decimals), e.g. the règlement date in the versement print.
+- **React "key" warning** fixed when printing a record (`ReportDetail`).
+
 ### Other (SaidT)
 - Dashboard counts of sorties and retours (all and non validés) moved to Prisma queries; period start/end dates corrected.
 - `localLog` calls the API with a relative URL (no server address).
 - "Throw error" test button removed from the home page; `consoleInfo` calls removed.
 
 ### Documentation
-- **`RAPPORT_TECHNIQUE.docx`:** technical report (packages, structure, features, authentication, security, lists, forms, master/detail, reports, database and logging, known limits), updated with the changes above.
+- **`RAPPORT_TECHNIQUE.docx`:** technical report (packages, structure, features, authentication, security, lists, forms, master/detail, reports, database and logging, known limits), updated with the changes above. It is the only copy, edited in Word; `CLAUDE.md` says to edit it in place.
 
 ---
 
