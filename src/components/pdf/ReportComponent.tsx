@@ -193,7 +193,7 @@ export const ReportDetail = <T extends Record<string, any>>({
         const columnFormatted = column?.accessorFn ? column.accessorFn(data) : formatted
 
         return (
-          <View style={{ flexDirection: 'row', marginBottom: 2 }}>
+          <View key={String(column.accessor)} style={{ flexDirection: 'row', marginBottom: 2 }}>
             <Text style={[print_styles.bold, { width: 100 }]}>{column.header}:</Text>
             <Text style={{ width: column.width, fontWeight: column.meta?.isPrimaryKey ? 'bold' : 'normal' }}>{String(columnFormatted) }</Text>
           </View>
