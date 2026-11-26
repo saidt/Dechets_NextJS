@@ -29,6 +29,8 @@ import { handleError } from "@/lib/error";
 import { useAppContext } from "@/app/context/AppContext";
 import { put_Versement_Dechet } from "@/fetch/versement-dechet";
 import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
+import { Versement_Dechet_Show_Print } from "./Versement_Dechet_Show_Print";
+import { useSession } from "next-auth/react";
 import { VERSEMENT_DECHET_LIGNE_TABLE_NAME } from "@/types/versement-dechet-ligne";
 import { todayUtc } from "@/lib/date-utils";
 
@@ -185,6 +187,13 @@ const Versement_Dechet_Show = () => {
   // A stored tab the user can no longer see falls back to the first one
   const tab = ["1", canListLignes && "2"].includes(value) ? value : "1";
 
+  const { data: session } = useSession()
+  const user = session?.user
+
+  const handlePrint = async(data: Versement_Dechet_Type) : Promise<void> => {
+    await Versement_Dechet_Show_Print(data, user?.id);
+  };  
+
   return (
     <GenericShowPage<Versement_Dechet_Type>
       tableName={ VERSEMENT_DECHET_TABLE_NAME }
@@ -203,6 +212,7 @@ const Versement_Dechet_Show = () => {
       getDuplicateEntity={get_Duplicate_Versement_Dechet }
       getModifiedWithId={getModifiedWithId}
       validate={validate}
+      onPrint={handlePrint}
       children={
         <>
 				  <TabContext value={tab}>

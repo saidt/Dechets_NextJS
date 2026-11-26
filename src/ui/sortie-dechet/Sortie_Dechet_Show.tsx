@@ -33,10 +33,10 @@ import { useAppContext } from "@/app/context/AppContext";
 import SecurityUpdateIcon from '@mui/icons-material/SecurityUpdate';
 import Sortie_Dechet_Maj_Prix_Detail from "./Sortie_Dechet_Maj_Prix_Detail";
 import useAuth from "@/app/context/UseAuth";
-import { sortie_Dechet_Show_Print } from "./Sortie_Dechet_Show_Print";
+import { Sortie_Dechet_Show_Print } from "./Sortie_Dechet_Show_Print";
 import { useSession } from "next-auth/react";
 import PrintIcon from "@mui/icons-material/Print";
-import { sortie_Dechet_Show_Print_Simple } from "./Sortie_Dechet_Show_Print_Simple";
+import { Sortie_Dechet_Show_Print_Simple } from "./Sortie_Dechet_Show_Print_Simple";
 import { fetch_Client_Dechet } from "@/fetch/client-dechet";
 import { put_Sortie_Dechet } from "@/fetch/sortie-dechet";
 import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
@@ -314,7 +314,7 @@ const Sortie_Dechet_Show = () => {
   }
 
   const handle_Print_Simple = async() : Promise<void> => {
-    await sortie_Dechet_Show_Print_Simple(sortie_Dechet);
+    await Sortie_Dechet_Show_Print_Simple(sortie_Dechet);
   };
 
   const { hasRole } = useAuth();
@@ -346,7 +346,7 @@ const Sortie_Dechet_Show = () => {
   ]
 
   const handlePrint = async(data: Sortie_Dechet_Type) : Promise<void> => {
-    await sortie_Dechet_Show_Print(data, user?.id);
+    await Sortie_Dechet_Show_Print(data, user?.id);
   };
 
   // Child tabs are shown only with the child list role (<TABLE>.LIST)

@@ -33,6 +33,8 @@ import Reglement_Dechet_Ligne_List from "./Reglement_Dechet_Ligne_List";
 import { fetch_Client_Dechet } from "@/fetch/client-dechet";
 import { put_Reglement_Dechet } from "@/fetch/reglement-dechet";
 import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
+import { Reglement_Dechet_Show_Print } from "./Reglement_Dechet_Show_Print";
+import { useSession } from "next-auth/react";
 import { REGLEMENT_DECHET_LIGNE_TABLE_NAME } from "@/types/reglement-dechet-ligne";
 import { todayUtc } from "@/lib/date-utils";
 
@@ -243,6 +245,13 @@ const Reglement_Dechet_Show = () => {
   // A stored tab the user can no longer see falls back to the first one
   const tab = ["1", canListLignes && "2"].includes(value) ? value : "1";
 
+  const { data: session } = useSession()
+  const user = session?.user
+
+  const handlePrint = async(data: Reglement_Dechet_Type) : Promise<void> => {
+    await Reglement_Dechet_Show_Print(data, user?.id);
+  };
+
   return (
     <GenericShowPage<Reglement_Dechet_Type>
       tableName={ REGLEMENT_DECHET_TABLE_NAME }
@@ -261,6 +270,7 @@ const Reglement_Dechet_Show = () => {
       getDuplicateEntity={get_Duplicate_Reglement_Dechet }
 			getModifiedWithId={getModifiedWithId}
       validate={validate}
+      onPrint={handlePrint}
       children={
         <>
           <MuiPKNumberField

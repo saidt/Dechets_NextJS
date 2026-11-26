@@ -43,7 +43,7 @@ export default function MuiDialog(props: MuiDialogProps) {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>{props.content}</DialogContentText>
+        <DialogContentText sx={{ m: 1 }}>{props.content}</DialogContentText>
         {props.children}
       </DialogContent>
     </Dialog>

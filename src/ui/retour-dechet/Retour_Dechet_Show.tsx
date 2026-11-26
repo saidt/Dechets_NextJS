@@ -35,14 +35,11 @@ import { put_Retour_Dechet } from "@/fetch/retour-dechet";
 import { useSessionStorageState } from "@/components/hooks/useSessionStorageState";
 import { RETOUR_DECHET_LIGNE_TABLE_NAME } from "@/types/retour-dechet-ligne";
 import { todayUtc } from "@/lib/date-utils";
+import { Retour_Dechet_Show_Print } from "./Retour_Dechet_Show_Print";
+import { useSession } from "next-auth/react";
 
 const TAB_STORAGE_KEY = "RETOUR_DECHET_TAB";
 
-// Declared at module level (not inside Retour_Dechet_Show) so each keeps the same
-// component identity across re-renders: a component declared inside another
-// one is a new type on every render, which remounts it (list reloaded, state
-// lost) and, on an API error, re-notifies in an endless loop.
-// Per-render values (filters) are passed through ReferenceField dataTableProps.
 const Client_Dechet_List_Modal = (props: CmListProps<Client_Dechet_Type>) => (
   <Client_Dechet_List {...props} isModalList={true} />
 );
@@ -306,6 +303,14 @@ const Retour_Dechet_Show = () => {
   // A stored tab the user can no longer see falls back to the first one
   const tab = ["1", canListLignes && "2"].includes(value) ? value : "1";
 
+  const { data: session } = useSession()
+  const user = session?.user
+  
+
+  const handlePrint = async(data: Retour_Dechet_Type) : Promise<void> => {
+    await Retour_Dechet_Show_Print(data, user?.id);
+  };
+
   return (
     <GenericShowPage<Retour_Dechet_Type>
       tableName={ RETOUR_DECHET_TABLE_NAME }
@@ -324,6 +329,7 @@ const Retour_Dechet_Show = () => {
       getDuplicateEntity={get_Duplicate_Retour_Dechet }
 			getModifiedWithId={getModifiedWithId}
       validate={validate}
+      onPrint={handlePrint}
       children={
         <>
           <TabContext value={tab}>

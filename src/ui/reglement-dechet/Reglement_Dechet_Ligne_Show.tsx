@@ -149,12 +149,11 @@ const Reglement_Dechet_Ligne_Show = () => {
     }
   };
 
-	
-    useEffect(() => {
+  useEffect(() => {
     const load_Reglement_Dechet = async () => {
       try {
         setLoading(true)
-        const response = await fetch_Reglement_Dechet(reglement_Dechet_Ligne.reglement_dechet_numero)
+        const response = await fetch_Reglement_Dechet(Number(id))
         const data : Reglement_Dechet_Type = await getResponseData(response, 'Reglement_Dechet_Ligne_Show load_Reglement_Dechet api error')
         //consoleInfo('Reglement_Dechet_Ligne_Show load_Reglement_Dechet data ', data)
         set_Reglement_Dechet(data);
@@ -168,7 +167,7 @@ const Reglement_Dechet_Ligne_Show = () => {
     };
 
     load_Reglement_Dechet();
-  }, []);
+  }, [id]);
   
   useEffect(() => {
     const load_Sortie_Dechet = async () => {
@@ -193,7 +192,7 @@ const Reglement_Dechet_Ligne_Show = () => {
     };
 
     load_Sortie_Dechet();
-  }, [reglement_Dechet_Ligne]);
+  }, [reglement_Dechet_Ligne.sortie_dechet_numero]);
   
 return (
     <GenericShowPage<Reglement_Dechet_Ligne_Type>
@@ -250,7 +249,7 @@ return (
             }}
             maxRows="md"
             DataTableComponent={ Client_Dechet_Reste_A_Payer_Modal }
-            dataTableProps={{ code: reglement_Dechet.client_code }}
+            dataTableProps={{ code: reglement_Dechet ? reglement_Dechet.client_code : null}}
             followUrl={`${ SORTIE_DECHET_URL}/${ reglement_Dechet_Ligne.sortie_dechet_numero }`}
             forceOpen={ sortie_dechet_numero_forceOpen }
           />

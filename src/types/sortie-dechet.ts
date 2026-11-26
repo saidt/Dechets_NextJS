@@ -54,12 +54,12 @@ export const sortie_Dechet_Columns: Column<Sortie_Dechet_Type>[] = [
   {
     accessor: "client_code" as keyof Sortie_Dechet_Type,
     header: "Client",
-    width: 100,
+    width: 120,
   },
   {
     accessor: "client_raison_sociale" as keyof Sortie_Dechet_Type,
     header: "Raison sociale",
-    width: 150,
+    width: 200,
   },
   {
     accessor: "date_piece" as keyof Sortie_Dechet_Type,
@@ -81,11 +81,11 @@ export const sortie_Dechet_Columns: Column<Sortie_Dechet_Type>[] = [
   {
     accessor: "valide" as keyof Sortie_Dechet_Type,
     header: "Validé",
-    width: 35,
+    width: 25,
   },
   {
     accessor: "controle" as keyof Sortie_Dechet_Type,
     header: "Contrôlé",
-    width: 35,
+    width: 25,
   },
 ];

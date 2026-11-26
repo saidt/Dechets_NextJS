@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Box, Typography } from "@mui/material";
 import { Column, Filter, filterValueText, isExactFilter, TableState } from "@/lib/types";
 
@@ -39,7 +38,7 @@ export function TableStatusBar<T extends Record<string, any>>({
   const describe = (f: Filter<T> | undefined): string[] =>
     (Object.keys(f ?? {}) as (keyof T)[])
       .filter((field) => filterValueText(f?.[field]).trim() !== "")
-      .map((field) => `${header(field)} ${isExactFilter(f?.[field]) ? "=" : ":"} « ${filterValueText(f?.[field])} »`);
+      .map((field) => `${header(field)} ${isExactFilter(f?.[field]) ? "=" : ":"} [ ${filterValueText(f?.[field])} ]`);
 
   const filters = describe(filter);
   const fixedFilters = describe(permanentFilter);
@@ -61,9 +60,9 @@ export function TableStatusBar<T extends Record<string, any>>({
         borderColor: "divider",
       }}
     >
-      <Item label="Tri" value={sort ? `${header(sort.field)} ${sort.direction === "asc" ? "↑ croissant" : "↓ décroissant"}` : "aucun"} />
-      <Item label="Filtres" value={filters.length > 0 ? filters.join(", ") : "aucun"} />
-      <Item label="Recherche" value={search !== "" ? `« ${search} »` : "aucune"} />
+      <Item label="Tri" value={sort ? `${header(sort.field)} ${sort.direction === "asc" ? "↑" : "↓"}` : ""} />
+      <Item label="Filtres" value={filters.length > 0 ? filters.join(", ") : ""} />
+      <Item label="Recherche" value={search !== "" ? `[ ${search} ]` : ""} />
       {fixedFilters.length > 0 && <Item label="Filtre fixe" value={fixedFilters.join(", ")} />}
     </Box>
   );

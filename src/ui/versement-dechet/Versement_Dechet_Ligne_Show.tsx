@@ -148,7 +148,6 @@ const Versement_Dechet_Ligne_Show = () => {
     }
   };
 
-
   useEffect(() => {
     const load_Reglement_Dechet = async () => {
       try {
@@ -172,7 +171,7 @@ const Versement_Dechet_Ligne_Show = () => {
     };
 
     load_Reglement_Dechet();
-  }, [versement_Dechet_Ligne]);
+  }, [versement_Dechet_Ligne.reglement_dechet_numero]);
 
   return (
     <GenericShowPage<Versement_Dechet_Ligne_Type>

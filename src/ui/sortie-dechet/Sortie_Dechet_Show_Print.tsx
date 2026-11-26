@@ -7,7 +7,7 @@ import { sortie_Dechet_Columns, SORTIE_DECHET_FETCH_URL, Sortie_Dechet_Type } fr
 import { SORTIE_DECHET_DETAIL_CHILD_URL, sortie_Dechet_Detail_Columns, Sortie_Dechet_Detail_Type } from '@/types/sortie-dechet-detail';
 import { SORTIE_DECHET_LIGNE_CHILD_URL, sortie_Dechet_Ligne_Columns, Sortie_Dechet_Ligne_Type } from '@/types/sortie-dechet-ligne';
 
-export async function sortie_Dechet_Show_Print(
+export async function Sortie_Dechet_Show_Print(
   data: Sortie_Dechet_Type,
   userId?: string,
 ): Promise<void> {

@@ -6,7 +6,6 @@
 *- Filtre on dates bug (sorties déchets par ex)
 - Ajouter un état de pointage des sorties déchets pour KarimJ
 - Add double click on empty reference fields to show list
-- Add primary key default sort
-- Add initial filter to list
+- Add "Supprimer contexte'
 
 Last commit to imacab: 3533ee2

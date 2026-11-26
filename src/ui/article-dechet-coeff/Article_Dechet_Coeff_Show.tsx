@@ -100,7 +100,6 @@ const Article_Dechet_Coeff_Show = () => {
     nature: { value: 'DECHET', exactFilter: true },
   };
 
-
   useEffect(() => {
       const load_Article = async () => {
         try {
@@ -124,7 +123,7 @@ const Article_Dechet_Coeff_Show = () => {
       };
   
       load_Article();
-    }, [article_Dechet_Coeff]);
+    }, [article_Dechet_Coeff.article_code]);
 
   return (
     <GenericShowPage<Article_Dechet_Coeff_Type>

@@ -10,6 +10,8 @@ import { Divider } from "@mui/material";
 import Parametre_Ligne_List from "./Parametre_Ligne_List";
 import useAuth from "@/app/context/UseAuth";
 import { PARAMETRE_LIGNE_TABLE_NAME } from "@/types/parametre-ligne";
+import { Parametre_Show_Print } from "./Parametre_Show_Print";
+import { useSession } from "next-auth/react";
 
 // Declared at module level (not inside Parametre_Show) so each keeps the same
 // component identity across re-renders: a component declared inside another
@@ -88,6 +90,13 @@ const Parametre_Show = () => {
   const { hasRole } = useAuth();
   const canListLignes = hasRole(PARAMETRE_LIGNE_TABLE_NAME + '.LIST');
 
+  const { data: session } = useSession()
+  const user = session?.user
+
+  const handlePrint = async(data: Parametre_Type) : Promise<void> => {
+    await Parametre_Show_Print(data, user?.id);
+  };
+
   return (
     <GenericShowPage<Parametre_Type>
       tableName={ PARAMETRE_TABLE_NAME }
@@ -104,6 +113,7 @@ const Parametre_Show = () => {
       getDuplicateEntity={getDuplicateParametre }
 			getModifiedWithId={getModifiedWithId}
       validate={validate}
+      onPrint={handlePrint}
       children={
         <>
           <MuiPKTextField

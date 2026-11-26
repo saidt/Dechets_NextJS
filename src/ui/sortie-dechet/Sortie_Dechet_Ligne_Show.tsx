@@ -171,7 +171,6 @@ const Sortie_Dechet_Ligne_Show = () => {
   const articlePermanentFilter: Filter<Article_Type> = {
     nature: { value: 'DECHET', exactFilter: true },
   };
-
   
 	const check_unite = async(value: string) : Promise<boolean> =>{
     try {
@@ -220,7 +219,6 @@ const Sortie_Dechet_Ligne_Show = () => {
     code: sortie_Dechet_Ligne.unite
   };
 	
-
   const check_pesee_numero = async(value: string) : Promise<boolean> =>{
     try {
       const response = await fetch_Pesee(value)
@@ -267,7 +265,6 @@ const Sortie_Dechet_Ligne_Show = () => {
   const pesee_fk_initialFilter: Filter<Pesee_Type> = {
     numero_1: sortie_Dechet_Ligne.pesee_numero ?? undefined
   };
-	
 	
   return (
     <GenericShowPage<Sortie_Dechet_Ligne_Type>

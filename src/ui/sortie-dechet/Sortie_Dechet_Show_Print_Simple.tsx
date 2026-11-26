@@ -14,7 +14,7 @@ import {
   Sortie_Dechet_Ligne_Type,
 } from "@/types/sortie-dechet-ligne";
 
-export async function sortie_Dechet_Show_Print_Simple(
+export async function Sortie_Dechet_Show_Print_Simple(
   data: Sortie_Dechet_Type,
 ): Promise<void> {
 
