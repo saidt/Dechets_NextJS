@@ -142,8 +142,9 @@ export const ReportList = <T extends Record<string, any>>({
       return (
         <View key={rowIndex} style={print_styles.tableRow} wrap={false}>
           {columns.map((column, index) => {
-            const { formatted, align } = formatValue(row[column.accessor], column.meta?.decimals);
-            const columnFormatted = column?.accessorFn ? column.accessorFn(row) : formatted
+            // Same as the screen (ReactTable): accessorFn's value is formatted too (dates, numbers)
+            const raw = column.accessorFn ? column.accessorFn(row) : row[column.accessor];
+            const { formatted: columnFormatted, align } = formatValue(raw, column.meta?.decimals);
             const columnAlign = column.meta?.align ? column.meta?.align : align
 
             return (
@@ -189,8 +190,9 @@ export const ReportDetail = <T extends Record<string, any>>({
 }: ReportDetailProps<T>) => (
   <ReportSection>
       {columns.map((column) => {
-        const { formatted } = formatValue(data[column.accessor], column.meta?.decimals);
-        const columnFormatted = column?.accessorFn ? column.accessorFn(data) : formatted
+        // Same as the screen: accessorFn's value is formatted too (dates, numbers)
+        const raw = column.accessorFn ? column.accessorFn(data) : data[column.accessor];
+        const { formatted: columnFormatted } = formatValue(raw, column.meta?.decimals);
 
         return (
           <View key={String(column.accessor)} style={{ flexDirection: 'row', marginBottom: 2 }}>
