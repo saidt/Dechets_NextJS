@@ -9,7 +9,7 @@ export const PESEE_URL : string = "/protected/pesee"
 export const PESEE_MODEL_NAME : string = 'Pesee'
 export const PESEE_LIST_TITLE : string = 'Pesées'
 export const PESEE_SHOW_TITLE : string = 'Pesée'
-export const PESEE_DEFAULT_SORT : Sort<Pesee_Type> =  { field: 'numero_1', direction: 'asc' }
+export const PESEE_DEFAULT_SORT : Sort<Pesee_Type> =  { field: 'date_1', direction: 'asc' }
 
 export type Pesee_Type = {
   numero_1: string,
