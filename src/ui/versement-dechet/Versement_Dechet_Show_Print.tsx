@@ -8,8 +8,8 @@ import { VERSEMENT_DECHET_LIGNE_CHILD_URL, versement_Dechet_Ligne_Columns, Verse
 
 export async function Versement_Dechet_Show_Print(
   data: Versement_Dechet_Type,
+  hasLigneRole: boolean,
   userId?: string,
-  hasLigneRole?: boolean,
 ): Promise<void> {
 
   const title = 'Versement déchets'

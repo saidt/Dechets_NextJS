@@ -251,7 +251,7 @@ const Reglement_Dechet_Show = () => {
   const hasLigneRole = hasRole(REGLEMENT_DECHET_LIGNE_TABLE_NAME + '.LIST')
 
   const handlePrint = async(data: Reglement_Dechet_Type) : Promise<void> => {
-    await Reglement_Dechet_Show_Print(data, user?.id, hasLigneRole);
+    await Reglement_Dechet_Show_Print(data, hasLigneRole, user?.id);
   };
 
   return (

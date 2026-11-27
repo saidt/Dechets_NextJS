@@ -8,8 +8,8 @@ import { RETOUR_DECHET_LIGNE_CHILD_URL, retour_Dechet_Ligne_Columns, Retour_Dech
 
 export async function Retour_Dechet_Show_Print(
   data: Retour_Dechet_Type,
+  hasLigneRole: boolean,
   userId?: string,
-  hasLigneRole?: boolean,
 ): Promise<void> {
 
   const title = ' Retour déchets'

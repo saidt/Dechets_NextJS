@@ -349,7 +349,7 @@ const Sortie_Dechet_Show = () => {
   const hasDetailRole = hasRole(SORTIE_DECHET_DETAIL_TABLE_NAME + '.LIST')
 
   const handlePrint = async(data: Sortie_Dechet_Type) : Promise<void> => {
-    await Sortie_Dechet_Show_Print(data, user?.id, hasLigneRole, hasDetailRole);
+    await Sortie_Dechet_Show_Print(data, hasLigneRole, hasDetailRole, user?.id);
   };
 
   // Child tabs are shown only with the child list role (<TABLE>.LIST)

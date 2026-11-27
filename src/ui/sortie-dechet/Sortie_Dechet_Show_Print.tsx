@@ -9,9 +9,9 @@ import { SORTIE_DECHET_LIGNE_CHILD_URL, sortie_Dechet_Ligne_Columns, Sortie_Dech
 
 export async function Sortie_Dechet_Show_Print(
   data: Sortie_Dechet_Type,
+  hasLigneRole: boolean,
+  hasDetailRole: boolean,
   userId?: string,
-  hasLigneRole?: boolean,
-  hasDetailRole?: boolean,
 ): Promise<void> {
 
   const title = 'Sortie déchets'

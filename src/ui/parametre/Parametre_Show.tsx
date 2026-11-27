@@ -95,7 +95,7 @@ const Parametre_Show = () => {
   const hasLigneRole = hasRole(PARAMETRE_LIGNE_TABLE_NAME + '.LIST')
 
   const handlePrint = async(data: Parametre_Type) : Promise<void> => {
-    await Parametre_Show_Print(data, user?.id, hasLigneRole);
+    await Parametre_Show_Print(data, hasLigneRole, user?.id);
   };
 
   return (

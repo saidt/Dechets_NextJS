@@ -310,7 +310,7 @@ const Retour_Dechet_Show = () => {
   const hasLigneRole = hasRole(RETOUR_DECHET_LIGNE_TABLE_NAME + '.LIST')
 
   const handlePrint = async(data: Retour_Dechet_Type) : Promise<void> => {
-    await Retour_Dechet_Show_Print(data, user?.id, hasLigneRole);
+    await Retour_Dechet_Show_Print(data, hasLigneRole, user?.id);
   };
 
   return (

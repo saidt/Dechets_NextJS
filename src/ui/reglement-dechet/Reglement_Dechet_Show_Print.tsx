@@ -8,8 +8,8 @@ import { REGLEMENT_DECHET_LIGNE_CHILD_URL, reglement_Dechet_Ligne_Columns, Regle
 
 export async function Reglement_Dechet_Show_Print(
   data: Reglement_Dechet_Type,
+  hasLigneRole: boolean,
   userId?: string,
-  hasLigneRole?: boolean,
 ): Promise<void> {
 
   const title = 'Réglement déchets'

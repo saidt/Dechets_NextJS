@@ -7,8 +7,9 @@ import { parametre_Columns, PARAMETRE_FETCH_URL, Parametre_Type } from '@/types/
 import { PARAMETRE_LIGNE_CHILD_URL, parametre_Ligne_Columns, Parametre_Ligne_Type } from '@/types/parametre-ligne';
 
 export async function Parametre_Show_Print(
-  data: Parametre_Type, userId?: string,
-  hasLigneRole?: boolean,
+  data: Parametre_Type, 
+  hasLigneRole: boolean,
+  userId?: string,
 ): Promise<void> {
 
   const title = 'Paramètres'

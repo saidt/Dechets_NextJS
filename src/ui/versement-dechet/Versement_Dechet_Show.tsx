@@ -193,7 +193,7 @@ const Versement_Dechet_Show = () => {
   const hasLigneRole = hasRole(VERSEMENT_DECHET_LIGNE_TABLE_NAME + '.LIST')
 
   const handlePrint = async(data: Versement_Dechet_Type) : Promise<void> => {
-    await Versement_Dechet_Show_Print(data, user?.id, hasLigneRole);
+    await Versement_Dechet_Show_Print(data, hasLigneRole, user?.id);
   };  
 
   return (
