@@ -28,9 +28,13 @@ export async function Sortie_Dechet_Show_Print_Simple(
     filter: { sortie_dechet_numero: String(data.numero) },
     quickSearch: ''
   }
-  const lignesResponse = await fetchAllData<Sortie_Dechet_Ligne_Type>(`${SORTIE_DECHET_FETCH_URL}/${data.numero}/${SORTIE_DECHET_LIGNE_CHILD_URL}`, lignesTableState);
-  const lignesJson = await lignesResponse.json();
-  const lignesData = lignesJson.data;    
+  // Child lines are only loaded with the child role (the API would refuse them anyway)
+  let lignesData: Sortie_Dechet_Ligne_Type[] = [];
+  if (hasLigneRole) {
+    const lignesResponse = await fetchAllData<Sortie_Dechet_Ligne_Type>(`${SORTIE_DECHET_FETCH_URL}/${data.numero}/${SORTIE_DECHET_LIGNE_CHILD_URL}`, lignesTableState);
+    const lignesJson = await lignesResponse.json();
+    lignesData = lignesJson.data;
+  }
 
   const sortieAccessors = ['numero', 'date_piece'] as (keyof Sortie_Dechet_Type)[];
 

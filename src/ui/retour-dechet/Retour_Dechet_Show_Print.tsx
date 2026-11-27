@@ -20,9 +20,13 @@ export async function Retour_Dechet_Show_Print(
     filter: { retour_dechet_numero: String(data.numero) },
     quickSearch: ''
   }
-const retour_Dechet_Ligne_Response = await fetchAllData<Retour_Dechet_Ligne_Type>(`${ RETOUR_DECHET_FETCH_URL}/${data.numero}/${ RETOUR_DECHET_LIGNE_CHILD_URL}`, retour_Dechet_Ligne_TableState); 
-  const retour_Dechet_Ligne_Json = await retour_Dechet_Ligne_Response.json();
-  const retour_Dechet_Ligne_Data = retour_Dechet_Ligne_Json.data;    
+  // Child lines are only loaded with the child role (the API would refuse them anyway)
+  let retour_Dechet_Ligne_Data: Retour_Dechet_Ligne_Type[] = [];
+  if (hasLigneRole) {
+    const retour_Dechet_Ligne_Response = await fetchAllData<Retour_Dechet_Ligne_Type>(`${ RETOUR_DECHET_FETCH_URL}/${data.numero}/${ RETOUR_DECHET_LIGNE_CHILD_URL}`, retour_Dechet_Ligne_TableState);
+    const retour_Dechet_Ligne_Json = await retour_Dechet_Ligne_Response.json();
+    retour_Dechet_Ligne_Data = retour_Dechet_Ligne_Json.data;
+  }
 
   const retour_Dechet_Ligne_Print_Columns = retour_Dechet_Ligne_Columns.filter(
     col => col.meta.printed

@@ -20,9 +20,13 @@ export async function Reglement_Dechet_Show_Print(
     filter: { reglement_dechet_numero: String(data.numero) },
     quickSearch: ''
   }
-const reglement_Dechet_Ligne_Response = await fetchAllData<Reglement_Dechet_Ligne_Type>(`${ REGLEMENT_DECHET_FETCH_URL}/${data.numero}/${ REGLEMENT_DECHET_LIGNE_CHILD_URL}`, reglement_Dechet_Ligne_TableState);
-  const reglement_Dechet_Ligne_Json = await reglement_Dechet_Ligne_Response.json();
-  const reglement_Dechet_Ligne_Data = reglement_Dechet_Ligne_Json.data;    
+  // Child lines are only loaded with the child role (the API would refuse them anyway)
+  let reglement_Dechet_Ligne_Data: Reglement_Dechet_Ligne_Type[] = [];
+  if (hasLigneRole) {
+    const reglement_Dechet_Ligne_Response = await fetchAllData<Reglement_Dechet_Ligne_Type>(`${ REGLEMENT_DECHET_FETCH_URL}/${data.numero}/${ REGLEMENT_DECHET_LIGNE_CHILD_URL}`, reglement_Dechet_Ligne_TableState);
+    const reglement_Dechet_Ligne_Json = await reglement_Dechet_Ligne_Response.json();
+    reglement_Dechet_Ligne_Data = reglement_Dechet_Ligne_Json.data;
+  }
 
   const reglement_Dechet_Ligne_Print_Columns = reglement_Dechet_Ligne_Columns.filter(
     col => col.meta.printed

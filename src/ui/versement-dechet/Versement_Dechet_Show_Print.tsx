@@ -21,9 +21,13 @@ export async function Versement_Dechet_Show_Print(
     quickSearch: ''
   }
 
-  const versement_Dechet_Ligne_Response = await fetchAllData<Versement_Dechet_Ligne_Type>(`${VERSEMENT_DECHET_FETCH_URL}/${data.numero}/${VERSEMENT_DECHET_LIGNE_CHILD_URL}`, versement_Dechet_Ligne_TableState);
-  const versement_Dechet_Ligne_Json = await versement_Dechet_Ligne_Response.json();
-  const versement_Dechet_Ligne_Data = versement_Dechet_Ligne_Json.data;    
+  // Child lines are only loaded with the child role (the API would refuse them anyway)
+  let versement_Dechet_Ligne_Data: Versement_Dechet_Ligne_Type[] = [];
+  if (hasLigneRole) {
+    const versement_Dechet_Ligne_Response = await fetchAllData<Versement_Dechet_Ligne_Type>(`${VERSEMENT_DECHET_FETCH_URL}/${data.numero}/${VERSEMENT_DECHET_LIGNE_CHILD_URL}`, versement_Dechet_Ligne_TableState);
+    const versement_Dechet_Ligne_Json = await versement_Dechet_Ligne_Response.json();
+    versement_Dechet_Ligne_Data = versement_Dechet_Ligne_Json.data;
+  }
 
   const versement_Dechet_Ligne_Print_Columns = versement_Dechet_Ligne_Columns.filter(
     col => col.meta.printed

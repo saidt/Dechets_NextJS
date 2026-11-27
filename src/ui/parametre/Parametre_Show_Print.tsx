@@ -19,9 +19,13 @@ export async function Parametre_Show_Print(
     filter: { parametre_rubrique: String(data.rubrique) },
     quickSearch: ''
   }
-const parametre_Ligne_Response = await fetchAllData<Parametre_Ligne_Type>(`${ PARAMETRE_FETCH_URL}/${data.rubrique}/${ PARAMETRE_LIGNE_CHILD_URL}`, parametre_Ligne_TableState); 
-  const parametre_Ligne_Json = await parametre_Ligne_Response.json();
-  const parametre_Ligne_Data = parametre_Ligne_Json.data;    
+  // Child lines are only loaded with the child role (the API would refuse them anyway)
+  let parametre_Ligne_Data: Parametre_Ligne_Type[] = [];
+  if (hasLigneRole) {
+    const parametre_Ligne_Response = await fetchAllData<Parametre_Ligne_Type>(`${ PARAMETRE_FETCH_URL}/${data.rubrique}/${ PARAMETRE_LIGNE_CHILD_URL}`, parametre_Ligne_TableState);
+    const parametre_Ligne_Json = await parametre_Ligne_Response.json();
+    parametre_Ligne_Data = parametre_Ligne_Json.data;
+  }
 
   const parametre_Ligne_Print_Columns = parametre_Ligne_Columns.filter(
     col => col.meta.printed

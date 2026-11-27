@@ -23,9 +23,13 @@ export async function Sortie_Dechet_Show_Print(
     filter: { sortie_dechet_numero: String(data.numero) },
     quickSearch: ''
   }
-  const lignesResponse = await fetchAllData<Sortie_Dechet_Ligne_Type>(`${SORTIE_DECHET_FETCH_URL}/${data.numero}/${SORTIE_DECHET_LIGNE_CHILD_URL}`, lignesTableState);
-  const lignesJson = await lignesResponse.json();
-  const lignesData = lignesJson.data;    
+  // Child lines are only loaded with the child role (the API would refuse them anyway)
+  let lignesData: Sortie_Dechet_Ligne_Type[] = [];
+  if (hasLigneRole) {
+    const lignesResponse = await fetchAllData<Sortie_Dechet_Ligne_Type>(`${SORTIE_DECHET_FETCH_URL}/${data.numero}/${SORTIE_DECHET_LIGNE_CHILD_URL}`, lignesTableState);
+    const lignesJson = await lignesResponse.json();
+    lignesData = lignesJson.data;
+  }
 
   const detailsTableState: TableState<Sortie_Dechet_Detail_Type> = {
     page: 0,
@@ -34,9 +38,13 @@ export async function Sortie_Dechet_Show_Print(
     filter: { sortie_dechet_numero: String(data.numero) },
     quickSearch: ''
   }
-  const detailsResponse = await fetchAllData<Sortie_Dechet_Detail_Type>(`${SORTIE_DECHET_FETCH_URL}/${data.numero}/${SORTIE_DECHET_DETAIL_CHILD_URL}`, detailsTableState);
-  const detailsJson = await detailsResponse.json();
-  const detailsData = detailsJson.data;    
+  // Child lines are only loaded with the child role (the API would refuse them anyway)
+  let detailsData: Sortie_Dechet_Detail_Type[] = [];
+  if (hasDetailRole) {
+    const detailsResponse = await fetchAllData<Sortie_Dechet_Detail_Type>(`${SORTIE_DECHET_FETCH_URL}/${data.numero}/${SORTIE_DECHET_DETAIL_CHILD_URL}`, detailsTableState);
+    const detailsJson = await detailsResponse.json();
+    detailsData = detailsJson.data;
+  }
 
   const lignesColumns = sortie_Dechet_Ligne_Columns.filter(
     col => col.meta.printed
