@@ -77,12 +77,14 @@ export function GenericMemListPage<T extends Record<string, any>>({
   const pathname = usePathname();
   const sessionUser = session?.user;
 
-  // This tab's last state of the list (sessionStorage), else the defaults.
-  // Pick-lists (isModalList) always start from the defaults.
-  const [tableState, setTableState] = useState<TableState<T>>(() =>
-    (sessionUser && !isModalList && loadSessionTableState<T>(sessionUser.id, title, pathname))
-      || createInitialTableState(columns, initialPageSize)
-  );
+  // This tab's last state of the list (sessionStorage), else the defaults; always on
+  // page 1 (the data is reloaded each time). Pick-lists always start from the defaults.
+  const [tableState, setTableState] = useState<TableState<T>>(() => {
+    const sessionState = sessionUser && !isModalList
+      ? loadSessionTableState<T>(sessionUser.id, title, pathname)
+      : null;
+    return sessionState ? { ...sessionState, page: 0 } : createInitialTableState(columns, initialPageSize);
+  });
 
   // Every change of the list's state is kept for this browser tab (not for pick-lists)
   useEffect(() => {
