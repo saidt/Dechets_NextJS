@@ -144,3 +144,21 @@ export const loadSessionTableState = <T extends Record<string, any>>(
     return null;
   }
 };
+
+/**
+ * Removes every list state kept for this browser tab (sessionStorage), so a new login
+ * starts from the saved contexts (localStorage) or the lists' defaults. The saved
+ * contexts themselves are kept ("Supprimer contexte" removes one).
+ */
+export const clearSessionTableStates = (): void => {
+  if (typeof window === 'undefined') return;
+  try {
+    const suffix = `-${USER_SETTINGS_KEY}`;
+    for (const key of Object.keys(sessionStorage)) {
+      if (key.endsWith(suffix)) sessionStorage.removeItem(key);
+    }
+  }
+  catch {
+    // storage blocked: nothing to clear
+  }
+};

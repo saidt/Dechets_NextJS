@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { credentials_Schema, Credentials_Form_Data, Credentials } from '../../types/credentials';
 import { signIn } from 'next-auth/react';
+import { clearSessionTableStates } from '@/services/userSettingsService';
 import LoginIcon from '@mui/icons-material/Login';
 import ErrorMsg from '@/components/ErrorMsg';
 //import { consoleError, consoleInfo } from '@/lib/clientLog';
@@ -56,6 +57,8 @@ export default function LoginForm({
         setError(result.error,)
       } 
       else if (result?.ok) {
+        // A new session: lists start again from their saved context or their defaults
+        clearSessionTableStates();
         // Full page load (not router.push): browsers' password managers (Firefox in
         // particular) offer to save the credentials when the page is left after a login
         // form submission; a client-side route change is not detected.
