@@ -68,8 +68,16 @@ export async function delete_Session(sessionId: string): Promise<string | null> 
 
 /** Deletes all sessions of a user except the given one ("log out everywhere else"). Returns how many. */
 export async function delete_Other_User_Sessions(userId: string, currentSessionId: string): Promise<number> {
-  const result = await prisma.session.deleteMany({
-    where: { userId, NOT: { sessionToken: hashSessionToken(currentSessionId) } },
-  });
+  const others = { userId, NOT: { sessionToken: hashSessionToken(currentSessionId) } };
+  // Count only the sessions that were still active (the profile lists those); expired
+  // rows, kept until the next login's clean-up, are deleted too but not counted
+  const active = await prisma.session.count({ where: { ...others, expires: { gt: new Date() } } });
+  await prisma.session.deleteMany({ where: others });
+  return active;
+}
+
+/** Deletes all sessions of a user, the current one included (password change). Returns how many. */
+export async function delete_All_User_Sessions(userId: string): Promise<number> {
+  const result = await prisma.session.deleteMany({ where: { userId } });
   return result.count;
 }

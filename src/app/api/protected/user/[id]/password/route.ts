@@ -5,7 +5,7 @@ import { getErrorMessage } from "@/lib/errorMessage";
 import { getValidSession, isSameUser } from "@/lib/auth-lib";
 import { hashPassword, verifyPassword } from "@/lib/crypt";
 import { read_User_Password_Hash, update_User_Password_Hash } from "@/app/db-data/user";
-import { delete_Other_User_Sessions } from "@/app/db-data/user-session";
+import { delete_All_User_Sessions, delete_Other_User_Sessions } from "@/app/db-data/user-session";
 import { createLog } from "@/app/db-data/log";
 import { LOGIN_FAILED_MESSAGE, loginLockedUntil } from "@/app/db-data/auth";
 import { PASSWORD_CHANGED_MESSAGE, password_Change_Schema } from "@/types/password-change";
@@ -15,7 +15,8 @@ import { PASSWORD_CHANGED_MESSAGE, password_Change_Schema } from "@/types/passwo
 // - Only for the session's own user (403 otherwise).
 // - A wrong current password is written to LOG as a failed login, so it counts toward the
 //   login lockout: a stolen session can't be used to guess the password.
-// - After the change, the user's other sessions are ended.
+// - After the change, all the user's sessions are ended, the current one included:
+//   the browser signs out and logs in again with the new password.
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -64,6 +65,7 @@ export async function POST(
 
     await update_User_Password_Hash(userId, await hashPassword(new_password));
     const otherSessionsEnded = await delete_Other_User_Sessions(userId, session.sessionUuid);
+    await delete_All_User_Sessions(userId); // the current session too
     await createLog({
       id: 0, date_oper: new Date(), user_id: userId, severite: 'info',
       message: PASSWORD_CHANGED_MESSAGE, contexte: JSON.stringify({ otherSessionsEnded }),

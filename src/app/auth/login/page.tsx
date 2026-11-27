@@ -29,6 +29,8 @@ export default function Login() {
         return "Session expired !";
       case "SessionClientChanged":
         return "Session closed: used from another browser or network !";
+      case "PasswordChanged":
+        return "Mot de passe changé : reconnectez-vous avec le nouveau mot de passe.";
       default:
         return null;
     }

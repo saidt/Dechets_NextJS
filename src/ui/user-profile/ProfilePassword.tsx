@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Box, IconButton, InputAdornment, Stack, Typography } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { BasicTextField } from "@/components/form-show/Inputs";
 import { TipButton } from "@/components/ui/ActionButtons";
 import SaveIcon from "@mui/icons-material/Save";
@@ -102,16 +102,11 @@ const ProfilePassword = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(parsed.data),
       });
-      const data = await getResponseData(response, "Changement du mot de passe");
-      setValues(EMPTY);
-      setErrors({});
-      const ended = Number(data?.otherSessionsEnded ?? 0);
-      addNotification(
-        ended > 0
-          ? `Mot de passe changé. ${ended} autre(s) session(s) terminée(s).`
-          : "Mot de passe changé.",
-        "success"
-      );
+      await getResponseData(response, "Changement du mot de passe");
+      // All the user's sessions are ended on the server: sign out (clears the cookie)
+      // and log in again with the new password
+      await signOut({ callbackUrl: "/auth/login?error=PasswordChanged", redirect: true });
+      return;
     }
     catch (err) {
       handleError("Changement du mot de passe", err, addNotification);
@@ -135,7 +130,7 @@ const ProfilePassword = () => {
         <PasswordField name="confirm_password" label="Confirmer le nouveau mot de passe" value={values.confirm_password}
           error={errors.confirm_password} autoComplete="new-password" onChange={handleChange} />
         <Typography variant="body2" color="text.secondary" sx={{ px: 1 }}>
-          Au moins 6 caractères, différent de l&apos;actuel. Vos autres sessions seront terminées.
+          Au moins 6 caractères, différent de l&apos;actuel. Toutes vos sessions seront terminées : vous vous reconnecterez avec le nouveau mot de passe.
         </Typography>
         <Box sx={{ px: 1, pt: 1 }}>
           <TipButton tip="Changer le mot de passe" type="submit" color="success" startIcon={<SaveIcon />} disabled={saving}>
