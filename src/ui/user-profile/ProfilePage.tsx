@@ -3,6 +3,7 @@
 import { Grid, TextField, Toolbar } from "@mui/material";
 import ProfileRoles from "./ProfileRoles";
 import ProfileSessions from "./ProfileSessions";
+import ProfilePassword from "./ProfilePassword";
 import BlankCard from "../../components/shared/BlankCard";
 import { useEffect, useState } from "react";
 import { formatDateTime } from "@/lib/date-utils";
@@ -175,6 +176,7 @@ const ProfilePage = () => {
           <Tab key={"1"} label='Utilisateur' value={"1"} />
           <Tab key={"2"} label='Rôles' value={"2"} />
           <Tab key={"3"} label='Sessions' value={"3"} />
+          <Tab key={"4"} label='Mot de passe' value={"4"} />
         </TabList>
         <Divider />
         <TabPanel key={"1"} value={"1"}>
@@ -185,6 +187,9 @@ const ProfilePage = () => {
         </TabPanel>
         <TabPanel key={"3"} value={"3"}>
           <ProfileSessions />
+        </TabPanel>
+        <TabPanel key={"4"} value={"4"}>
+          <ProfilePassword />
         </TabPanel>
       </TabContext>
     </TitleCard>
