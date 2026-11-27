@@ -92,9 +92,10 @@ const Parametre_Show = () => {
 
   const { data: session } = useSession()
   const user = session?.user
+  const hasLigneRole = hasRole(PARAMETRE_LIGNE_TABLE_NAME + '.LIST')
 
   const handlePrint = async(data: Parametre_Type) : Promise<void> => {
-    await Parametre_Show_Print(data, user?.id, hasRole);
+    await Parametre_Show_Print(data, user?.id, hasLigneRole);
   };
 
   return (

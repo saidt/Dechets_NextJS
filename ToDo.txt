@@ -7,5 +7,6 @@
 - Ajouter un état de pointage des sorties déchets pour KarimJ
 - Add "Supprimer contexte'
 - Save list state through session
+- Print childs only if list role granted
 
 Last commit to imacab: 019a1b4 (019a1b4bd5e4b542bb0d3f1da9f02d8f22b417b0)
