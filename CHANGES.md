@@ -113,7 +113,6 @@ About 40 commits, 105 files changed.
 ### Telemetry (SaidT)
 - **OpenTelemetry** for the Node server (`src/lib/telemetry`): request traces and the `http.server.request.duration` metric per route, SQL Server calls (tedious), Node runtime metrics, a health gauge, and the user id on request spans (`checkRole` registers it). Nothing is exported without `OTEL_EXPORTER_OTLP_ENDPOINT`.
 - **JSON logs:** with `LOG_FORMAT=json`, the server log (`logInfo`, `logWarn`, `logError`) writes one JSON line per entry on stdout, with the error in `err`, instead of the log files.
-- **To check:** `src/lib/telemetry/node.ts` says it is loaded by `instrumentation.ts`, but there is no `instrumentation.ts` in the repo and nothing imports `node.ts`, so traces and metrics don't start yet. The JSON logs and the user id work.
 
 ---
 
