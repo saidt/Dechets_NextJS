@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Column, Filter, Sort, TableState } from "@/lib/types";
 import ToolbarList from "./ToolBarList";
 import { useAppContext } from "@/app/context/AppContext";
-import { deleteTableState, loadLastViewedId, loadSessionTableState, loadTableState, saveSessionTableState, saveTableState } from "@/services/userSettingsService";
+import { deleteSessionTableState, deleteTableState, loadLastViewedId, loadSessionTableState, loadTableState, saveSessionTableState, saveTableState } from "@/services/userSettingsService";
 import { ReactTable } from "./ReactTable";
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -180,7 +180,9 @@ export function GenericListPage<T extends Record<string, any>>({
 
   const handleDeleteContext = () => {
     if (user) {
+      // The saved context (localStorage) and this tab's state of the list (sessionStorage)
       deleteTableState(user.id, tableName);
+      deleteSessionTableState(user.id, tableName, pathname);
       addNotification("Contexte supprimé", "success");
     }
   };  
