@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Column, Filter, Sort, TableState } from "@/lib/types";
 import ToolbarList from "./ToolBarList";
 import { useAppContext } from "@/app/context/AppContext";
-import { deleteTableState, loadLastViewedId, loadTableState, saveTableState } from "@/services/userSettingsService";
+import { deleteTableState, loadLastViewedId, loadSessionTableState, loadTableState, saveSessionTableState, saveTableState } from "@/services/userSettingsService";
 import { ReactTable } from "./ReactTable";
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -88,7 +88,11 @@ export function GenericListPage<T extends Record<string, any>>({
       quickSearch: "",
     };
 
-    if (user) {
+    // Pick-lists (isModalList) always start from their caller's initialFilter
+    if (user && !isModalList) {
+      // 1. This tab's last state of the list (sessionStorage), 2. the saved context (localStorage)
+      const sessionState = loadSessionTableState<T>(user.id, tableName, pathname);
+      if (sessionState) return sessionState;
       const savedState = loadTableState<T>(user.id, tableName);
       if (savedState) return savedState;
     }
@@ -113,6 +117,13 @@ export function GenericListPage<T extends Record<string, any>>({
       quickSearch: "",
     };
   });
+
+  // Every change of the list's state is kept for this browser tab (not for pick-lists)
+  useEffect(() => {
+    if (user && !isModalList) {
+      saveSessionTableState(user.id, tableName, pathname, tableState);
+    }
+  }, [user, isModalList, tableName, pathname, tableState]);
 
   useEffect(() => {
     if (status !== "loading" && !session) {

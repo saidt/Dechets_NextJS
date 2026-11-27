@@ -105,3 +105,42 @@ export const loadLastViewedId = (
   const settings = getSettings(userId, tableName);
   return settings.lastViewedId || null;
 };
+// ---- List state for the browser tab (sessionStorage) ----
+// Saved after every change of a list's state (page, size, sort, filters, quick
+// search) and read first when the list is displayed again; the saved context
+// (localStorage, "Save / Read context") is only the fallback. Keyed by user,
+// table and page path, so a child list keeps one state per parent record.
+
+const sessionTableKey = (userId: string, tableName: string, path: string) =>
+  `${userId}-${tableName}-${path}-${USER_SETTINGS_KEY}`;
+
+export const saveSessionTableState = <T extends Record<string, any>>(
+  userId: string,
+  tableName: string,
+  path: string,
+  state: TableState<T>
+): void => {
+  if (typeof window === 'undefined') return; // server render: no sessionStorage
+  try {
+    const cleanState = { ...state, filter: removeEmptyValues(state.filter) };
+    sessionStorage.setItem(sessionTableKey(userId, tableName, path), JSON.stringify(cleanState));
+  }
+  catch {
+    // storage full or blocked: the list still works, it just won't be restored
+  }
+};
+
+export const loadSessionTableState = <T extends Record<string, any>>(
+  userId: string,
+  tableName: string,
+  path: string
+): TableState<T> | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const saved = sessionStorage.getItem(sessionTableKey(userId, tableName, path));
+    return saved ? JSON.parse(saved) : null;
+  }
+  catch {
+    return null;
+  }
+};

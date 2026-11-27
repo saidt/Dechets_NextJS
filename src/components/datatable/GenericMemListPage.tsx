@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { loadSessionTableState, saveSessionTableState } from "@/services/userSettingsService";
 import { Box } from "@mui/material";
 import { Column, Filter, Sort, TableState } from "@/lib/types";
 import { useAppContext } from "@/app/context/AppContext";
@@ -9,7 +10,7 @@ import ToolbarMemList from "./ToolBarMemList";
 import { applyFilter } from "@/lib/localData";
 import { ReportLayout, ReportList } from "../pdf/ReportComponent";
 import { downloadPdf } from "../pdf/pdfService";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { clientError, handleError } from "@/lib/error";
 import { useSession } from "next-auth/react";
 import Loading from "../ui/Loading";
@@ -72,11 +73,24 @@ export function GenericMemListPage<T extends Record<string, any>>({
     };
   }
 
+  const { data: session, status } = useSession()
+  const pathname = usePathname();
+  const sessionUser = session?.user;
+
+  // This tab's last state of the list (sessionStorage), else the defaults.
+  // Pick-lists (isModalList) always start from the defaults.
   const [tableState, setTableState] = useState<TableState<T>>(() =>
-    createInitialTableState(columns, initialPageSize)
+    (sessionUser && !isModalList && loadSessionTableState<T>(sessionUser.id, title, pathname))
+      || createInitialTableState(columns, initialPageSize)
   );
 
-  const { data: session, status } = useSession()
+  // Every change of the list's state is kept for this browser tab (not for pick-lists)
+  useEffect(() => {
+    if (sessionUser && !isModalList) {
+      saveSessionTableState(sessionUser.id, title, pathname, tableState);
+    }
+  }, [sessionUser, isModalList, title, pathname, tableState]);
+
   const { addNotification } = useAppContext();
   const { authLoading } = useAuth();
   const router =  useRouter()
