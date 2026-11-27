@@ -1,7 +1,6 @@
 import * as XLSX from "xlsx";
 import { Column } from "./types";
 import { formatDate, isDateValue } from "./date-utils";
-import { isNumber } from "./number-utils";
 import { formatNumber } from "@/lib/number-utils";
 
 export function exportToExcel<T extends Record<string, any>>(
@@ -26,7 +25,8 @@ export function exportToExcel<T extends Record<string, any>>(
       if (isDateValue(value)) {
         excelRow[col.header] = formatDate(new Date(value));
       } 
-      else if (isNumber(String(value))) {
+      // By the variable's type: a string made of digits stays text in Excel
+      else if (typeof value === "number") {
         if (col.meta?.decimals) {
           excelRow[col.header] = formatNumber(Number(value), col.meta?.decimals);
         }

@@ -50,17 +50,13 @@ export const formatValue = (
     };
   }
 
-  const num = Number(value);
-  const isNumber =
-    type === "number" ||
-    (!isNaN(num) &&
-      value !== null &&
-      value !== "" &&
-      typeof value !== "boolean");
+  // By the variable's type, not its content: a string made of digits (a code such as
+  // "00123") stays a string. SQL decimals arrive as numbers (see src/lib/prisma.ts).
+  const isNumber = type === "number" || typeof value === "number" || typeof value === "bigint";
 
   if (isNumber) {
     return {
-      formatted: formatNumber(num, decimals ?? 0),
+      formatted: formatNumber(Number(value), decimals ?? 0),
       align: "right",
     };
   }

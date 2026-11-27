@@ -36,7 +36,7 @@ function compare(a: number | string, b: number | string, op: FilterOperator): bo
 /**
  * One column filter on one row, with the operators of server lists (filterOperator.ts):
  * - no operator: the displayed text contains the value (or matches it as "like" with %);
- * - with an operator: dates (DD/MM/YYYY) are compared by day, numbers as numbers, other
+ * - with an operator: dates (DD/MM/YYYY) are compared by day, numbers (typeof number) as numbers, other
  *   values on the displayed text (case-insensitive). Empty values never match an
  *   operator, as in SQL.
  */
@@ -54,8 +54,8 @@ function matchesFilter(raw: unknown, shown: string, { op, value }: ParsedFilter)
     return compare(rowDay, wanted.getFullYear() * 10000 + (wanted.getMonth() + 1) * 100 + wanted.getDate(), op);
   }
 
-  // Numbers, also as text (stored procedures send decimals as strings, e.g. "12.50")
-  const num = typeof raw === 'number' ? raw : typeof raw === 'string' && /^-?\d+(\.\d+)?$/.test(raw.trim()) ? Number(raw) : NaN;
+  // Numbers by the variable's type: a string made of digits is compared as text
+  const num = typeof raw === 'number' ? raw : NaN;
   const wantedNum = parseFloat(value);
   if (!isNaN(num) && !isNaN(wantedNum)) {
     return compare(num, wantedNum, op);
