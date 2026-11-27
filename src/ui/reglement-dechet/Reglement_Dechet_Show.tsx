@@ -248,8 +248,10 @@ const Reglement_Dechet_Show = () => {
   const { data: session } = useSession()
   const user = session?.user
 
+  const hasLigneRole = hasRole(REGLEMENT_DECHET_LIGNE_TABLE_NAME + '.LIST')
+
   const handlePrint = async(data: Reglement_Dechet_Type) : Promise<void> => {
-    await Reglement_Dechet_Show_Print(data, user?.id, hasRole);
+    await Reglement_Dechet_Show_Print(data, user?.id, hasLigneRole);
   };
 
   return (
