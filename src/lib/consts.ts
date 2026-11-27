@@ -7,3 +7,4 @@ export const LOGIN_MAX_FAILURES = 5; // failed logins (within LOGIN_LOCK_MINUTES
 export const LOGIN_LOCK_MINUTES = 15; // lock duration, counted from the oldest of those failures
 export const SESSION_MAX_AGE = 24 * 60 * 60; // 1 day in seconds: a session expires this long after login
 export const FILTER_DEBOUCE_TIME = 500; // ms
+export const SESSION_CHECK_INTERVAL = 60 * 1000; // ms: how often an open page asks the server whether its session is still valid

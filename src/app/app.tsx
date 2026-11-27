@@ -9,6 +9,7 @@ import "@/utils/i18n";
 import { AppProvider } from "./context/AppContext";
 import { SessionProvider } from "next-auth/react";
 import { AuthProvider } from "./context/AuthContext";
+import SessionWatcher from "@/components/session/SessionWatcher";
 
 const MyApp = ({
   children,
@@ -22,6 +23,8 @@ const MyApp = ({
   return (
     <>
       <SessionProvider session={session}>
+        {/* Takes an idle page to the login page when its session ends */}
+        <SessionWatcher />
         <AuthProvider>
           <AppRouterCacheProvider options={{ enableCssLayer: true }}>
             <AppProvider>
