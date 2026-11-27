@@ -93,12 +93,17 @@ About 40 commits, 105 files changed.
 - **`RAPPORT_TECHNIQUE.docx`:** technical report (packages, structure, features, authentication, security, lists, forms, master/detail, reports, database and logging, known limits), updated with the changes above. It is the only copy, edited in Word; `CLAUDE.md` says to edit it in place.
 
 ## 9. Since production 019a1b4 (2026-11-27)
-11 commits, 62 files changed (most of it the telemetry packages in `package-lock.json`).
+16 commits, 69 files changed (most of it the telemetry packages in `package-lock.json`).
 
 ### Lists
 - **State kept for the browser tab:** every change of a list's state (page, page size, sort, column filters, quick search) is saved in `sessionStorage`, keyed by user, table (title for in-memory lists) and page path, so a child list keeps one state per parent record. A list displayed again starts from that state; if there is none, from the saved context (`localStorage`); then from its `initialFilter` / defaults. Pick-lists neither save nor restore.
 - **Server lists starting from defaults open on their last page** (the first answer gives the total, then the last page is loaded). Restored states keep their page. **In-memory lists always open on page 1.**
-- **"Supprimer contexte"** in the list options menu deletes the saved context (SaidT).
+- **"Supprimer contexte"** in the list options menu (SaidT) deletes the list's saved context (`localStorage`) and its state for the browser tab (`sessionStorage`). The tab states are kept after logout; this is the way to start a list again from its defaults.
+- **Pesées** start with `date_1 >=` the 1st of last month, like the other lists with a date pièce (SaidT).
+
+### Numbers
+- **SQL decimals arrive as numbers:** a Prisma client extension (`src/lib/prisma.ts`) turns every `Decimal` in query results (model and raw queries) into a JavaScript number. They used to reach the browser as strings (`"12.50"`).
+- **Formatting by type:** lists, PDFs, Excel exports and in-memory filters treat a value as a number only when `typeof value === "number"`. A string made of digits (a code such as `"00123"`) stays a string: no number formatting, left-aligned, text in Excel.
 
 ### Reports
 - **`meta.printed` and `meta.print_width`** are required on every column (`Column<T>`): `printed: false` leaves a column out of PDFs (child ids, the Actions column), `print_width` is its width on paper. The print widths were then adjusted per column (SaidT).
