@@ -37,22 +37,25 @@ export const parametre_Ligne_Columns: Column<Parametre_Ligne_Type>[] = [
     accessor: "id" as keyof Parametre_Ligne_Type,
     header: "Id",
     width: 100,
-    meta: { isPrimaryKey: true, align: "right" },
+    meta: { isPrimaryKey: true, align: "right", printed: false, print_width: 100 },
   },
   {
     accessor: "parametre_rubrique" as keyof Parametre_Ligne_Type,
     header: "Rubrique",
     width: 100,
+    meta: { printed: true, print_width: 100 },
   },
   {
     accessor: "code" as keyof Parametre_Ligne_Type,
     header: "Code",
     width: 100,
+    meta: { printed: true, print_width: 100 },
   },
   {
     accessor: "designation" as keyof Parametre_Ligne_Type,
     header: "Désignation",
     width: 300,
+    meta: { printed: true, print_width: 300 },
   },
 ];
 

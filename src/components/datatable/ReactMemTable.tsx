@@ -181,7 +181,8 @@ export function ReactMemTable<T extends Record<string, any>>({
   const tableColumns: Column<T>[] = useMemo(() => {
     const cols = [...columns];
     if (renderRowActions) {
-      cols.push({ accessor: "actions" as any, header: "Actions", width: 100 });
+      // Screen-only buttons: never printed
+      cols.push({ accessor: "actions" as any, header: "Actions", width: 100, meta: { printed: false, print_width: 100 } });
     }
     return cols;
   }, [columns, renderRowActions]);

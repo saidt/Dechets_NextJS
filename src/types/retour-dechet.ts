@@ -53,49 +53,55 @@ export const retour_Dechet_Columns: Column<Retour_Dechet_Type>[] = [
     accessor: "numero" as keyof Retour_Dechet_Type,
     header: "Numéro",
     width: 50,
-    meta: { isPrimaryKey: true, align: 'right' },
+    meta: { isPrimaryKey: true, align: 'right', printed: true, print_width: 50 },
   },
   {
     accessor: "client_code" as keyof Retour_Dechet_Type,
     header: "Client",
     width: 50,
+    meta: { printed: true, print_width: 50 },
   },
   {
     accessor: "client_raison_sociale" as keyof Retour_Dechet_Type,
     header: "Raison sociale",
     width: 250,
+    meta: { printed: true, print_width: 250 },
   },
   {
     accessor: "date_piece" as keyof Retour_Dechet_Type,
     header: "Date retour",
     width: 50,
+    meta: { printed: true, print_width: 50 },
   },
   {
     accessor: "montant" as keyof Retour_Dechet_Type,
     header: "Montant",
     width: 100,
-    meta: { align: 'right', decimals: 2 },
+    meta: { align: 'right', decimals: 2, printed: true, print_width: 100 },
   },
   {
     accessor: "montant_regle" as keyof Retour_Dechet_Type,
     header: "MT réglé",
     width: 120,
-    meta: { align: 'right', decimals: 2 },
+    meta: { align: 'right', decimals: 2, printed: true, print_width: 120 },
   },
   {
     accessor: "date_sortie" as keyof Retour_Dechet_Type,
     header: "Date sortie",
     width: 50,
+    meta: { printed: true, print_width: 50 },
   },
   {
     accessor: "valide" as keyof Retour_Dechet_Type,
     header: "Validé",
     width: 50,
+    meta: { printed: true, print_width: 50 },
   },
   {
     accessor: "controle" as keyof Retour_Dechet_Type,
     header: "Contrôlé",
     width: 50,
+    meta: { printed: true, print_width: 50 },
   },
 ];
 

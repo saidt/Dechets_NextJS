@@ -111,6 +111,14 @@ export const ReportLayout: React.FC<ReportLayoutProps> = ({ title, userId, child
   </Document>
 );
 
+/** The columns a report prints: all but those with meta.printed === false. */
+const printedColumns = <T extends Record<string, any>>(columns: Column<T>[]): Column<T>[] =>
+  columns.filter((column) => column.meta?.printed !== false);
+
+/** A column's width on paper: meta.print_width, else its screen width. */
+const printWidth = <T extends Record<string, any>>(column: Column<T>): number =>
+  column.meta?.print_width ?? column.width;
+
 interface ReportListProps<T extends Record<string, any>> {
   columns: Column<T>[];
   data: T[];
@@ -122,13 +130,13 @@ export const ReportList = <T extends Record<string, any>>({
 }: ReportListProps<T>) => (
   <View style={print_styles.table}>
     <View style={print_styles.tableHeader} fixed>
-      {columns.map((column, index) => (
+      {printedColumns(columns).map((column, index) => (
         <Text
           key={index}
           style={[
             print_styles.tableHeaderCell,
             {
-              flexBasis: column.width,
+              flexBasis: printWidth(column),
               flexGrow: 0,
               textAlign: column.meta?.align,
             },
@@ -141,7 +149,7 @@ export const ReportList = <T extends Record<string, any>>({
     {data.map((row: T, rowIndex: number) => {
       return (
         <View key={rowIndex} style={print_styles.tableRow} wrap={false}>
-          {columns.map((column, index) => {
+          {printedColumns(columns).map((column, index) => {
             // Same as the screen (ReactTable): accessorFn's value is formatted too (dates, numbers)
             const raw = column.accessorFn ? column.accessorFn(row) : row[column.accessor];
             const { formatted: columnFormatted, align } = formatValue(raw, column.meta?.decimals);
@@ -153,7 +161,7 @@ export const ReportList = <T extends Record<string, any>>({
                 style={[
                   print_styles.tableCell,
                   {
-                    flexBasis: column.width,
+                    flexBasis: printWidth(column),
                     flexGrow: 0,
                     textAlign: columnAlign,
                     fontWeight: column.meta?.isPrimaryKey ? 'bold' : 'normal'
@@ -189,7 +197,7 @@ export const ReportDetail = <T extends Record<string, any>>({
   data,
 }: ReportDetailProps<T>) => (
   <ReportSection>
-      {columns.map((column) => {
+      {printedColumns(columns).map((column) => {
         // Same as the screen: accessorFn's value is formatted too (dates, numbers)
         const raw = column.accessorFn ? column.accessorFn(data) : data[column.accessor];
         const { formatted: columnFormatted } = formatValue(raw, column.meta?.decimals);
@@ -197,7 +205,7 @@ export const ReportDetail = <T extends Record<string, any>>({
         return (
           <View key={String(column.accessor)} style={{ flexDirection: 'row', marginBottom: 2 }}>
             <Text style={[print_styles.bold, { width: 100 }]}>{column.header}:</Text>
-            <Text style={{ width: column.width, fontWeight: column.meta?.isPrimaryKey ? 'bold' : 'normal' }}>{String(columnFormatted) }</Text>
+            <Text style={{ width: printWidth(column), fontWeight: column.meta?.isPrimaryKey ? 'bold' : 'normal' }}>{String(columnFormatted) }</Text>
           </View>
           
         );

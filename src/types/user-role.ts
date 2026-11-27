@@ -26,17 +26,19 @@ export const user_Role_Columns: Column<User_Role_Type>[] = [
     accessor: "id" as keyof User_Role_Type,
     header: "Id",
     width: 150,
-    meta: { isPrimaryKey: true, align: "right" },
+    meta: { isPrimaryKey: true, align: "right", printed: false, print_width: 150 },
   },
   {
     accessor: "role_id" as keyof User_Role_Type,
     header: "Rôle",
     width: 150,
+    meta: { printed: true, print_width: 150 },
   },
   {
     accessor: "role.description" as keyof User_Role_Type,
     header: "Description",
     width: 300,
+    meta: { printed: true, print_width: 300 },
     accessorFn: (row: User_Role_Type) => row?.role?.description || "",
   },
 ];

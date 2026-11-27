@@ -55,10 +55,14 @@ export interface Column<T extends Record<string, any>> {
   header: string;
   width: number;
   accessorFn?: (row: T) => string | number | Date;
-  meta?: {
+  meta: {
     isPrimaryKey?: true | false;
     align?: 'left' | 'right' | 'center' | 'justify';
     decimals?: number; 
+    // Reports (PDF), required on every column: printed = false leaves the column
+    // out (child ids); print_width is its width on paper (usually = width)
+    printed: boolean;
+    print_width: number;
   };
 }
 

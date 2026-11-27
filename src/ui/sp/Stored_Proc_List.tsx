@@ -83,6 +83,7 @@ const Stored_Proc_List = ({ spName, open, progress, params, onClose, ...restProp
         accessor: key as keyof T,
         header: key,
         width: 100,
+        meta: { printed: true, print_width: 100 },
       })),
     []
   );

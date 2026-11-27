@@ -33,19 +33,20 @@ export const article_Dechet_Coeff_Columns: Column<Article_Dechet_Coeff_Type>[] =
     accessor: "article_code" as keyof Article_Dechet_Coeff_Type,
     header: "Article",
     width: 100,
-    meta: { isPrimaryKey: true }
+    meta: { isPrimaryKey: true, printed: true, print_width: 100 }
   },
   {
     accessor: "article.designation" as keyof Article_Dechet_Coeff_Type,
     header: "Désignation",
     width: 300,
+    meta: { printed: true, print_width: 300 },
     accessorFn: (row: Article_Dechet_Coeff_Type) => row?.article?.designation || "",
   },
   {
     accessor: "coeff" as keyof Article_Dechet_Coeff_Type,
     header: "Coéfficient",
     width: 100,
-    meta: { align: 'right', decimals: 2 },
+    meta: { align: 'right', decimals: 2, printed: true, print_width: 100 },
   },
 ];
 

@@ -57,50 +57,55 @@ const Client_Dechet_Reste_A_Payer = ({code, ...restProps}: CdrapMemListPageProps
       accessor: 'ANNEE' as keyof Reste_A_Payer_Type,
       header: 'Année' , 
       width: 100,
+      meta: { printed: true, print_width: 100 },
     },
     { 
       accessor: 'MOIS' as keyof Reste_A_Payer_Type,
       header: 'Mois' , 
       width: 100,
+      meta: { printed: true, print_width: 100 },
     },
     { 
       accessor: 'NUMERO' as keyof Reste_A_Payer_Type,
       header: 'Numéro',
       width: 100,
-      meta: { isPrimaryKey: true }
+      meta: { isPrimaryKey: true, printed: true, print_width: 100 }
     },
     { 
       accessor: 'DATE_PIECE' as keyof Reste_A_Payer_Type,
       header: 'Date',
-      width: 150
+      width: 150,
+      meta: { printed: true, print_width: 150 }
     },
     { 
       accessor: 'CLIENT_CODE' as keyof Reste_A_Payer_Type,
       header: 'Client' , 
       width: 100,
+      meta: { printed: true, print_width: 100 },
     },
     { 
       accessor: 'CLIENT_RAISON_SOCIALE' as keyof Reste_A_Payer_Type,
       header: 'Raison sociale' , 
       width: 250,
+      meta: { printed: true, print_width: 250 },
     },
     { 
       accessor: 'MONTANT' as keyof Reste_A_Payer_Type,
       header: 'Montant' , 
       width: 100,
-      meta: { decimals: 2 },
+      meta: { decimals: 2, printed: true, print_width: 100 },
     },
     { 
       accessor: 'MONTANT_REGLE' as keyof Reste_A_Payer_Type,
       header: 'MT réglé' , 
       width: 100,
-      meta: { decimals: 2 },
+      meta: { decimals: 2, printed: true, print_width: 100 },
     },
     { 
       accessor: 'RESTE_A_REGLER' as keyof Reste_A_Payer_Type,
       header: 'Reste' , 
       width: 100,
-      meta: { decimals: 2 },
+      meta: { decimals: 2, printed: true, print_width: 100 },
     },
   ];
 

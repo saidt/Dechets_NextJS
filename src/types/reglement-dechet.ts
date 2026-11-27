@@ -49,44 +49,48 @@ export const reglement_Dechet_Columns: Column<Reglement_Dechet_Type>[] = [
     accessor: "numero" as keyof Reglement_Dechet_Type,
     header: "Numéro",
     width: 80,
-    meta: { isPrimaryKey: true, align: 'right'}
+    meta: { isPrimaryKey: true, align: 'right', printed: true, print_width: 80 }
   },
   {
     accessor: "client_code" as keyof Reglement_Dechet_Type,
     header: "Client",
     width: 100,
+    meta: { printed: true, print_width: 100 },
   },
   {
     accessor: "date_piece" as keyof Reglement_Dechet_Type,
     header: "Date",
     width: 100,
+    meta: { printed: true, print_width: 100 },
   },
   {
     accessor: "client_raison_sociale" as keyof Reglement_Dechet_Type,
     header: "Raison sociale",
     width: 250,
+    meta: { printed: true, print_width: 250 },
   },
   {
     accessor: "montant" as keyof Reglement_Dechet_Type,
     header: "Montant",
     width: 100,
-    meta: { align: 'right', decimals: 2 },
+    meta: { align: 'right', decimals: 2, printed: true, print_width: 100 },
   },
   {
     accessor: "montant_regle" as keyof Reglement_Dechet_Type,
     header: "MT réglé",
     width: 100,
-    meta: { align: 'right', decimals: 2 },
+    meta: { align: 'right', decimals: 2, printed: true, print_width: 100 },
   },
   {
     accessor: "montant_verse" as keyof Reglement_Dechet_Type,
     header: "MT versé",
     width: 100,
-    meta: { align: 'right', decimals: 2 },
+    meta: { align: 'right', decimals: 2, printed: true, print_width: 100 },
   },
   {
     accessor: "valide" as keyof Reglement_Dechet_Type,
     header: "Validé",
     width: 50,
+    meta: { printed: true, print_width: 50 },
   },
 ];

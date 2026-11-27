@@ -57,34 +57,37 @@ const Envoi_Frs_Dechet_Reste = (props: EfdrMemListPageProps) => {
       accessor: 'ANNEE' as keyof Envoi_Frs_Dechet_Reste_Type,
       header: 'Année' , 
       width: 100,
-      meta: { isPrimaryKey: true }
+      meta: { isPrimaryKey: true, printed: true, print_width: 100 }
     },
     { 
       accessor: 'NO_DOS_EXP' as keyof Envoi_Frs_Dechet_Reste_Type,
       header: 'N° dossier' , 
       width: 100,
-      meta: { isPrimaryKey: true }
+      meta: { isPrimaryKey: true, printed: true, print_width: 100 }
     },
     { 
       accessor: 'NO_CMD_EXP' as keyof Envoi_Frs_Dechet_Reste_Type,
       header: 'N° commande',
       width: 100,
-      meta: { isPrimaryKey: true }
+      meta: { isPrimaryKey: true, printed: true, print_width: 100 }
     },
     { 
       accessor: 'DATE_CMD' as keyof Envoi_Frs_Dechet_Reste_Type,
       header: 'Date',
-      width: 150
+      width: 150,
+      meta: { printed: true, print_width: 150 }
     },
     { 
       accessor: 'ARTICLE_CODE' as keyof Envoi_Frs_Dechet_Reste_Type,
       header: 'Article' , 
       width: 100,
+      meta: { printed: true, print_width: 100 },
     },
     { 
       accessor: 'QUANTITE' as keyof Envoi_Frs_Dechet_Reste_Type,
       header: 'Quantité' , 
       width: 100,
+      meta: { printed: true, print_width: 100 },
     },
   ];
 

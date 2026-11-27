@@ -45,34 +45,36 @@ export const client_Dechet_Sld_Ini_Columns: Column<Client_Dechet_Sld_Ini_Type>[]
     accessor: "id" as keyof Client_Dechet_Sld_Ini_Type,
     header: "Id",
     width: 100, 
-    meta: { isPrimaryKey: true, align: 'right' },
+    meta: { isPrimaryKey: true, align: 'right', printed: true, print_width: 100 },
   },
   {
     accessor: "article_code" as keyof Client_Dechet_Sld_Ini_Type,
     header: "Article",
     width: 120, 
-    meta: { align: 'left' },
+    meta: { align: 'left', printed: true, print_width: 120 },
   },
   {
     accessor: "client_code" as keyof Client_Dechet_Sld_Ini_Type,
     header: "Client",
-    width: 120, 
+    width: 120,
+    meta: { printed: true, print_width: 120 }, 
   },
   {
     accessor: "date_debut" as keyof Client_Dechet_Sld_Ini_Type,
     header: "Date début",
-    width: 150, 
+    width: 150,
+    meta: { printed: true, print_width: 150 }, 
   },
   {
     accessor: "quantite" as keyof Client_Dechet_Sld_Ini_Type,
     header: "Quantité",
     width: 150, 
-    meta: { align: 'right', decimals: 3 }
+    meta: { align: 'right', decimals: 3, printed: true, print_width: 150 }
   },
   {
     accessor: "valide" as keyof Client_Dechet_Sld_Ini_Type,
     header: "Validé",
     width: 100,
-    meta: { align: 'center' }
+    meta: { align: 'center', printed: true, print_width: 100 }
   }
 ];
