@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { apiFetch } from "@/lib/apiFetch";
 import { Box, IconButton } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
@@ -79,7 +79,8 @@ export function GenericListPage<T extends Record<string, any>>({
   const role = useMemo(() => `${tableName}.LIST`, [tableName]);
   const authorized = useMemo(() => hasRole(role), [hasRole, role]);
 
-  const [tableState, setTableState] = useState<TableState<T>>(() => {
+  // The list's starting state, and whether it comes from the defaults (computed once)
+  const [start] = useState<{ state: TableState<T>; fromDefaults: boolean }>(() => {
     const initialTableState : TableState<T> = {
       page: 0,
       pageSize: initialPageSize ?? 8,
@@ -92,14 +93,14 @@ export function GenericListPage<T extends Record<string, any>>({
     if (user && !isModalList) {
       // 1. This tab's last state of the list (sessionStorage), 2. the saved context (localStorage)
       const sessionState = loadSessionTableState<T>(user.id, tableName, pathname);
-      if (sessionState) return sessionState;
+      if (sessionState) return { state: sessionState, fromDefaults: false };
       const savedState = loadTableState<T>(user.id, tableName);
-      if (savedState) return savedState;
+      if (savedState) return { state: savedState, fromDefaults: false };
     }
 
     if (initialFilter) {
       initialTableState.filter = initialFilter 
-      return initialTableState;
+      return { state: initialTableState, fromDefaults: true };
     }
 
     const emptyFilter = columns.reduce(
@@ -110,13 +111,22 @@ export function GenericListPage<T extends Record<string, any>>({
     //consoleInfo("GenericListPage emptyFilter: ", emptyFilter);
 
     return {
-      page: 0,
-      pageSize: initialPageSize ?? 8,
-      sort: initialSort ?? null,
-      filter: emptyFilter,
-      quickSearch: "",
+      state: {
+        page: 0,
+        pageSize: initialPageSize ?? 8,
+        sort: initialSort ?? null,
+        filter: emptyFilter,
+        quickSearch: "",
+      },
+      fromDefaults: true,
     };
   });
+
+  const [tableState, setTableState] = useState<TableState<T>>(start.state);
+
+  // A list that starts from its defaults (no state for this tab, no saved context)
+  // opens on its last page, once the first answer gives the total (not pick-lists)
+  const goToLastPage = useRef(start.fromDefaults && !isModalList);
 
   // Every change of the list's state is kept for this browser tab (not for pick-lists)
   useEffect(() => {
@@ -300,6 +310,15 @@ export function GenericListPage<T extends Record<string, any>>({
         setTotalRows(0);
       }
       else {
+        if (goToLastPage.current) {
+          goToLastPage.current = false;
+          const lastPage = Math.max(0, Math.ceil(result.total / pageSize) - 1);
+          if (lastPage !== page) {
+            // Load the last page instead of showing the first one
+            setTableState((prev) => ({ ...prev, page: lastPage }));
+            return;
+          }
+        }
         setData(result.data);
         setTotalRows(result.total);
       }
