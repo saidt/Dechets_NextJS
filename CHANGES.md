@@ -61,7 +61,7 @@ About 40 commits, 105 files changed.
 - **Child tabs** (sortie lignes / détails, retour, règlement, versement lignes, paramètre lignes) are shown only with the child table's `.LIST` role, instead of sending the user to the error page.
 
 ### Lists
-- **Status bar** above the pagination: current sort, column filters (`=` for exact ones), quick search and the screen's fixed filter ("Filtre fixe"). Display only, bold.
+- **Status bar** above the pagination: current sort, column filters (`=` for exact ones), quick search and the screen's fixed filter ("Filtre fixe"). Display only, bold. Compact format (SaidT): sort as `Montant ↑`, values in brackets (`Client : [ C1 ]`), blank when there is none.
 - **Default sort:** `initialSort` on `GenericListPage` / `GenericMemListPage`, set on every server list from its `*_DEFAULT_SORT`, and on the profile and admin session lists (newest first) and profile roles (`role_id`). Lists filled by stored procedures keep the procedure's order.
 - **Date pièce initial filter:** sorties, retours, règlements and versements start with `date_piece >=` the 1st of last month (`firstDayOfMonthOffset(-1)` in `date-utils`), as `initialFilter` unless the caller passes one. The date column's filter shows it and the user can change or clear it there.
 - **Filter operators** in every list, server and in-memory: `=`, `<>`, `>=`, `<=`, `>`, `<` for dates (by day, DD/MM/YYYY), numbers and text; no operator keeps the default (text contains, number equals, date that day). In text, `%` is a wildcard: `AB%` starts with, `%AB` ends with, `%AB%` contains. `exactFilter` values are matched as they are. Shared parser: `src/lib/filterOperator.ts`.
@@ -84,12 +84,31 @@ About 40 commits, 105 files changed.
 - **React "key" warning** fixed when printing a record (`ReportDetail`).
 
 ### Other (SaidT)
+- **Line pages:** the règlement line loads its règlement from the page address; effects of the règlement, versement and article coefficient pages depend on the field they use instead of the whole record (no reload loops); some column widths adjusted; dialog text has a margin.
 - Dashboard counts of sorties and retours (all and non validés) moved to Prisma queries; period start/end dates corrected.
 - `localLog` calls the API with a relative URL (no server address).
 - "Throw error" test button removed from the home page; `consoleInfo` calls removed.
 
 ### Documentation
 - **`RAPPORT_TECHNIQUE.docx`:** technical report (packages, structure, features, authentication, security, lists, forms, master/detail, reports, database and logging, known limits), updated with the changes above. It is the only copy, edited in Word; `CLAUDE.md` says to edit it in place.
+
+## 9. Since production 019a1b4 (2026-11-27)
+11 commits, 62 files changed (most of it the telemetry packages in `package-lock.json`).
+
+### Lists
+- **State kept for the browser tab:** every change of a list's state (page, page size, sort, column filters, quick search) is saved in `sessionStorage`, keyed by user, table (title for in-memory lists) and page path, so a child list keeps one state per parent record. A list displayed again starts from that state; if there is none, from the saved context (`localStorage`); then from its `initialFilter` / defaults. Pick-lists neither save nor restore.
+- **Server lists starting from defaults open on their last page** (the first answer gives the total, then the last page is loaded). Restored states keep their page. **In-memory lists always open on page 1.**
+- **"Supprimer contexte"** in the list options menu deletes the saved context (SaidT).
+
+### Reports
+- **`meta.printed` and `meta.print_width`** are required on every column (`Column<T>`): `printed: false` leaves a column out of PDFs (child ids, the Actions column), `print_width` is its width on paper. The print widths were then adjusted per column (SaidT).
+- **Thin lines** under the title, above and under the column headers and above the footer (the old borders were never drawn). Empty values print blank instead of "undefined".
+- **Child lists in record prints** (sortie lignes / détails, sortie simple, retour, règlement, versement, paramètre) are loaded and printed only when the user has the child's `.LIST` role: the screen passes `hasLigneRole` / `hasDetailRole` to the print function (SaidT's pattern, `data, hasLigneRole, userId?`).
+
+### Telemetry (SaidT)
+- **OpenTelemetry** for the Node server (`src/lib/telemetry`): request traces and the `http.server.request.duration` metric per route, SQL Server calls (tedious), Node runtime metrics, a health gauge, and the user id on request spans (`checkRole` registers it). Nothing is exported without `OTEL_EXPORTER_OTLP_ENDPOINT`.
+- **JSON logs:** with `LOG_FORMAT=json`, the server log (`logInfo`, `logWarn`, `logError`) writes one JSON line per entry on stdout, with the error in `err`, instead of the log files.
+- **To check:** `src/lib/telemetry/node.ts` says it is loaded by `instrumentation.ts`, but there is no `instrumentation.ts` in the repo and nothing imports `node.ts`, so traces and metrics don't start yet. The JSON logs and the user id work.
 
 ---
 
@@ -120,6 +139,7 @@ About 40 commits, 105 files changed.
 6. **Regenerate every user's `PSW_HASH` with bcrypt**, using the production `NEXTAUTH_SECRET`.
 
 ### Configuration
+- **Telemetry** (set by the Helm chart): `OTEL_EXPORTER_OTLP_ENDPOINT` (nothing is exported without it), `OTEL_SERVICE_NAME`, `OTEL_RESOURCE_ATTRIBUTES` (`service.version`, `deployment.environment.name`), `OTEL_METRIC_EXPORT_INTERVAL`; `LOG_FORMAT=json` for JSON logs.
 - **`NEXTAUTH_SECRET`** must be the same as the one used for the hashes. Changing it invalidates every password.
 - **`TRUSTED_PROXY_COUNT`:** the number of reverse proxies in front of Next.js, for example `1` behind a Kubernetes Ingress. Behind Kubernetes, also set `externalTrafficPolicy: Local` on the Ingress controller's Service, or IP changes will log users out.
 - **Don't set `NEXT_PUBLIC_USER_ID` / `NEXT_PUBLIC_PASSWORD`** in the production build: their values end up in the JavaScript sent to browsers.
@@ -129,6 +149,7 @@ About 40 commits, 105 files changed.
 - Approve npm 12's install scripts for Prisma: `npm install-scripts approve prisma @prisma/engines`.
 
 ### What users will notice
+- Lists come back as they left them in the same browser tab (page, sort, filters); a new tab starts from their saved context, or from the defaults on the last page.
 - Everyone logs in once again.
 - Sessions end exactly 1 day after login.
 - A user whose browser or IP changes is logged out.
