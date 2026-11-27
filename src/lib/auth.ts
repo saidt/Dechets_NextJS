@@ -9,7 +9,7 @@ import { createLog } from '@/app/db-data/log';
 import { dbLogin, INVALID_CREDENTIALS, LoginRejectedError, loginLockedUntil, LOGIN_BLOCKED_MESSAGE, LOGIN_FAILED_MESSAGE, LOGIN_SUCCESS_MESSAGE } from '@/app/db-data/auth';
 import { ZodError } from 'zod';
 import { logError, logWarn } from './serverLog';
-import { LOGIN_MAX_FAILURES, SESSION_MAX_AGE } from './consts';
+import { LOGIN_MAX_FAILURES, SESSION_MAX_AGE } from './authSettings';
 import { getClientInfo } from './client-info';
 import { hashSessionToken } from './crypt';
 import { consoleDebug, consoleError, consoleWarn } from './clientLog';
@@ -19,7 +19,7 @@ export const authOptions: AuthOptions = {
   // rows are created, checked and deleted by this app (jwt callback, auth-lib).
   session: {
     strategy: "jwt",
-    maxAge: SESSION_MAX_AGE, // 1 day in seconds
+    maxAge: SESSION_MAX_AGE, // seconds, from SESSION_MAX_AGE_HOURS (default 1 day)
   },
   providers: [
     CredentialsProvider({
@@ -151,7 +151,7 @@ export const authOptions: AuthOptions = {
         });
 
         const sessionUuid = uuid()
-        const expiresAt = new Date(Date.now() + 1 * SESSION_MAX_AGE * 1000) // 1 day in milliseconds
+        const expiresAt = new Date(Date.now() + SESSION_MAX_AGE * 1000) // SESSION_MAX_AGE_HOURS after login
 
         // Bind the session to the browser and IP address it is created from
         const { userAgent, ip } = await getClientInfo()

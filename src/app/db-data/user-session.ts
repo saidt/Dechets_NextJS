@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { SESSION_MAX_AGE } from "@/lib/consts";
+import { SESSION_MAX_AGE } from "@/lib/authSettings";
 import { hashSessionToken } from "@/lib/crypt";
 import { User_Session_Type } from "@/types/user-session";
 import { Admin_Session_Type } from "@/types/admin-session";

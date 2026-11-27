@@ -2,7 +2,7 @@ import { isBcryptHash, verifyPassword } from "@/lib/crypt";
 import { Credentials, credentials_Schema } from "@/types/credentials";
 import { prisma } from "@/lib/prisma";
 import { trimStrings } from "@/lib/lib";
-import { LOGIN_LOCK_MINUTES, LOGIN_MAX_FAILURES } from "@/lib/consts";
+import { LOGIN_LOCK_MINUTES, LOGIN_MAX_FAILURES } from "@/lib/authSettings";
 
 export const INVALID_CREDENTIALS = "Invalid credentials !";
 
