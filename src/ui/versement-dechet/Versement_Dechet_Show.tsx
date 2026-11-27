@@ -191,7 +191,7 @@ const Versement_Dechet_Show = () => {
   const user = session?.user
 
   const handlePrint = async(data: Versement_Dechet_Type) : Promise<void> => {
-    await Versement_Dechet_Show_Print(data, user?.id);
+    await Versement_Dechet_Show_Print(data, user?.id, hasRole);
   };  
 
   return (

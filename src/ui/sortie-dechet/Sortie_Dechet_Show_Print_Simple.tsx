@@ -1,7 +1,7 @@
 import { ReportDetail, ReportLayout, ReportList } from '@/components/pdf/ReportComponent';
 import { downloadPdf } from '@/components/pdf/pdfService';
 import { MAX_ALL_DATA_SIZE } from '@/lib/consts';
-import { fetchAllData } from '@/lib/fetchData';
+import { fetchChildForPrint } from '@/components/pdf/printChild';
 import { TableState } from '@/lib/types';
 import {
   sortie_Dechet_Columns,
@@ -12,10 +12,12 @@ import {
   SORTIE_DECHET_LIGNE_CHILD_URL,
   sortie_Dechet_Ligne_Columns,
   Sortie_Dechet_Ligne_Type,
+  SORTIE_DECHET_LIGNE_TABLE_NAME
 } from "@/types/sortie-dechet-ligne";
 
 export async function Sortie_Dechet_Show_Print_Simple(
   data: Sortie_Dechet_Type,
+  hasRole: (role: string) => boolean,
 ): Promise<void> {
 
   const title = 'Sortie déchets'
@@ -27,9 +29,8 @@ export async function Sortie_Dechet_Show_Print_Simple(
     filter: { sortie_dechet_numero: String(data.numero) },
     quickSearch: ''
   }
-  const lignesResponse = await fetchAllData<Sortie_Dechet_Ligne_Type>(`${SORTIE_DECHET_FETCH_URL}/${data.numero}/${SORTIE_DECHET_LIGNE_CHILD_URL}`, lignesTableState);
-  const lignesJson = await lignesResponse.json();
-  const lignesData = lignesJson.data;    
+  // null without the child table's LIST role: the list is left out
+  const lignesData = await fetchChildForPrint<Sortie_Dechet_Ligne_Type>(hasRole, SORTIE_DECHET_LIGNE_TABLE_NAME, `${SORTIE_DECHET_FETCH_URL}/${data.numero}/${SORTIE_DECHET_LIGNE_CHILD_URL}`, lignesTableState);
 
   const sortieAccessors = ['numero', 'date_piece'] as (keyof Sortie_Dechet_Type)[];
 
@@ -46,7 +47,7 @@ export async function Sortie_Dechet_Show_Print_Simple(
   const doc = (
     <ReportLayout title={title} userId={''}>
       <ReportDetail columns={sortieColumns} data={data} />
-      <ReportList columns={ligneColumns} data={lignesData} />
+      {lignesData && <ReportList columns={ligneColumns} data={lignesData} />}
     </ReportLayout>
   );
 

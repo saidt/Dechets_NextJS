@@ -249,7 +249,7 @@ const Reglement_Dechet_Show = () => {
   const user = session?.user
 
   const handlePrint = async(data: Reglement_Dechet_Type) : Promise<void> => {
-    await Reglement_Dechet_Show_Print(data, user?.id);
+    await Reglement_Dechet_Show_Print(data, user?.id, hasRole);
   };
 
   return (

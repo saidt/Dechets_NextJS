@@ -314,7 +314,7 @@ const Sortie_Dechet_Show = () => {
   }
 
   const handle_Print_Simple = async() : Promise<void> => {
-    await Sortie_Dechet_Show_Print_Simple(sortie_Dechet);
+    await Sortie_Dechet_Show_Print_Simple(sortie_Dechet, hasRole);
   };
 
   const { hasRole } = useAuth();
@@ -346,7 +346,7 @@ const Sortie_Dechet_Show = () => {
   ]
 
   const handlePrint = async(data: Sortie_Dechet_Type) : Promise<void> => {
-    await Sortie_Dechet_Show_Print(data, user?.id);
+    await Sortie_Dechet_Show_Print(data, user?.id, hasRole);
   };
 
   // Child tabs are shown only with the child list role (<TABLE>.LIST)

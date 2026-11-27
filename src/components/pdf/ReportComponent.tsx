@@ -3,6 +3,10 @@ import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import { Column } from '@/lib/types';
 import { formatValue } from "@/lib/number-utils";
 
+// Thin rule used under the title, around the column headers and above the footer.
+// react-pdf only draws a border with its width, colour and style set separately.
+const THIN_LINE = { width: 0.5, color: '#888', style: 'solid' as const };
+
 export const print_styles = StyleSheet.create({
   page: {
     paddingTop: 25,
@@ -16,9 +20,12 @@ export const print_styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: '#000',
     paddingBottom: 5,
+    marginBottom: 8,
     position: 'relative',
+    borderBottomWidth: THIN_LINE.width,
+    borderBottomColor: THIN_LINE.color,
+    borderBottomStyle: THIN_LINE.style,
   },
   headerText: {
     fontSize: 8,
@@ -36,8 +43,9 @@ export const print_styles = StyleSheet.create({
     bottom: 20,
     left: 25,
     right: 25,
-    borderTop: 1,
-    borderColor: '#ccc',
+    borderTopWidth: THIN_LINE.width,
+    borderTopColor: THIN_LINE.color,
+    borderTopStyle: THIN_LINE.style,
     flexDirection: 'row',
     justifyContent: 'center',
     paddingTop: 5,
@@ -53,9 +61,12 @@ export const print_styles = StyleSheet.create({
   },
   tableHeader: {
     flexDirection: 'row',
-    borderBottom: 1,
-    borderTop: 1,
-    borderColor: '#000',
+    borderTopWidth: THIN_LINE.width,
+    borderTopColor: THIN_LINE.color,
+    borderTopStyle: THIN_LINE.style,
+    borderBottomWidth: THIN_LINE.width,
+    borderBottomColor: THIN_LINE.color,
+    borderBottomStyle: THIN_LINE.style,
     backgroundColor: '#f9f9f9',
     minHeight: 24,
   },
@@ -168,7 +179,7 @@ export const ReportList = <T extends Record<string, any>>({
                   },
                 ]}
               >
-                {String(columnFormatted)}
+                {String(columnFormatted ?? '')}
               </Text>
             );
           })}
@@ -205,7 +216,7 @@ export const ReportDetail = <T extends Record<string, any>>({
         return (
           <View key={String(column.accessor)} style={{ flexDirection: 'row', marginBottom: 2 }}>
             <Text style={[print_styles.bold, { width: 100 }]}>{column.header}:</Text>
-            <Text style={{ width: printWidth(column), fontWeight: column.meta?.isPrimaryKey ? 'bold' : 'normal' }}>{String(columnFormatted) }</Text>
+            <Text style={{ width: printWidth(column), fontWeight: column.meta?.isPrimaryKey ? 'bold' : 'normal' }}>{String(columnFormatted ?? '')}</Text>
           </View>
           
         );

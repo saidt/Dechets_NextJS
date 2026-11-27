@@ -308,7 +308,7 @@ const Retour_Dechet_Show = () => {
   
 
   const handlePrint = async(data: Retour_Dechet_Type) : Promise<void> => {
-    await Retour_Dechet_Show_Print(data, user?.id);
+    await Retour_Dechet_Show_Print(data, user?.id, hasRole);
   };
 
   return (

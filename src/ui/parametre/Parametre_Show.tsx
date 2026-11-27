@@ -94,7 +94,7 @@ const Parametre_Show = () => {
   const user = session?.user
 
   const handlePrint = async(data: Parametre_Type) : Promise<void> => {
-    await Parametre_Show_Print(data, user?.id);
+    await Parametre_Show_Print(data, user?.id, hasRole);
   };
 
   return (
