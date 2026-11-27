@@ -33,8 +33,8 @@ export const article_Schema = z.object({
 export type Article_FormData = z.infer<typeof article_Schema>;
 
 export const article_Columns: Column<Article_Type>[] = [
-  { accessor: "code" as keyof Article_Type, header: "Code", width: 100, meta: { isPrimaryKey: true, printed: true, print_width: 100 } },
-  { accessor: "designation" as keyof Article_Type, header: "Désignation", width: 300, meta: { printed: true, print_width: 300 } },
-  { accessor: "unite_stk" as keyof Article_Type, header: "Unité stock", width: 150, meta: { printed: true, print_width: 150 }, },
-  { accessor: "nature" as keyof Article_Type, header: "Nature", width: 100, meta: { printed: true, print_width: 100 } },
+  { accessor: "code" as keyof Article_Type, header: "Code", width: 100, meta: { isPrimaryKey: true, printed: true, printWidth: 100 } },
+  { accessor: "designation" as keyof Article_Type, header: "Désignation", width: 300, meta: { printed: true, printWidth: 300 } },
+  { accessor: "unite_stk" as keyof Article_Type, header: "Unité stock", width: 150, meta: { printed: true, printWidth: 150 }, },
+  { accessor: "nature" as keyof Article_Type, header: "Nature", width: 100, meta: { printed: true, printWidth: 100 } },
 ];

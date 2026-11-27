@@ -69,84 +69,84 @@ export const pesee_Columns: Column<Pesee_Type>[] = [
     accessor: "numero_1" as keyof Pesee_Type,
     header: "Numéro 1",
     width: 100,
-    meta: { isPrimaryKey: true, printed: true, print_width: 100 },
+    meta: { isPrimaryKey: true, printed: true, printWidth: 100 },
   },
   {
     accessor: "date_1" as keyof Pesee_Type,
     header: "Date 1",
     width: 100,
-    meta: { printed: true, print_width: 100 }, 
+    meta: { printed: true, printWidth: 100 }, 
   },
   {
     accessor: "heure_1" as keyof Pesee_Type,
     header: "Heure 1",
     width: 50,
-    meta: { printed: true, print_width: 50 }, 
+    meta: { printed: true, printWidth: 50 }, 
   },
   /*{
     accessor: "numero_2" as keyof Pesee_Type,
     header: "Numéro 2",
     width: 10,
-    meta: { printed: true, print_width: 10 }, 
+    meta: { printed: true, printWidth: 10 }, 
   },
   {
     accessor: "date_2" as keyof Pesee_Type,
     header: "Date 2",
     width: 10,
-    meta: { printed: true, print_width: 10 }, 
+    meta: { printed: true, printWidth: 10 }, 
   },
   {
     accessor: "heure_2" as keyof Pesee_Type,
     header: "Heure 2",
     width: 5,
-    meta: { printed: true, print_width: 5 }, 
+    meta: { printed: true, printWidth: 5 }, 
   },*/
   {
     accessor: "client_raison_sociale" as keyof Pesee_Type,
     header: "Client",
     width: 20,
-    meta: { printed: true, print_width: 20 }, 
+    meta: { printed: true, printWidth: 20 }, 
   },
   /*{
     accessor: "frs_raison_sociale" as keyof Pesee_Type,
     header: "Fournisseur",
     width: 40,
-    meta: { printed: true, print_width: 40 }, 
+    meta: { printed: true, printWidth: 40 }, 
   },*/
   {
     accessor: "article_designation" as keyof Pesee_Type,
     header: "Article",
     width: 200,
-    meta: { printed: true, print_width: 200 }, 
+    meta: { printed: true, printWidth: 200 }, 
   },
   {
     accessor: "immatriculation" as keyof Pesee_Type,
     header: "Matricule",
     width: 100,
-    meta: { printed: true, print_width: 100 }, 
+    meta: { printed: true, printWidth: 100 }, 
   },
   {
     accessor: "poids_brut" as keyof Pesee_Type,
     header: "Poids brut",
     width: 100, 
-    meta: { align: 'right', decimals: 0, printed: true, print_width: 100 }
+    meta: { align: 'right', decimals: 0, printed: true, printWidth: 100 }
   },
   /*{
     accessor: "tare" as keyof Pesee_Type,
     header: "Tare",
     width: 10, 
-    meta: { align: 'right', decimals: 0, printed: true, print_width: 10 }
+    meta: { align: 'right', decimals: 0, printed: true, printWidth: 10 }
   },*/
   {
     accessor: "poids_net" as keyof Pesee_Type,
     header: "Poids net",
     width: 100 , 
-    meta: { align: 'right', decimals: 0, printed: true, print_width: 100 }
+    meta: { align: 'right', decimals: 0, printed: true, printWidth: 100 }
   },
   {
     accessor: "sens" as keyof Pesee_Type,
     header: "Sens",
     width: 50,
-    meta: { printed: true, print_width: 50 }, 
+    meta: { printed: true, printWidth: 50 }, 
   },
 ];

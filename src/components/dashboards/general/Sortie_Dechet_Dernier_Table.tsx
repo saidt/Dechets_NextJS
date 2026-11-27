@@ -12,12 +12,12 @@ import { Sortie_Dechet_Dernier_Type } from "@/types/retour-dechet";
 import { fetch_Sortie_Dechet_Dernier_DataSet } from "@/fetch/sortie-dechet";
 
 const columns: Column<Sortie_Dechet_Dernier_Type>[] = [
-  { accessor: "NUMERO", header: "Numéro", width: 100, meta: { isPrimaryKey: true, printed: true, print_width: 100 } },
-  { accessor: "CLIENT_CODE", header: "Client", width: 120, meta: { printed: true, print_width: 120 } },
-  { accessor: "DATE_PIECE", header: "Date sortie", width: 120, meta: { printed: true, print_width: 120 } },
-  { accessor: "ARTICLE_CODE", header: "Article", width: 100, meta: { align: 'left', printed: true, print_width: 100 } },
-  { accessor: "ARTICLE_DESIGNATION", header: "Désignation", width: 250, meta: { printed: true, print_width: 250 } },
-  { accessor: "QUANTITE", header: "Quantité", width: 100, meta: { printed: true, print_width: 100 } },
+  { accessor: "NUMERO", header: "Numéro", width: 100, meta: { isPrimaryKey: true, printed: true, printWidth: 100 } },
+  { accessor: "CLIENT_CODE", header: "Client", width: 120, meta: { printed: true, printWidth: 120 } },
+  { accessor: "DATE_PIECE", header: "Date sortie", width: 120, meta: { printed: true, printWidth: 120 } },
+  { accessor: "ARTICLE_CODE", header: "Article", width: 100, meta: { align: 'left', printed: true, printWidth: 100 } },
+  { accessor: "ARTICLE_DESIGNATION", header: "Désignation", width: 250, meta: { printed: true, printWidth: 250 } },
+  { accessor: "QUANTITE", header: "Quantité", width: 100, meta: { printed: true, printWidth: 100 } },
 ];
 
 const Sortie_Dechet_Dernier_Table = () => {

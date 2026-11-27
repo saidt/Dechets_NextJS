@@ -31,12 +31,12 @@ export const client_Dechet_Columns: Column<Client_Dechet_Type>[] = [
     accessor: "code" as keyof Client_Dechet_Type,
     header: "Code",
     width: 150,
-    meta: { isPrimaryKey: true, printed: true, print_width: 150 },
+    meta: { isPrimaryKey: true, printed: true, printWidth: 150 },
   },
   {
     accessor: "raison_sociale" as keyof Client_Dechet_Type,
     header: "Raison sociale",
     width: 300,
-    meta: { printed: true, print_width: 300 },
+    meta: { printed: true, printWidth: 300 },
   },
 ];

@@ -37,11 +37,11 @@ export async function Sortie_Dechet_Show_Print(
   const detailsData = detailsJson.data;    
 
   const lignesColumns = sortie_Dechet_Ligne_Columns.filter(
-    col => col.accessor !== "id"
+    col => col.meta.printed
   );
 
   const detailColumns = sortie_Dechet_Detail_Columns.filter(
-    col => col.accessor !== "id"
+    col => col.meta.printed
   );
 
   const doc = (

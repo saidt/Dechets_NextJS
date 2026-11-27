@@ -24,7 +24,7 @@ const parametre_Ligne_Response = await fetchAllData<Parametre_Ligne_Type>(`${ PA
   const parametre_Ligne_Data = parametre_Ligne_Json.data;    
 
   const parametre_Ligne_Print_Columns = parametre_Ligne_Columns.filter(
-    col => col.accessor !== "id" 
+    col => col.meta.printed 
   );
 
   const doc = (

@@ -115,9 +115,9 @@ export const ReportLayout: React.FC<ReportLayoutProps> = ({ title, userId, child
 const printedColumns = <T extends Record<string, any>>(columns: Column<T>[]): Column<T>[] =>
   columns.filter((column) => column.meta?.printed !== false);
 
-/** A column's width on paper: meta.print_width, else its screen width. */
+/** A column's width on paper: meta.printWidth, else its screen width. */
 const printWidth = <T extends Record<string, any>>(column: Column<T>): number =>
-  column.meta?.print_width ?? column.width;
+  column.meta?.printWidth ?? column.width;
 
 interface ReportListProps<T extends Record<string, any>> {
   columns: Column<T>[];

@@ -25,7 +25,7 @@ export async function Versement_Dechet_Show_Print(
   const versement_Dechet_Ligne_Data = versement_Dechet_Ligne_Json.data;    
 
   const versement_Dechet_Ligne_Print_Columns = versement_Dechet_Ligne_Columns.filter(
-    col => col.accessor !== "id" 
+    col => col.meta.printed
   );
 
   const doc = (

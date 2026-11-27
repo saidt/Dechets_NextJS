@@ -123,7 +123,7 @@ export function ReactTable<T extends Record<string, any>>({
     const cols = [...columns];
     if (renderRowActions) {
       // Screen-only buttons: never printed
-      cols.push({ accessor: "actions" as any, header: "Actions", width: 100, meta: { printed: false, print_width: 100 } });
+      cols.push({ accessor: "actions" as any, header: "Actions", width: 100, meta: { printed: false } });
     }
     return cols;
   }, [columns, renderRowActions]);

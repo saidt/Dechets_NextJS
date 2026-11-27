@@ -6,5 +6,6 @@
 *- Filtre on dates bug (sorties déchets par ex)
 - Ajouter un état de pointage des sorties déchets pour KarimJ
 - Add "Supprimer contexte'
+- Save list state through session
 
 Last commit to imacab: 019a1b4 (019a1b4bd5e4b542bb0d3f1da9f02d8f22b417b0)

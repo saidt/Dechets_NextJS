@@ -51,48 +51,48 @@ export const envoi_Frs_Dechet_Columns: Column<Envoi_Frs_Dechet_Type>[] = [
     accessor: "id" as keyof Envoi_Frs_Dechet_Type,
     header: "Id",
     width: 50, 
-    meta: { isPrimaryKey: true, align: 'right', decimals: 0, printed: true, print_width: 50 },
+    meta: { isPrimaryKey: true, align: 'right', decimals: 0, printed: true, printWidth: 50 },
   },
   {
     accessor: "article_code" as keyof Envoi_Frs_Dechet_Type,
     header: "Article",
     width: 100,
-    meta: { printed: true, print_width: 100 }, 
+    meta: { printed: true, printWidth: 100 }, 
   },
   {
     accessor: "annee" as keyof Envoi_Frs_Dechet_Type,
     header: "Année",
     width: 40, 
-    meta: { align: 'right', decimals: 0, printed: true, print_width: 40 }
+    meta: { align: 'right', decimals: 0, printed: true, printWidth: 40 }
   },
   {
     accessor: "no_dos_exp" as keyof Envoi_Frs_Dechet_Type,
     header: "Dossier",
     width: 50, 
-    meta: { align: 'right', decimals: 0, printed: true, print_width: 50 }
+    meta: { align: 'right', decimals: 0, printed: true, printWidth: 50 }
   },
   {
     accessor: "no_cmd_exp" as keyof Envoi_Frs_Dechet_Type,
     header: "Commande",
     width: 50, 
-    meta: { align: 'right', decimals: 0, printed: true, print_width: 50 }
+    meta: { align: 'right', decimals: 0, printed: true, printWidth: 50 }
   },
   {
     accessor: "date_cmd" as keyof Envoi_Frs_Dechet_Type,
     header: "Date Cmd",
     width: 120,
-    meta: { printed: true, print_width: 120 }, 
+    meta: { printed: true, printWidth: 120 }, 
   },
   {
     accessor: "quantite" as keyof Envoi_Frs_Dechet_Type,
     header: "Quantité",
     width: 100, 
-    meta: { align: 'right', decimals: 0, printed: true, print_width: 100 }
+    meta: { align: 'right', decimals: 0, printed: true, printWidth: 100 }
   },
   {
     accessor: "valide" as keyof Envoi_Frs_Dechet_Type,
     header: "Validé",
     width: 60,
-    meta: { align: 'center', printed: true, print_width: 60 }
+    meta: { align: 'center', printed: true, printWidth: 60 }
   }
 ];

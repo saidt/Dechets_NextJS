@@ -39,24 +39,24 @@ export const unite_Conversion_Columns: Column<Unite_Conversion_Type>[] = [
     accessor: "id" as keyof Unite_Conversion_Type,
     header: "id",
     width: 100,
-    meta: { isPrimaryKey: true, align: "right", printed: true, print_width: 100 },
+    meta: { isPrimaryKey: true, align: "right", printed: true, printWidth: 100 },
   },
   {
     accessor: "unite_source" as keyof Unite_Conversion_Type,
     header: "Unité source",
     width: 150,
-    meta: { printed: true, print_width: 150 },
+    meta: { printed: true, printWidth: 150 },
   },
   {
     accessor: "unite_destination" as keyof Unite_Conversion_Type,
     header: "Unité destination",
     width: 200,
-    meta: { printed: true, print_width: 200 },
+    meta: { printed: true, printWidth: 200 },
   },
   {
     accessor: "coeff" as keyof Unite_Conversion_Type,
     header: "Coéfficient",
     width: 100,
-    meta: { align: "right", decimals: 6, printed: true, print_width: 100 },
+    meta: { align: "right", decimals: 6, printed: true, printWidth: 100 },
   },
 ];

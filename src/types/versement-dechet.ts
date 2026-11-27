@@ -40,18 +40,18 @@ export const versement_Dechet_Columns: Column<Versement_Dechet_Type>[] = [
     accessor: "numero" as keyof Versement_Dechet_Type,
     header: "Numéro",
     width: 100,
-    meta: { isPrimaryKey: true, align: "right", printed: true, print_width: 100 },
+    meta: { isPrimaryKey: true, align: "right", printed: true, printWidth: 100 },
   },
   {
     accessor: "date_piece" as keyof Versement_Dechet_Type,
     header: "Date",
     width: 150,
-    meta: { printed: true, print_width: 150 },
+    meta: { printed: true, printWidth: 150 },
   },
   {
     accessor: "valide" as keyof Versement_Dechet_Type,
     header: "Validé",
     width: 100,
-    meta: { printed: true, print_width: 100 },
+    meta: { printed: true, printWidth: 100 },
   },
 ];

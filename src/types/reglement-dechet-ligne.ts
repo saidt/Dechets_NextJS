@@ -51,25 +51,19 @@ export const reglement_Dechet_Ligne_Columns: Column<Reglement_Dechet_Ligne_Type>
     accessor: "id" as keyof Reglement_Dechet_Ligne_Type,
     header: "Id",
     width: 150,
-    meta: { isPrimaryKey: true, align: 'right', printed: false, print_width: 150 }
-  },
-  {
-    accessor: "reglement_dechet_numero" as keyof Reglement_Dechet_Ligne_Type,
-    header: "N° réglement",
-    width: 150,
-    meta: { align: 'right', printed: true, print_width: 150 }
+    meta: { isPrimaryKey: true, align: 'right', printed: false }
   },
   {
     accessor: "sortie_dechet_numero" as keyof Reglement_Dechet_Ligne_Type,
     header: "N° sortie",
     width: 150,
-    meta: { align: 'right', printed: true, print_width: 150 }
+    meta: { align: 'right', printed: true, printWidth: 80 }
   },
   {
     accessor: "sortie_dechet.client_code" as keyof Reglement_Dechet_Ligne_Type,
     header: "Client",
     width: 100,
-    meta: { printed: true, print_width: 100 },
+    meta: { printed: true, printWidth: 100 },
     accessorFn: (row: Reglement_Dechet_Ligne_Type) =>
       row?.sortie_dechet?.client_code || "",
   },
@@ -77,7 +71,7 @@ export const reglement_Dechet_Ligne_Columns: Column<Reglement_Dechet_Ligne_Type>
     accessor: "sortie_dechet.client_raison_sociale" as keyof Reglement_Dechet_Ligne_Type,
     header: "Raison sociale",
     width: 200,
-    meta: { printed: true, print_width: 200 },
+    meta: { printed: true, printWidth: 220 },
     accessorFn: (row: Reglement_Dechet_Ligne_Type) =>
       row?.sortie_dechet?.client_raison_sociale || "",
   },
@@ -85,7 +79,7 @@ export const reglement_Dechet_Ligne_Columns: Column<Reglement_Dechet_Ligne_Type>
     accessor: "sortie_dechet.date_piece" as keyof Reglement_Dechet_Ligne_Type,
     header: "Date sortie",
     width: 100,
-    meta: { printed: true, print_width: 100 },
+    meta: { printed: true, printWidth: 100 },
     accessorFn: (row: Reglement_Dechet_Ligne_Type) =>
       row?.sortie_dechet?.date_piece || "",
   },
@@ -93,6 +87,6 @@ export const reglement_Dechet_Ligne_Columns: Column<Reglement_Dechet_Ligne_Type>
     accessor: "montant" as keyof Reglement_Dechet_Ligne_Type,
     header: "Montant",
     width: 150,
-    meta: { align: 'right', decimals: 2, printed: true, print_width: 150 }
+    meta: { align: 'right', decimals: 2, printed: true, printWidth: 150 }
   },
 ];

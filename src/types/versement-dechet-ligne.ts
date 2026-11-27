@@ -40,47 +40,43 @@ export const versement_Dechet_Ligne_Columns: Column<Versement_Dechet_Ligne_Type>
     accessor: "id" as keyof Versement_Dechet_Ligne_Type,
     header: "Id",
     width: 100,
-    meta: { isPrimaryKey: true, align: "right", printed: false, print_width: 100 },
+    meta: { isPrimaryKey: true, align: "right", printed: false },
   },
   {
     accessor: "reglement_dechet_numero" as keyof Versement_Dechet_Ligne_Type,
     header: "Réglement",
     width: 100,
-    meta: { align: "right", printed: true, print_width: 100 },
+    meta: { align: "right", printed: true, printWidth: 80 },
   },
-
   {
     accessor:
       "reglement_dechet.client_code" as keyof Versement_Dechet_Ligne_Type,
     header: "Client",
     width: 100,
-    meta: { printed: true, print_width: 100 },
+    meta: { printed: true, printWidth: 100 },
     accessorFn: (row: Versement_Dechet_Ligne_Type) =>
       row?.reglement_dechet?.client_code || "",
   },
   {
-    accessor:
-      "reglement_dechet.client_raison_sociale" as keyof Versement_Dechet_Ligne_Type,
+    accessor: "reglement_dechet.client_raison_sociale" as keyof Versement_Dechet_Ligne_Type,
     header: "Raison sociale",
     width: 200,
-    meta: { printed: true, print_width: 200 },
+    meta: { printed: true, printWidth: 200 },
     accessorFn: (row: Versement_Dechet_Ligne_Type) =>
       row?.reglement_dechet?.client_raison_sociale || "",
   },
   {
-    accessor:
-      "reglement_dechet.date_piece" as keyof Versement_Dechet_Ligne_Type,
+    accessor: "reglement_dechet.date_piece" as keyof Versement_Dechet_Ligne_Type,
     header: "Date régl.",
     width: 100,
-    meta: { printed: true, print_width: 100 },
+    meta: { printed: true, printWidth: 100 },
     accessorFn: (row: Versement_Dechet_Ligne_Type) =>
       row?.reglement_dechet?.date_piece || "",
   },
-
   {
     accessor: "montant" as keyof Versement_Dechet_Ligne_Type,
     header: "Montant",
     width: 150,
-    meta: { align: "right", decimals: 2, printed: true, print_width: 150 },
+    meta: { align: "right", decimals: 2, printed: true, printWidth: 100 },
   },
 ];

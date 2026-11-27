@@ -34,12 +34,12 @@ export const unite_Columns: Column<Unite_Type>[] = [
     accessor: "code" as keyof Unite_Type,
     header: "Code",
     width: 150,
-    meta: { isPrimaryKey: true, printed: true, print_width: 150 },
+    meta: { isPrimaryKey: true, printed: true, printWidth: 150 },
   },
   {
     accessor: "designation" as keyof Unite_Type,
     header: "Désignation",
     width: 300,
-    meta: { printed: true, print_width: 300 },
+    meta: { printed: true, printWidth: 300 },
   },
 ];

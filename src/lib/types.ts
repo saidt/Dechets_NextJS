@@ -60,9 +60,9 @@ export interface Column<T extends Record<string, any>> {
     align?: 'left' | 'right' | 'center' | 'justify';
     decimals?: number; 
     // Reports (PDF), required on every column: printed = false leaves the column
-    // out (child ids); print_width is its width on paper (usually = width)
+    // out (child ids); printWidth is its width on paper (usually = width)
     printed: boolean;
-    print_width: number;
+    printWidth?: number;
   };
 }
 

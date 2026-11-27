@@ -38,20 +38,20 @@ export const periode_Columns: Column<Periode_Type>[] = [
     accessor: "code" as keyof Periode_Type,
     header: "Code",
     width: 100,
-    meta: { isPrimaryKey: true, printed: true, print_width: 100 },
+    meta: { isPrimaryKey: true, printed: true, printWidth: 100 },
   },
   {
     accessor: "date_deb" as keyof Periode_Type,
     header: "Date début",
     width: 175,
-    meta: { printed: true, print_width: 175 },
+    meta: { printed: true, printWidth: 175 },
     accessorFn: (row: Periode_Type) => formatDateTime(new Date(row.date_deb)),
   },
   {
     accessor: "date_fin" as keyof Periode_Type,
     header: "Date fin",
     width: 175,
-    meta: { printed: true, print_width: 175 },
+    meta: { printed: true, printWidth: 175 },
     accessorFn: (row: Periode_Type) => formatDateTime(new Date(row.date_fin)),
   },
 ];

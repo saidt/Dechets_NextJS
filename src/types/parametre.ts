@@ -34,12 +34,12 @@ export const parametre_Columns: Column<Parametre_Type>[] = [
     accessor: "rubrique" as keyof Parametre_Type,
     header: "Rubrique",
     width: 100,
-    meta: { isPrimaryKey: true, printed: true, print_width: 100 },
+    meta: { isPrimaryKey: true, printed: true, printWidth: 100 },
   },
   {
     accessor: "designation" as keyof Parametre_Type,
     header: "Désignation",
     width: 300,
-    meta: { printed: true, print_width: 300 },
+    meta: { printed: true, printWidth: 300 },
   },
 ];

@@ -33,55 +33,55 @@ const columns: Column<Maj_Prix_Detail_Type>[] = [
     accessor: 'SORTIE_DECHET_NUMERO' as keyof Maj_Prix_Detail_Type,
     header: 'Sortie' , 
     width: 100,
-    meta: { isPrimaryKey: true, printed: true, print_width: 100 }
+    meta: { isPrimaryKey: true, printed: true, printWidth: 100 }
   },
   { 
     accessor: 'LIGNE_NUMERO' as keyof Maj_Prix_Detail_Type,
     header: 'Ligne' , 
     width: 100,
-    meta: { isPrimaryKey: true, printed: true, print_width: 100 }
+    meta: { isPrimaryKey: true, printed: true, printWidth: 100 }
   },
   { 
     accessor: 'ARTICLE_CODE' as keyof Maj_Prix_Detail_Type,
     header: 'Article',
     width: 120,
-    meta: { printed: true, print_width: 120 }
+    meta: { printed: true, printWidth: 120 }
   },
   { 
     accessor: 'ARTICLE_DESIGNATION' as keyof Maj_Prix_Detail_Type,
     header: 'Désignation',
     width: 300,
-    meta: { printed: true, print_width: 300 } 
+    meta: { printed: true, printWidth: 300 } 
   },
   { 
     accessor: 'POIDS' as keyof Maj_Prix_Detail_Type,
     header: 'Poids' , 
     width: 100,
-    meta: { printed: true, print_width: 100 },
+    meta: { printed: true, printWidth: 100 },
   },
   { 
     accessor: 'KG_KM' as keyof Maj_Prix_Detail_Type,
     header: 'Kg/Km' , 
     width: 100,
-    meta: { printed: true, print_width: 100 },
+    meta: { printed: true, printWidth: 100 },
   },
   { 
     accessor: 'ML' as keyof Maj_Prix_Detail_Type,
     header: 'M.L.' , 
     width: 100,
-    meta: { printed: true, print_width: 100 },
+    meta: { printed: true, printWidth: 100 },
   },
   { 
     accessor: 'PRIX_VENTE' as keyof Maj_Prix_Detail_Type,
     header: 'P.U.V.' , 
     width: 100,
-    meta: { decimals: 2, printed: true, print_width: 100 },
+    meta: { decimals: 2, printed: true, printWidth: 100 },
   },
   { 
     accessor: 'MONTANT' as keyof Maj_Prix_Detail_Type,
     header: 'Montant' , 
     width: 100,
-    meta: { decimals: 2, printed: true, print_width: 100 },
+    meta: { decimals: 2, printed: true, printWidth: 100 },
   },
 ];
 

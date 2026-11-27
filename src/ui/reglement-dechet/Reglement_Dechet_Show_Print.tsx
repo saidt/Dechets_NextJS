@@ -24,7 +24,7 @@ const reglement_Dechet_Ligne_Response = await fetchAllData<Reglement_Dechet_Lign
   const reglement_Dechet_Ligne_Data = reglement_Dechet_Ligne_Json.data;    
 
   const reglement_Dechet_Ligne_Print_Columns = reglement_Dechet_Ligne_Columns.filter(
-    col => col.accessor !== "id"
+    col => col.meta.printed
   );
 
   const doc = (

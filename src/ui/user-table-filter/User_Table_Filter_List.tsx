@@ -34,37 +34,37 @@ const User_Table_Filter_List = (props: CmListProps<User_Table_Filter_Type>) => {
     accessor: "id" as keyof User_Table_Filter_Type,
     header: "Id",
     width: 100,
-    meta: { printed: true, print_width: 100 },
+    meta: { printed: true, printWidth: 100 },
   };
   const user_id_column: Column<User_Table_Filter_Type> = {
     accessor: "user_id" as keyof User_Table_Filter_Type,
     header: "User Id",
     width: 100,
-    meta: { printed: true, print_width: 100 },
+    meta: { printed: true, printWidth: 100 },
   };
   const table_name_column: Column<User_Table_Filter_Type> = {
     accessor: "table_name" as keyof User_Table_Filter_Type,
     header: "Table",
     width: 250,
-    meta: { printed: true, print_width: 250 },
+    meta: { printed: true, printWidth: 250 },
   };
   const filter_name_column: Column<User_Table_Filter_Type> = {
     accessor: "filter_name" as keyof User_Table_Filter_Type,
     header: "Nom filtre",
     width: 200,
-    meta: { printed: true, print_width: 200 },
+    meta: { printed: true, printWidth: 200 },
   };
   const type_column: Column<User_Table_Filter_Type> = {
     accessor: "type" as keyof User_Table_Filter_Type,
     header: "Type",
     width: 100,
-    meta: { printed: true, print_width: 100 },
+    meta: { printed: true, printWidth: 100 },
   };
   const filter_column: Column<User_Table_Filter_Type> = {
     accessor: "filter" as keyof User_Table_Filter_Type,
     header: "Filtre",
     width: 250,
-    meta: { printed: true, print_width: 250 },
+    meta: { printed: true, printWidth: 250 },
   };
 
   const columns: Column<User_Table_Filter_Type>[] = [
